@@ -1,16 +1,88 @@
-# React + Vite
+# سوق البن الفاخر | AgriTech Coffee Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+منصة تجارة زراعية رقمية متقدمة مخصصة لتجارة وتسويق محاصيل البن اليمني المختص، تربط مزارعي المدرجات الجبلية العالية في حراز، يافع، وبني مطر مباشرة برواد القهوة ومحمّصي البن، بنقاء نكهات فريد وتوريد طازج مباشر بدون وسطاء.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## الرؤية والأهداف
 
-## React Compiler
+تهدف المنصة إلى تمكين مزارعي البن اليمني من الوصول المباشر إلى الأسواق المحلية والدولية، مع توفير شفافية كاملة في سلاسل الإمداد وتوثيق درجات جودة التنقيط المعتمدة (SCAA). تعتمد المنصة نموذج تواصل مباشر وتوثيق للحجوزات والطلبات الميدانية عبر واتساب، متجاوزة تعقيدات بوابات الدفع الإلكتروني التقليدية لتسهيل المعاملات بين المزارع والمشتري.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the Oxlint configuration
+## أبرز مميزات المنصة
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+- **نموذج تجارة مباشر وموثق:** ربط مباشر للمحاصيل بالمزارع المنتجة، وإتمام عمليات الطلب والحجز المسبق عبر واتساب مع ممثل المنصة والمزارعين.
+- **خلفيات بصرية تفاعلية:** خيارات متعددة لتخصيص الواجهة تشمل جزيئات الكانفاس الفيزيائية التفاعلية مع المؤشر (Interactive Particles)، والتوهج العضوي الناعم (Organic Ambient)، والخلفية المبسطة الهادئة.
+- **نظام إعدادات وهوية متكامل (Settings Drawer):**
+  - دعم الوضعين النهاري والليلي (Light / Dark Mode).
+  - ثلاثة أنساق لونية قابلة للتخصيص: الأخضر الغابي الزراعي (AgriTech)، البن المحمص والذهبي (Roasted)، والفحمي الكلاسيكي (Obsidian).
+  - تخصيص أشكال الأزرار (انسيابي ناعم، كبسولة دائرية، حاد هندسي).
+  - تخصيص أنماط مؤشر التحميل والانتقال بين التبويبات.
+- **دعم ثنائي للغة والاتجاه (Bilingual & RTL/LTR):** ترجمة كاملة لجميع أقسام المنصة باللغتين العربية والإنجليزية مع ضبط تلقائي للاتجاه.
+- **لوحة تحكم المشتري (Buyer Dashboard):** سجل مفصل للطلبات والحجوزات السابقة، تتبع حالات المحاصيل، وإدارة بيانات الشحن المباشر.
+- **بوابة خدمة المزارعين (Farmers Portal):** نافذة تواصل مباشرة لخدمة وتوثيق مزارع البن والتعاونيات الزراعية الميدانية.
+
+---
+
+## التقنيات المستخدمة (Tech Stack)
+
+- **بيئة العمل الأساسية:** React 18, Vite
+- **التصميم وتنسيق الواجهات:** Tailwind CSS, PostCSS
+- **الحركات والتأثيرات التفاعلية:** Framer Motion, HTML5 Canvas API
+- **الأيقونات:** Lucide React
+- **الخطوط:** Cairo Font (Google Fonts)
+
+---
+
+## هيكل مجلدات المشروع
+
+```text
+src/
+├── assets/             # الصور والأصول الثابتة
+├── components/
+│   ├── home/           # مكونات الصفحة الرئيسية (Hero, فلاتر المحاصيل، بطاقات المنتجات)
+│   ├── layout/         # الشريط العلوي، التذييل، ومؤشرات التحميل
+│   └── modals/         # نوافذ السلة، الإعدادات، تسجيل الدخول، وتفاصيل المنتج
+├── context/            # سياقات الحالة (السلة، المصادقة، الإعدادات والترجمة)
+├── data/               # البيانات التجريبية للمحاصيل وقاموس الترجمة الشامل
+├── pages/              # الصفحات الرئيسية ولوحة تحكم المشتري
+└── services/           # دوال التوجيه والربط مع واتساب
+```
+
+---
+
+## التشغيل والتطوير المحلي
+
+### المتطلبات المسبقة:
+- Node.js (الإصدار 18 أو أحدث)
+- npm أو pnpm
+
+### خطوات التثبيت والتشغيل:
+
+1. استنساخ المستودع:
+```bash
+git clone https://github.com/hevasaleh64-sys/agritech-coffee-web.git
+cd agritech-coffee-web
+```
+
+2. تثبيت الحزم:
+```bash
+npm install
+```
+
+3. تشغيل سيرفر التطوير المحلي:
+```bash
+npm run dev
+```
+
+4. بناء النسخة الإنتاجية (Production Build):
+```bash
+npm run build
+```
+
+---
+
+## التراخيص والحقوق
+
+جميع الحقوق محفوظة © 2026 - سوق البن الفاخر (AgriTech Coffee Platform).
