@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="ar"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"on-primary-fixed-variant":"#1a5206","on-primary-container":"#a7e78b","tertiary":"#274e29","primary-fixed-dim":"#98d77d","on-secondary-fixed":"#2a1800","surface-container":"#ecefea","surface-variant":"#e1e3de","surface-container-high":"#e7e9e4","error-container":"#ffdad6","inverse-primary":"#98d77d","on-surface":"#191c1a","secondary-fixed":"#ffddb6","surface-container-low":"#f2f4ef","tertiary-fixed-dim":"#a5d2a2","on-secondary-fixed-variant":"#5c421f","on-tertiary-fixed":"#002106","tertiary-container":"#3e663f","primary":"#185004","secondary":"#765934","surface":"#f8faf5","secondary-fixed-dim":"#e6c093","on-secondary-container":"#795b36","surface-dim":"#d8dbd6","surface-bright":"#f8faf5","secondary-container":"#fed6a7","on-tertiary-fixed-variant":"#284f2a","inverse-on-surface":"#eff1ec","on-surface-variant":"#41493c","error":"#ba1a1a","on-secondary":"#ffffff","on-tertiary":"#ffffff","on-background":"#191c1a","outline":"#727a6b","on-primary":"#ffffff","surface-container-highest":"#e1e3de","surface-tint":"#336b1f","outline-variant":"#c1c9b8","inverse-surface":"#2e312e","on-primary-fixed":"#052100","on-error-container":"#93000a","primary-container":"#31691d","tertiary-fixed":"#c1eebc","on-error":"#ffffff","primary-fixed":"#b3f496","background":"#f8faf5","on-tertiary-container":"#b5e2b0","surface-container-lowest":"#ffffff"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"margin":"1.25rem","gutter":"1rem","space-xl":"2.25rem","space-md":"1rem","space-lg":"1.5rem","space-xs":"0.25rem","space-sm":"0.5rem"},"fontFamily":{"body-sm":["Cairo"],"label-lg":["Cairo"],"body-md":["Cairo"],"headline-lg":["Cairo"],"body-lg":["Cairo"],"headline-sm":["Cairo"],"label-md":["Cairo"],"headline-md":["Cairo"],"label-sm":["Cairo"]},"fontSize":{"body-sm":["12px",{"lineHeight":"20px","fontWeight":"400"}],"label-lg":["15px",{"lineHeight":"24px","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"24px","fontWeight":"400"}],"headline-lg":["26px",{"lineHeight":"38px","fontWeight":"700"}],"body-lg":["16px",{"lineHeight":"26px","fontWeight":"500"}],"headline-sm":["18px",{"lineHeight":"28px","fontWeight":"600"}],"label-md":["13px",{"lineHeight":"20px","fontWeight":"600"}],"headline-md":["22px",{"lineHeight":"32px","fontWeight":"700"}],"label-sm":["11px",{"lineHeight":"16px","fontWeight":"500"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased">
+<!-- 1. شاشة انتقال وتحميل خفيفة (Loading Overlay) -->
+<div class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#f8faf5]/85 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300" id="loading-overlay">
+<div class="flex flex-col items-center gap-4 text-center p-6">
+<div class="relative flex items-center justify-center">
+<div class="w-16 h-16 rounded-2xl bg-primary-container text-on-primary flex items-center justify-center shadow-lg relative z-10 animate-pulse">
+<span class="material-symbols-outlined text-[34px]">eco</span>
+</div>
+<div class="absolute inset-0 -m-2 rounded-3xl border-2 border-primary/30 border-t-primary animate-spin"></div>
+</div>
+<div class="flex flex-col items-center gap-1 mt-2">
+<span class="font-headline-sm text-headline-sm text-primary font-bold">سوق البن الفاخر</span>
+<span class="font-label-sm text-label-sm text-secondary tracking-wider font-semibold">AgriTech Platform</span>
+</div>
+<div class="flex items-center gap-1.5 mt-1 text-primary text-xs font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-bounce"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-bounce [animation-delay:0.15s]"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-bounce [animation-delay:0.3s]"></span>
+<span class="mr-1 text-on-surface-variant font-label-sm text-label-sm">جاري التحديث والتصفية...</span>
+</div>
+</div>
+</div>
+<!-- 2. نافذة سلة الطلبات الجانبية (Slide-over Cart Drawer) -->
+<div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300" id="cart-drawer-backdrop"></div>
+<!-- 3. نافذة تفاصيل المنتج المنبثقة (Product Details Modal) -->
+<div aria-labelledby="modal-product-title" aria-modal="true" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-black/45 backdrop-blur-md transition-opacity duration-300" id="product-modal-backdrop" role="dialog">
+<div class="relative w-full max-w-[920px] bg-white rounded-3xl shadow-2xl border border-primary/20 overflow-hidden transform transition-all duration-300 my-auto text-right" id="product-modal-dialog">
+<!-- زر الإغلاق الدائري الأنيق (جهة اليسار في RTL) -->
+<button aria-label="إغلاق نافذة التفاصيل" class="absolute top-4 left-4 z-20 w-10 h-10 rounded-full bg-surface-container-high/80 hover:bg-surface-container-highest text-on-surface flex items-center justify-center transition-all duration-200 shadow-sm hover:scale-105 active:scale-95" id="modal-close-btn" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+<!-- محتوى النافذة: عمودان متوازنان -->
+<div class="grid grid-cols-1 md:grid-cols-12 min-h-[580px]">
+<!-- العمود الأيمن: الجانب البصري للمحصول والصور والمصدر (~45% من العرض) -->
+<div class="md:col-span-5 bg-surface-container-low/50 p-6 flex flex-col justify-between border-b md:border-b-0 md:border-l border-surface-container">
+<div>
+<!-- إطار الصورة الرئيسية مع الشارات -->
+<div class="relative w-full aspect-square rounded-2xl overflow-hidden bg-surface-container shadow-md group">
+<img alt="بن حراز مجفف طبيعي" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" id="modal-main-img" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKEftdcz1tASIp53VNNNtvvLg_Qcho3ySS-19C2Jxy-QwyNZxhp6RImp65lf3CCSKSCQ1izwqdQONFSXkyfNTsHIMdEoFRuJh-GSZrhUFiA9aelEfdBK9lOMrk6VON2gv2O6czhxkEfhcUtur-i6tumESoVHIqHIyb-wjyXETn3StoVpVvsSfqQSvwMaM9v0HtqBiXmlBYUzjv2RE9RrSv7uYz4I8-xHRaQ_dwZ4Hh"/>
+<!-- شارة المعالجة -->
+<div class="absolute top-3 right-3 bg-primary text-on-primary px-3 py-1 rounded-lg font-label-sm text-label-sm font-semibold shadow-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">eco</span>
+<span id="modal-badge-process">معالجة مجففة لاهوائية</span>
+</div>
+<!-- شارة تقييم الجودة المختصة SCAA -->
+<div class="absolute bottom-3 right-3 bg-surface-container-lowest/95 backdrop-blur-sm border border-primary/20 text-primary px-2.5 py-1 rounded-lg font-label-sm text-label-sm font-bold shadow-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-secondary">workspace_premium</span>
+<span id="modal-badge-score">تقييم الجودة: 88.5 SCAA</span>
+</div>
+</div>
+<!-- مصغرات معرض الصور للمحصول -->
+<div class="grid grid-cols-3 gap-2.5 mt-3" id="modal-thumbnails">
+<button class="modal-thumb relative aspect-square rounded-xl overflow-hidden border-2 border-primary shadow-xs transition-all active:scale-95 cursor-pointer" data-full-img="https://lh3.googleusercontent.com/aida-public/AB6AXuBKEftdcz1tASIp53VNNNtvvLg_Qcho3ySS-19C2Jxy-QwyNZxhp6RImp65lf3CCSKSCQ1izwqdQONFSXkyfNTsHIMdEoFRuJh-GSZrhUFiA9aelEfdBK9lOMrk6VON2gv2O6czhxkEfhcUtur-i6tumESoVHIqHIyb-wjyXETn3StoVpVvsSfqQSvwMaM9v0HtqBiXmlBYUzjv2RE9RrSv7uYz4I8-xHRaQ_dwZ4Hh" type="button">
+<img alt="حبوب محمصة" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKEftdcz1tASIp53VNNNtvvLg_Qcho3ySS-19C2Jxy-QwyNZxhp6RImp65lf3CCSKSCQ1izwqdQONFSXkyfNTsHIMdEoFRuJh-GSZrhUFiA9aelEfdBK9lOMrk6VON2gv2O6czhxkEfhcUtur-i6tumESoVHIqHIyb-wjyXETn3StoVpVvsSfqQSvwMaM9v0HtqBiXmlBYUzjv2RE9RrSv7uYz4I8-xHRaQ_dwZ4Hh"/>
+<span class="absolute bottom-0 inset-x-0 bg-black/60 text-white text-[9px] font-bold text-center py-0.5">حبوب محمصة</span>
+</button>
+<button class="modal-thumb relative aspect-square rounded-xl overflow-hidden border border-outline-variant hover:border-primary transition-all active:scale-95 cursor-pointer opacity-80 hover:opacity-100" data-full-img="https://lh3.googleusercontent.com/aida-public/AB6AXuDps0D04xpqlboojkpX3PmqBYEnTuLRRGW44i3fUZSUSoX60vfwGuvaJrlQisgieOKI6LcfoPApoKpYIdjJiVnAcb_JlI-96re1o7raqzEvjAp7dwYEayyW5yopFpcXG4GBoGMXUYXCi9MXz6HhgvtzDoNNoicZefLwWXVh1RyAUYp516HsazmKdhn6g2Bjq8BXKSlqwuiHQwhr5F8KkuiLiSRAihv6TV9pmXWk_o8k" type="button">
+<img alt="الحبوب الخضراء" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDps0D04xpqlboojkpX3PmqBYEnTuLRRGW44i3fUZSUSoX60vfwGuvaJrlQisgieOKI6LcfoPApoKpYIdjJiVnAcb_JlI-96re1o7raqzEvjAp7dwYEayyW5yopFpcXG4GBoGMXUYXCi9MXz6HhgvtzDoNNoicZefLwWXVh1RyAUYp516HsazmKdhn6g2Bjq8BXKSlqwuiHQwhr5F8KkuiLiSRAihv6TV9pmXWk_o8k"/>
+<span class="absolute bottom-0 inset-x-0 bg-black/60 text-white text-[9px] font-bold text-center py-0.5">حبوب خضراء</span>
+</button>
+<button class="modal-thumb relative aspect-square rounded-xl overflow-hidden border border-outline-variant hover:border-primary transition-all active:scale-95 cursor-pointer opacity-80 hover:opacity-100" data-full-img="https://lh3.googleusercontent.com/aida-public/AB6AXuAPNvv1OPGzzBM1n2Ij6k8Hs5blPlgrDMsnSl2lo5bu6aFo3JtH0UYfDK1TzxepViE4Tn9SGAPjCsc1LoXQ3jefCZ5IldkU1FgFF6IOJaYWKMxOGyYppx78XwwEEhbDQwA5Jvl3x8V2FDU14cgTzJUJaxvfadxP71MI1_5aQaa-yZCPwoRcdrrSDbk3dcK17ZNY0OoEvKyxRV1Yr91kDv2ACVI4Ku_bDRjAHGpRSCgU" type="button">
+<img alt="المزرعة والمدرجات" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPNvv1OPGzzBM1n2Ij6k8Hs5blPlgrDMsnSl2lo5bu6aFo3JtH0UYfDK1TzxepViE4Tn9SGAPjCsc1LoXQ3jefCZ5IldkU1FgFF6IOJaYWKMxOGyYppx78XwwEEhbDQwA5Jvl3x8V2FDU14cgTzJUJaxvfadxP71MI1_5aQaa-yZCPwoRcdrrSDbk3dcK17ZNY0OoEvKyxRV1Yr91kDv2ACVI4Ku_bDRjAHGpRSCgU"/>
+<span class="absolute bottom-0 inset-x-0 bg-black/60 text-white text-[9px] font-bold text-center py-0.5">المدرجات الجبلية</span>
+</button>
+</div>
+</div>
+<!-- بطاقة المنشأ الجغرافي والارتفاع -->
+<div class="mt-4 p-3 rounded-xl bg-surface-container-lowest border border-surface-container flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">terrain</span>
+</div>
+<div>
+<span class="block font-label-sm text-[12px] font-bold text-on-surface" id="modal-origin-text">جبال حراز - ارتفاع 2,200م</span>
+<span class="block text-[11px] text-on-surface-variant">حصاد يدوي انتقائي للمحصول</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-[18px] text-primary">verified</span>
+</div>
+</div>
+<!-- العمود الأيسر: تفاصيل المحصول، المواصفات والخيارات، وأزرار الإجراءات (~55% من العرض) -->
+<div class="md:col-span-7 p-6 sm:p-7 flex flex-col justify-between space-y-4">
+<div>
+<!-- مسار التصنيف / الشارة العلوية -->
+<div class="flex items-center gap-2 mb-2">
+<span class="px-2.5 py-0.5 rounded-full bg-primary-container/15 text-primary text-[11px] font-bold tracking-wide flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">coffee</span>
+<span id="modal-category-chip">محاصيل البن المختص • بن يمني أصيل</span>
+</span>
+<span class="text-[11px] text-secondary font-semibold">مباشر بدون وسطاء</span>
+</div>
+<!-- اسم المنتج والعنوان العريض -->
+<h2 class="font-headline-lg text-[22px] sm:text-[24px] text-on-surface font-bold leading-tight" id="modal-product-title">
+            بن حراز مجفف طبيعي - فاخر
+          </h2>
+<!-- السعر مع المعادل بالريال اليمني -->
+<div class="flex items-baseline gap-2.5 mt-2 pb-3 border-b border-surface-container">
+<span class="font-headline-lg text-[26px] text-primary font-bold tracking-tight" id="modal-price-usd">22.00 $</span>
+<span class="font-body-md text-body-md text-secondary font-semibold" id="modal-price-yer">(5,500 ر.ي)</span>
+<span class="text-[11px] text-on-surface-variant font-medium mr-auto bg-surface-container-low px-2 py-0.5 rounded-md">شحن طازج ومباشر</span>
+</div>
+<!-- جدول المواصفات الفنية للمحصول -->
+<div class="grid grid-cols-2 gap-2.5 my-3.5">
+<div class="bg-surface-container-low/60 p-2.5 rounded-xl border border-surface-container">
+<span class="text-[11px] text-on-surface-variant block mb-0.5">درجة التحميص</span>
+<span class="font-label-sm text-[12px] font-bold text-on-surface flex items-center gap-1" id="modal-roast-level">
+<span class="material-symbols-outlined text-[14px] text-secondary">local_fire_department</span>
+                تحميص متوسط (فلتر وإسبريسو)
+              </span>
+</div>
+<div class="bg-surface-container-low/60 p-2.5 rounded-xl border border-surface-container">
+<span class="text-[11px] text-on-surface-variant block mb-0.5">السلالة والمعالجة</span>
+<span class="font-label-sm text-[12px] font-bold text-on-surface flex items-center gap-1" id="modal-variety-text">
+<span class="material-symbols-outlined text-[14px] text-primary">psychology_alt</span>
+                عديني أصيل • تجفيف بطيء
+              </span>
+</div>
+</div>
+<!-- الإيحاءات العطرية والنكهات (Flavors Chips) -->
+<div class="mb-3">
+<span class="text-[11px] font-bold text-on-surface-variant block mb-1.5">الإيحاءات والنكهات البارزة:</span>
+<div class="flex flex-wrap items-center gap-1.5" id="modal-flavors-container">
+<span class="px-2.5 py-1 rounded-lg bg-surface-container text-on-surface font-label-sm text-[11px] font-medium border border-surface-container-high">مشمش مجفف</span>
+<span class="px-2.5 py-1 rounded-lg bg-surface-container text-on-surface font-label-sm text-[11px] font-medium border border-surface-container-high">كاكاو خام</span>
+<span class="px-2.5 py-1 rounded-lg bg-surface-container text-on-surface font-label-sm text-[11px] font-medium border border-surface-container-high">توت بري</span>
+<span class="px-2.5 py-1 rounded-lg bg-surface-container text-on-surface font-label-sm text-[11px] font-medium border border-surface-container-high">عسل جبلي</span>
+</div>
+</div>
+<!-- الوصف التراثي الزراعي الدقيق -->
+<div class="mb-3.5">
+<p class="font-body-sm text-[13px] text-on-surface-variant leading-relaxed bg-surface-container-lowest p-3 rounded-xl border border-surface-container/70" id="modal-description">
+              محصول استثنائي تم انتقاؤه يدوياً من مدرجات جبال حراز الشاهقة على ارتفاع يفوق 2,200 متر عن سطح البحر. يتميز هذا المحصول بمعالجة تجفيف لاهوائية متقنة تبرز حلاوة الفاكهة الطبيعية وتمنح فنجان القهوة قواماً مخملياً متزناً مع إيحاءات التوت والمشمش ونهاية بنكهة الشوكولاتة الداكنة.
+            </p>
+</div>
+<!-- محددات الوزن والكمية -->
+<div class="flex flex-wrap items-center justify-between gap-3 pt-1 border-t border-surface-container">
+<!-- أزرار اختيار الوزن -->
+<div>
+<span class="text-[11px] font-bold text-on-surface-variant block mb-1.5">الوزن المتاح:</span>
+<div class="flex items-center gap-1.5" id="modal-weight-options">
+<button class="modal-weight-btn px-3 py-1 rounded-lg font-label-sm text-[12px] font-bold bg-primary text-on-primary shadow-xs transition-all" data-multiplier="1" data-weight-label="250 جرام" type="button">250 جم</button>
+<button class="modal-weight-btn px-3 py-1 rounded-lg font-label-sm text-[12px] font-semibold bg-surface-container text-on-surface hover:bg-surface-container-high transition-all" data-multiplier="1.9" data-weight-label="500 جرام" type="button">500 جم</button>
+<button class="modal-weight-btn px-3 py-1 rounded-lg font-label-sm text-[12px] font-semibold bg-surface-container text-on-surface hover:bg-surface-container-high transition-all" data-multiplier="3.6" data-weight-label="1 كجم" type="button">1 كجم</button>
+</div>
+</div>
+<!-- عداد الكمية الرقمي -->
+<div>
+<span class="text-[11px] font-bold text-on-surface-variant block mb-1.5">الكمية:</span>
+<div class="flex items-center bg-surface-container-low rounded-xl border border-outline-variant/60 p-1">
+<button aria-label="إنقاص الكمية" class="w-7 h-7 rounded-lg flex items-center justify-center bg-white hover:bg-surface-container text-on-surface shadow-xs active:scale-90 font-bold transition-all" id="modal-qty-minus" type="button">-</button>
+<span class="font-label-md text-label-md font-bold px-3 text-on-surface text-center min-w-[32px]" id="modal-qty-display">1</span>
+<button aria-label="زيادة الكمية" class="w-7 h-7 rounded-lg flex items-center justify-center bg-white hover:bg-surface-container text-on-surface shadow-xs active:scale-90 font-bold transition-all" id="modal-qty-plus" type="button">+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- أزرار الإجراءات الرئيسية المعتمدة عبر المنصة (خالية تماماً من بوابات الدفع الإلكتروني) -->
+<div class="pt-2 space-y-2">
+<div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5">
+<!-- الزر الرئيسي العريض: أضف للطلب -->
+<button class="sm:col-span-7 py-3 px-4 rounded-xl bg-primary text-on-primary hover:bg-[#204613] hover:shadow-lg active:scale-[0.98] transition-all duration-200 font-label-lg text-label-lg font-bold shadow-md flex items-center justify-center gap-2" id="modal-add-to-cart-btn" type="button">
+<span class="material-symbols-outlined text-[20px]">shopping_bag</span>
+<span id="modal-add-btn-text">أضف للطلب</span>
+</button>
+<!-- الزر الثانوي: طلب حجز للمحصول مباشرة من المزرعة -->
+<button class="sm:col-span-5 py-3 px-3 rounded-xl border-2 border-primary text-primary hover:bg-primary/10 active:scale-[0.98] transition-all duration-200 font-label-md text-label-md font-bold flex items-center justify-center gap-1.5 bg-surface-container-lowest" id="modal-reserve-btn" type="button">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+<span>طلب حجز للمحصول</span>
+</button>
+</div>
+<!-- إشعار الثقة والأمان الزراعي المباشر -->
+<p class="text-center font-label-sm text-[11px] text-on-surface-variant flex items-center justify-center gap-1 pt-1">
+<span class="material-symbols-outlined text-[14px] text-primary">verified_user</span>
+<span>طلب مباشر موثق من المزارعين • التنسيق والتأكيد حصرياً عبر ممثل المنصة</span>
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<aside aria-label="سلة محاصيل البن" class="fixed top-0 left-0 h-full w-[440px] max-w-full bg-white shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between" id="cart-drawer">
+<!-- رأس السلة الجانبية -->
+<div class="p-5 border-b border-surface-container flex items-center justify-between bg-surface-container-low/50">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary-container/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[24px]">shopping_bag</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">سلة محاصيل البن</h2>
+<span class="px-2 py-0.5 rounded-full bg-primary-container text-on-primary text-xs font-bold" id="drawer-cart-count-badge">0</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">طلب مباشر بدون وسطاء من المدرجات</p>
+</div>
+</div>
+<button aria-label="إغلاق السلة" class="w-9 h-9 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors" id="cart-drawer-close" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<!-- قائمة منتجات السلة (قابلة للتمرير) -->
+<div class="flex-1 overflow-y-auto p-5 space-y-4" id="drawer-cart-items">
+<!-- محتوى المنتجات يتم تعبئته تفاعلياً بواسطة JavaScript -->
+</div>
+<!-- تذييل السلة: نموذج بيانات المشتري وملخص الحساب وزر الواتساب -->
+<div class="p-5 border-t border-surface-container bg-surface-container-low/40 space-y-4">
+<!-- نموذج بيانات المشتري (حقلان نظيفان فقط) -->
+<div class="space-y-3 bg-surface-container-lowest p-3.5 rounded-xl border border-surface-container">
+<div>
+<label class="block font-label-md text-label-md text-on-surface font-semibold mb-1 flex items-center gap-1" for="buyer-name">
+<span class="material-symbols-outlined text-[16px] text-primary">person</span>
+          اسم المشتري الكريم <span class="text-error">*</span>
+</label>
+<input class="w-full text-sm px-3 py-2 rounded-lg border border-outline-variant bg-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-body-md" id="buyer-name" placeholder="مثال: عبد الرحمن اليافعي" required="" type="text"/>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface font-semibold mb-1 flex items-center gap-1" for="buyer-address">
+<span class="material-symbols-outlined text-[16px] text-primary">pin_drop</span>
+          عنوان التوصيل بالتفصيل <span class="text-error">*</span>
+</label>
+<input class="w-full text-sm px-3 py-2 rounded-lg border border-outline-variant bg-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-body-md" id="buyer-address" placeholder="المدينة، الحي، رقم الشارع أو أقرب معلم" required="" type="text"/>
+</div>
+</div>
+<!-- ملخص المجموع بالدولار والريال اليمني -->
+<div class="flex items-center justify-between px-1">
+<div>
+<span class="text-xs text-on-surface-variant font-medium block">الإجمالي التقديري للطلب</span>
+<span class="text-xs text-primary font-semibold flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[14px]">local_shipping</span>
+          شحن طازج من المحمية
+        </span>
+</div>
+<div class="text-left">
+<div class="font-headline-md text-headline-md text-primary font-bold" id="drawer-total-usd">0.00 $</div>
+<div class="font-body-sm text-body-sm text-secondary font-semibold" id="drawer-total-yer">(0 ر.ي)</div>
+</div>
+</div>
+<!-- رسالة تنبيه الخطأ في حال لم تُملأ الحقول -->
+<div class="hidden text-xs text-error font-semibold text-center bg-error-container/60 p-2 rounded-lg" id="drawer-form-alert">
+      يرجى إدخال اسم المشتري وعنوان التوصيل لإتمام الطلب.
+    </div>
+<!-- زر طلب وحيد معتمد عبر الواتساب حصراً -->
+<button class="w-full py-3.5 px-4 rounded-xl bg-primary text-on-primary hover:bg-[#204613] hover:shadow-lg active:scale-[0.98] transform transition-all duration-200 flex items-center justify-center gap-2 font-label-lg text-label-lg font-bold shadow-md" id="drawer-whatsapp-submit" type="button">
+<span class="material-symbols-outlined text-[22px]">chat</span>
+<span>إرسال الطلب عبر واتساب</span>
+</button>
+<p class="text-center font-label-sm text-label-sm text-on-surface-variant flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">lock</span>
+      تأكيد فوري ومباشر مع ممثل المزارع بدون أي رسوم دفع إلكتروني
+    </p>
+</div>
+</aside>
+<header class="fixed top-0 w-full z-40 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(49,105,29,0.04)]"><div class="h-20 max-w-7xl mx-auto px-margin flex items-center justify-between gap-space-lg"><div class="flex items-center gap-space-xl"><a class="flex items-center gap-space-sm group nav-link" data-path="home" href="#"><div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center text-on-primary shadow-sm"><span class="material-symbols-outlined text-[24px]">eco</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary leading-tight tracking-tight">سوق البن الفاخر</span><span class="font-label-sm text-label-sm text-secondary tracking-wide">AgriTech Platform</span></div></a><nav class="hidden xl:flex items-center gap-space-lg" data-active-classes="text-primary font-bold border-b-2 border-primary pb-1"><a aria-current="page" class="nav-link transition-colors py-1 text-primary font-bold border-b-2 border-primary pb-1" data-path="home" href="#">الرئيسية</a><a class="nav-link font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-1" data-path="roasted-coffee" href="#">البن المحمص</a><a class="nav-link font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-1" data-path="green-coffee" href="#">البن الأخضر</a><a class="nav-link font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-1" data-path="special-blends" href="#">الخلطات الخاصة</a><a class="nav-link font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-1" data-path="contact" href="#">تواصل معنا</a></nav></div><div class="flex items-center gap-space-md"><a class="hidden md:flex items-center gap-space-xs px-space-md py-space-xs rounded-xl bg-surface-container-low hover:bg-surface-container-high transition-colors text-on-surface-variant" href="tel:+9671000000"><span class="material-symbols-outlined text-[18px] text-primary">phone_in_talk</span><span class="font-label-md text-label-md text-on-surface">خدمة المزارعين</span></a><button aria-label="سلة المشتريات" class="relative p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container-high transition-colors flex items-center justify-center text-on-surface" id="header-cart-btn" type="button"><span class="material-symbols-outlined text-[24px] text-primary">shopping_bag</span><span class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-primary text-on-primary font-label-sm text-label-sm flex items-center justify-center shadow-sm transition-transform duration-300" id="header-cart-badge">0</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-20 bg-surface"><div class="flex flex-col w-full">
+<!-- 1. القسم الترحيبي (Hero Section) -->
+<section class="relative w-full overflow-hidden bg-gradient-to-b from-surface-container-low via-surface to-background pb-space-xl pt-space-lg">
+<!-- خلفية عضوية ناعمة بتدرجات متناسقة -->
+<div class="absolute -top-32 right-1/4 w-96 h-96 rounded-full bg-primary-fixed/20 blur-3xl pointer-events-none"></div>
+<div class="absolute top-12 left-10 w-80 h-80 rounded-full bg-secondary-fixed/15 blur-2xl pointer-events-none"></div>
+<div class="max-w-7xl mx-auto px-margin relative z-10">
+<div class="flex flex-col items-center text-center max-w-3xl mx-auto space-y-space-md">
+<!-- شارة علوية ناعمة -->
+<div class="inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-surface-container-high/80 text-primary shadow-sm backdrop-blur-sm">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span class="font-label-md text-label-md tracking-wide">محاصيل يمنية أصيلة 100% من أعالي الجبال</span>
+</div>
+<!-- العنوان الرئيسي -->
+<h1 class="font-headline-lg text-headline-lg text-primary md:text-[34px] md:leading-[46px] tracking-tight">
+          أجود أنواع البن اليمني الأصيل.. نكهات متفردة من المزرعة إليك
+        </h1>
+<!-- وصف مختصر ومركّز -->
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed">
+          ننتقي لكم حبات الكرز الناضجة يدوياً من مدرجات حراز ويافع وبني مطر، بنقاء نكهات فريد، تحميص طازج عند الطلب وشحن مباشر بدون وسطاء.
+        </p>
+<!-- زر رئيسي واحد بارز بألوان Terrace Earth -->
+<div class="pt-space-xs">
+<a class="inline-flex items-center justify-center gap-space-sm px-space-xl py-3.5 rounded-xl bg-primary-container text-on-primary hover:bg-[#204613] hover:shadow-lg hover:-translate-y-0.5 active:scale-95 transform transition-all duration-300 shadow-md group" href="#coffee-products">
+<span class="font-label-lg text-label-lg font-bold">تصفح المنتجات</span>
+<span class="material-symbols-outlined text-[20px] transition-transform duration-300 group-hover:-translate-x-1">arrow_downward</span>
+</a>
+</div>
+<!-- إحصائيات سريعة مدمجة -->
+<div class="w-full pt-space-lg">
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-space-md bg-surface-container-lowest/80 p-space-md rounded-xl shadow-sm backdrop-blur-md">
+<div class="flex flex-col items-center justify-center py-space-xs">
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[22px]">terrain</span>
+<span class="font-headline-md text-headline-md font-bold">42+</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-1">مزارع جبلية موثقة</span>
+</div>
+<div class="flex flex-col items-center justify-center py-space-xs bg-surface-container-low/40 rounded-lg">
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[22px]">star</span>
+<span class="font-headline-md text-headline-md font-bold">+85</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-1">درجات تنقيط مختصة SCAA</span>
+</div>
+<div class="flex flex-col items-center justify-center py-space-xs">
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[22px]">workspace_premium</span>
+<span class="font-headline-md text-headline-md font-bold">100%</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-1">تجارب تذوق أصيلة ومصدر مفرد</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 2. شريط التصفية التفاعلي (Filter Pills) -->
+<section class="w-full py-space-lg bg-surface" id="coffee-products">
+<div class="max-w-7xl mx-auto px-margin">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md pb-space-md">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface font-bold">محاصيل المتجر المتاحة</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">اختر نوع البن والمصدر لمعاينة تفاصيل المحصول</p>
+</div>
+<!-- أزرار الفلترة السريعة -->
+<div class="flex items-center gap-space-xs overflow-x-auto pb-2 md:pb-0 scrollbar-none" id="filter-container">
+<button class="filter-pill flex-shrink-0 px-space-md py-2 rounded-full font-label-md text-label-md bg-primary-container text-on-primary shadow-sm hover:scale-105 transition-all duration-200" data-filter="all" type="button">
+            الكل
+          </button>
+<button class="filter-pill flex-shrink-0 px-space-md py-2 rounded-full font-label-md text-label-md bg-surface-container-high text-on-surface-variant hover:text-primary hover:bg-emerald-100/80 active:scale-95 transition-all duration-200" data-filter="roasted" type="button">
+            بن محمص مختص
+          </button>
+<button class="filter-pill flex-shrink-0 px-space-md py-2 rounded-full font-label-md text-label-md bg-surface-container-high text-on-surface-variant hover:text-primary hover:bg-emerald-100/80 active:scale-95 transition-all duration-200" data-filter="green" type="button">
+            بن أخضر (خام)
+          </button>
+<button class="filter-pill flex-shrink-0 px-space-md py-2 rounded-full font-label-md text-label-md bg-surface-container-high text-on-surface-variant hover:text-primary hover:bg-emerald-100/80 active:scale-95 transition-all duration-200" data-filter="blends" type="button">
+            خلطات مميزة وإسبريسو
+          </button>
+<button class="filter-pill flex-shrink-0 px-space-md py-2 rounded-full font-label-md text-label-md bg-surface-container-high text-on-surface-variant hover:text-primary hover:bg-emerald-100/80 active:scale-95 transition-all duration-200" data-filter="haraz-yafa" type="button">
+            محاصيل حراز ويافع
+          </button>
+<button class="filter-pill flex-shrink-0 px-space-md py-2 rounded-full font-label-md text-label-md bg-surface-container-high text-on-surface-variant hover:text-primary hover:bg-emerald-100/80 active:scale-95 transition-all duration-200" data-filter="matar-bura" type="button">
+            محاصيل بني مطر وبرع
+          </button>
+</div>
+</div>
+<!-- 3. شبكة منتجات البن (Product Grid - 4 أعمدة متناسقة ومنتظمة) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-lg pt-space-sm" id="product-grid"><!-- بطاقة 1: بن حراز مجفف طبيعي -->
+<div class="product-card group cursor-pointer flex flex-col justify-between bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 ease-out border border-transparent hover:border-emerald-600/30" data-category="roasted haraz-yafa" data-details="250 جرام - تحميص متوسط" data-id="p1" data-image="https://lh3.googleusercontent.com/aida-public/AB6AXuBKEftdcz1tASIp53VNNNtvvLg_Qcho3ySS-19C2Jxy-QwyNZxhp6RImp65lf3CCSKSCQ1izwqdQONFSXkyfNTsHIMdEoFRuJh-GSZrhUFiA9aelEfdBK9lOMrk6VON2gv2O6czhxkEfhcUtur-i6tumESoVHIqHIyb-wjyXETn3StoVpVvsSfqQSvwMaM9v0HtqBiXmlBYUzjv2RE9RrSv7uYz4I8-xHRaQ_dwZ4Hh" data-name="بن حراز مجفف طبيعي" data-price="22.00" data-yer="5500">
+<div>
+<div class="relative w-full aspect-square bg-surface-container-low overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" data-alt="Artisanal specialty Yemeni Harazi coffee beans, natural sun-dried process, displayed inside an elegant craft bag on a rustic wood board with whole golden-brown roasted coffee beans scattered around, soft natural daylight, deep forest green and earth tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKEftdcz1tASIp53VNNNtvvLg_Qcho3ySS-19C2Jxy-QwyNZxhp6RImp65lf3CCSKSCQ1izwqdQONFSXkyfNTsHIMdEoFRuJh-GSZrhUFiA9aelEfdBK9lOMrk6VON2gv2O6czhxkEfhcUtur-i6tumESoVHIqHIyb-wjyXETn3StoVpVvsSfqQSvwMaM9v0HtqBiXmlBYUzjv2RE9RrSv7uYz4I8-xHRaQ_dwZ4Hh"/>
+<div class="absolute top-space-xs right-space-xs bg-primary text-on-primary px-space-sm py-1 rounded-md font-label-sm text-label-sm shadow-sm">
+                معالجة مجففة لا هوائية
+              </div>
+</div>
+<div class="p-space-md space-y-space-xs">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold line-clamp-1 group-hover:text-primary transition-colors duration-200">بن حراز مجفف طبيعي</h3>
+<p class="font-body-sm text-body-sm text-secondary font-medium">250 جرام - تحميص متوسط</p>
+<div class="pt-space-xs">
+<span class="font-headline-md text-headline-md text-primary font-bold">22.00 $</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant mr-1">(5,500 ر.ي)</span>
+</div>
+</div>
+</div>
+<div class="p-space-md pt-0 grid grid-cols-2 gap-space-xs">
+<button class="btn-cart flex items-center justify-center gap-1 py-2 px-space-xs rounded-lg bg-surface-container text-on-surface hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-400 active:scale-95 transform transition-all duration-200 text-center font-label-sm text-label-sm" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary">shopping_bag</span>
+<span class="btn-cart-text">أضف للسلة</span>
+</button>
+<a class="flex items-center justify-center gap-1 py-2 px-space-xs rounded-lg bg-primary text-on-primary hover:bg-[#204613] hover:shadow-md active:scale-95 transform transition-all duration-200 text-center font-label-sm text-label-sm font-semibold" href="https://wa.me/9671000000?text=أود%20طلب%20بن%20حراز%20مجفف%20طبيعي" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+<span>واتساب</span>
+</a>
+</div>
+</div>
+<!-- بطاقة 2: بن مطري محمص فلتر -->
+<div class="product-card group cursor-pointer flex flex-col justify-between bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 ease-out border border-transparent hover:border-emerald-600/30" data-category="roasted matar-bura" data-details="250 جرام - تحميص خفيف" data-id="p2" data-image="https://lh3.googleusercontent.com/aida-public/AB6AXuDiq-XU2Jv4Nc0FmA1r_Lcp-21PpmgcTtqEpIjFzcAMP8k207MkIN2F6WGM-uQv0v8RYrt9b_EShlKyrBouDgcVpcxyd3uhxaFpYlW06VoxgcR3-1vtb31fIhDIc9TfRyA8ed6x9v9PsszE6l_n-vmKAuQT866qwfJCxRwesi3qEIFl39ayrBshn0uUZa2KeAgcL5LN0h9DS2XuaOtd_8JYawy8mve61BEsnab7Wl0A" data-name="بن مطري محمص فلتر" data-price="24.50" data-yer="6100">
+<div>
+<div class="relative w-full aspect-square bg-surface-container-low overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" data-alt="High elevation Bani Matar roasted filter specialty coffee in a minimal paper pouch, roasted coffee beans with caramel tones, aromatic steam, warm organic studio lighting with rich sage and olive green accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiq-XU2Jv4Nc0FmA1r_Lcp-21PpmgcTtqEpIjFzcAMP8k207MkIN2F6WGM-uQv0v8RYrt9b_EShlKyrBouDgcVpcxyd3uhxaFpYlW06VoxgcR3-1vtb31fIhDIc9TfRyA8ed6x9v9PsszE6l_n-vmKAuQT866qwfJCxRwesi3qEIFl39ayrBshn0uUZa2KeAgcL5LN0h9DS2XuaOtd_8JYawy8mve61BEsnab7Wl0A"/>
+<div class="absolute top-space-xs right-space-xs bg-primary-container text-on-primary px-space-sm py-1 rounded-md font-label-sm text-label-sm shadow-sm">
+                تحميص خفيف فلتر
+              </div>
+</div>
+<div class="p-space-md space-y-space-xs">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold line-clamp-1 group-hover:text-primary transition-colors duration-200">بن مطري محمص فلتر</h3>
+<p class="font-body-sm text-body-sm text-secondary font-medium">250 جرام - تحميص خفيف</p>
+<div class="pt-space-xs">
+<span class="font-headline-md text-headline-md text-primary font-bold">24.50 $</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant mr-1">(6,100 ر.ي)</span>
+</div>
+</div>
+</div>
+<div class="p-space-md pt-0 grid grid-cols-2 gap-space-xs">
+<button class="btn-cart flex items-center justify-center gap-1 py-2 px-space-xs rounded-lg bg-surface-container text-on-surface hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-400 active:scale-95 transform transition-all duration-200 text-center font-label-sm text-label-sm" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary">shopping_bag</span>
+<span class="btn-cart-text">أضف للسلة</span>
+</button>
+<a class="flex items-center justify-center gap-1 py-2 px-space-xs rounded-lg bg-primary text-on-primary hover:bg-[#204613] hover:shadow-md active:scale-95 transform transition-all duration-200 text-center font-label-sm text-label-sm font-semibold" href="https://wa.me/9671000000?text=أود%20طلب%20بن%20مطري%20محمص%20فلتر" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+<span>واتساب</span>
+</a>
+</div>
+</div>
+<!-- بطاقة 3: بن يافعي إكسترا -->
+<div class="product-card group cursor-pointer flex flex-col justify-between bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 ease-out border border-transparent hover:border-emerald-600/30" data-category="roasted haraz-yafa" data-details="500 جرام - تحميص متوسط" data-id="p3" data-image="https://lh3.googleusercontent.com/aida-public/AB6AXuAvcxkIAW7D1IF_2bj2lDT8ZjabsMFKx0P5FQtuWglX8_ocDXDucxE-QGQaCVEP31CPWIwdcgJj-fvcdtbxylfZdPiGX028Ug-JLA23fE7bTaIUrp37tmnzlTnfdNSz5xPK7RCixEOvvD3Svm7UNdY_ruyyVK4efgVwV-sZGm6UTyRebTV0RggLi6IYQzaWYBlB-keVakYOyeupnkD4cXdYyhthLU4p2p5reGpv_qYs" data-name="بن يافعي إكسترا" data-price="38.00" data-yer="9500">
+<div>
+<div class="relative w-full aspect-square bg-surface-container-low overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" data-alt="Premium Yafa high altitude Yemeni coffee beans in premium matte dark pouch with authentic Arabic typography emblem, medium roast, dense aromatic coffee cherries in the background, sharp detail." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvcxkIAW7D1IF_2bj2lDT8ZjabsMFKx0P5FQtuWglX8_ocDXDucxE-QGQaCVEP31CPWIwdcgJj-fvcdtbxylfZdPiGX028Ug-JLA23fE7bTaIUrp37tmnzlTnfdNSz5xPK7RCixEOvvD3Svm7UNdY_ruyyVK4efgVwV-sZGm6UTyRebTV0RggLi6IYQzaWYBlB-keVakYOyeupnkD4cXdYyhthLU4p2p5reGpv_qYs"/>
+<div class="absolute top-space-xs right-space-xs bg-primary text-on-primary px-space-sm py-1 rounded-md font-label-sm text-label-sm shadow-sm">
+                تحميص متوسط متوازن
+              </div>
+</div>
+<div class="p-space-md space-y-space-xs">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold line-clamp-1 group-hover:text-primary transition-colors duration-200">بن يافعي إكسترا</h3>
+<p class="font-body-sm text-body-sm text-secondary font-medium">500 جرام - تحميص متوسط</p>
+<div class="pt-space-xs">
+<span class="font-headline-md text-headline-md text-primary font-bold">38.00 $</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant mr-1">(9,500 ر.ي)</span>
+</div>
+</div>
+</div>
+<div class="p-space-md pt-0 grid grid-cols-2 gap-space-xs">
+<button class="btn-cart flex items-center justify-center gap-1 py-2 px-space-xs rounded-lg bg-surface-container text-on-surface hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-400 active:scale-95 transform transition-all duration-200 text-center font-label-sm text-label-sm" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary">shopping_bag</span>
+<span class="btn-cart-text">أضف للسلة</span>
+</button>
+<a class="flex items-center justify-center gap-1 py-2 px-space-xs rounded-lg bg-primary text-on-primary hover:bg-[#204613] hover:shadow-md active:scale-95 transform transition-all duration-200 text-center font-label-sm text-label-sm font-semibold" href="https://wa.me/9671000000?text=أود%20طلب%20بن%20يافعي%20إكسترا" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+<span>واتساب</span>
+</a>
+</div>
+</div>
+<!-- بطاقة 4: بن إسماعيلي أخضر فاخر -->
+<div class="product-card group cursor-pointer flex flex-col justify-between bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 ease-out border border-transparent hover:border-emerald-600/30" data-category="green haraz-yafa" data-details="1 كجم - حبوب خضراء كاملة" data-id="p4" data-image="https://lh3.googleusercontent.com/aida-public/AB6AXuDps0D04xpqlboojkpX3PmqBYEnTuLRRGW44i3fUZSUSoX60vfwGuvaJrlQisgieOKI6LcfoPApoKpYIdjJiVnAcb_JlI-96re1o7raqzEvjAp7dwYEayyW5yopFpcXG4GBoGMXUYXCi9MXz6HhgvtzDoNNoicZefLwWXVh1RyAUYp516HsazmKdhn6g2Bjq8BXKSlqwuiHQwhr5F8KkuiLiSRAihv6TV9pmXWk_o8k" data-name="بن إسماعيلي أخضر فاخر" data-price="52.00" data-yer="13000">
+<div>
+<div class="relative w-full aspect-square bg-surface-container-low overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" data-alt="Raw unroasted pale jade green specialty coffee beans from Ismaili mountain terraces, clean defect-free raw beans inside burlap sack, clean aesthetic lighting, natural agricultural texture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDps0D04xpqlboojkpX3PmqBYEnTuLRRGW44i3fUZSUSoX60vfwGuvaJrlQisgieOKI6LcfoPApoKpYIdjJiVnAcb_JlI-96re1o7raqzEvjAp7dwYEayyW5yopFpcXG4GBoGMXUYXCi9MXz6HhgvtzDoNNoicZefLwWXVh1RyAUYp516HsazmKdhn6g2Bjq8BXKSlqwuiHQwhr5F8KkuiLiSRAihv6TV9pmXWk_o8k"/>
+<div class="absolute top-space-xs right-space-xs bg-tertiary-container text-on-primary px-space-sm py-1 rounded-md font-label-sm text-label-sm shadow-sm">
+                بن خام أخضر نخب أول
+              </div>
+</div>
+<div class="p-space-md space-y-space-xs">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold line-clamp-1 group-hover:text-primary transition-colors duration-200">بن إسماعيلي أخضر فاخر</h3>
+<p class="font-body-sm text-body-sm text-secondary font-medium">1 كجم - حبوب خضراء كاملة</p>
+<div class="pt-space-xs">
+<span class="font-headline-md text-headline-md text-primary font-bold">52.00 $</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant mr-1">(13,000 ر.ي)</span>
+</div>
+</div>
+</div>
+<div class="p-space-md pt-0 grid grid-cols-2 gap-space-xs">
+<button class="btn-cart flex items-center justify-center gap-1 py-2 px-space-xs rounded-lg bg-surface-container text-on-surface hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-400 active:scale-95 transform transition-all duration-200 text-center font-label-sm text-label-sm" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary">shopping_bag</span>
+<span class="btn-cart-text">أضف للسلة</span>
+</button>
+<a class="flex items-center justify-center gap-1 py-2 px-space-xs rounded-lg bg-primary text-on-primary hover:bg-[#204613] hover:shadow-md active:scale-95 transform transition-all duration-200 text-center font-label-sm text-label-sm font-semibold" href="https://wa.me/9671000000?text=أود%20طلب%20بن%20إسماعيلي%20أخضر%20فاخر" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+<span>واتساب</span>
+</a>
+</div>
+</div>
+<!-- بطاقة 5: خلطة صنعاء التراثية -->
+<div class="product-card group cursor-pointer flex flex-col justify-between bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 ease-out border border-transparent hover:border-emerald-600/30" data-category="blends" data-details="500 جرام - تحميص داكن خفيف" data-id="p5" data-image="https://lh3.googleusercontent.com/aida-public/AB6AXuC_2LYobiaS063_C_xr_qfExRXMFNJ951TnAZkM_UDc_abFfeIyR0-eIdccWLgo_RkXzmT16gRIXZi3DUCI9kawG5mB6BBn47Ft04u4byrIAvDaNJkdVjIRIRzAu_auXdSnFUxYl7vohqY4At1_kP6PHEiwMPzfgE2tttxU3_uZNzm-aptddUzIYbMlPmBpfIAS1ZX8wr7PJtv5311NRXqx5y-ufQLAuiv1cXD-qKmA" data-name="خلطة صنعاء التراثية" data-price="18.50" data-yer="4600">
+<div>
+<div class="relative w-full aspect-square bg-surface-container-low overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" data-alt="Traditional Sanaa blend coffee with whole coffee husks qishr and aromatic spices alongside freshly roasted dark espresso beans, studio macro shot, earthy ceramic bowl, warm natural lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_2LYobiaS063_C_xr_qfExRXMFNJ951TnAZkM_UDc_abFfeIyR0-eIdccWLgo_RkXzmT16gRIXZi3DUCI9kawG5mB6BBn47Ft04u4byrIAvDaNJkdVjIRIRzAu_auXdSnFUxYl7vohqY4At1_kP6PHEiwMPzfgE2tttxU3_uZNzm-aptddUzIYbMlPmBpfIAS1ZX8wr7PJtv5311NRXqx5y-ufQLAuiv1cXD-qKmA"/>
+<div class="absolute top-space-xs right-space-xs bg-secondary text-on-secondary px-space-sm py-1 rounded-md font-label-sm text-label-sm shadow-sm">
+                خلطة تقليدية متوارثة
+              </div>
+</div>
+<div class="p-space-md space-y-space-xs">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold line-clamp-1 group-hover:text-primary transition-colors duration-200">خلطة صنعاء التراثية</h3>
+<p class="font-body-sm text-body-sm text-secondary font-medium">500 جرام - تحميص داكن خفيف</p>
+<div class="pt-space-xs">
+<span class="font-headline-md text-headline-md text-primary font-bold">18.50 $</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant mr-1">(4,600 ر.ي)</span>
+</div>
+</div>
+</div>
+<div class="p-space-md pt-0 grid grid-cols-2 gap-space-xs">
+<button class="btn-cart flex items-center justify-center gap-1 py-2 px-space-xs rounded-lg bg-surface-container text-on-surface hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-400 active:scale-95 transform transition-all duration-200 text-center font-label-sm text-label-sm" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary">shopping_bag</span>
+<span class="btn-cart-text">أضف للسلة</span>
+</button>
+<a class="flex items-center justify-center gap-1 py-2 px-space-xs rounded-lg bg-primary text-on-primary hover:bg-[#204613] hover:shadow-md active:scale-95 transform transition-all duration-200 text-center font-label-sm text-label-sm font-semibold" href="https://wa.me/9671000000?text=أود%20طلب%20خلطة%20صنعاء%20التراثية" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+<span>واتساب</span>
+</a>
+</div>
+</div>
+<!-- بطاقة 6: بن برعي درجة أولى -->
+<div class="product-card group cursor-pointer flex flex-col justify-between bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 ease-out border border-transparent hover:border-emerald-600/30" data-category="roasted matar-bura" data-details="250 جرام - تحميص متوسط" data-id="p6" data-image="https://lh3.googleusercontent.com/aida-public/AB6AXuAPNvv1OPGzzBM1n2Ij6k8Hs5blPlgrDMsnSl2lo5bu6aFo3JtH0UYfDK1TzxepViE4Tn9SGAPjCsc1LoXQ3jefCZ5IldkU1FgFF6IOJaYWKMxOGyYppx78XwwEEhbDQwA5Jvl3x8V2FDU14cgTzJUJaxvfadxP71MI1_5aQaa-yZCPwoRcdrrSDbk3dcK17ZNY0OoEvKyxRV1Yr91kDv2ACVI4Ku_bDRjAHGpRSCgU" data-name="بن برعي درجة أولى" data-price="26.00" data-yer="6500">
+<div>
+<div class="relative w-full aspect-square bg-surface-container-low overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" data-alt="Rare mountain roasted Bura coffee from subtropical mountain slopes, medium-light roast with sweet chocolate and dried fruit aromas, arranged neatly with green coffee leaves on light wood." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPNvv1OPGzzBM1n2Ij6k8Hs5blPlgrDMsnSl2lo5bu6aFo3JtH0UYfDK1TzxepViE4Tn9SGAPjCsc1LoXQ3jefCZ5IldkU1FgFF6IOJaYWKMxOGyYppx78XwwEEhbDQwA5Jvl3x8V2FDU14cgTzJUJaxvfadxP71MI1_5aQaa-yZCPwoRcdrrSDbk3dcK17ZNY0OoEvKyxRV1Yr91kDv2ACVI4Ku_bDRjAHGpRSCgU"/>
+<div class="absolute top-space-xs right-space-xs bg-primary text-on-primary px-space-sm py-1 rounded-md font-label-sm text-label-sm shadow-sm">
+                معالجة مائية نقية
+              </div>
+</div>
+<div class="p-space-md space-y-space-xs">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold line-clamp-1 group-hover:text-primary transition-colors duration-200">بن برعي درجة أولى</h3>
+<p class="font-body-sm text-body-sm text-secondary font-medium">250 جرام - تحميص متوسط</p>
+<div class="pt-space-xs">
+<span class="font-headline-md text-headline-md text-primary font-bold">26.00 $</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant mr-1">(6,500 ر.ي)</span>
+</div>
+</div>
+</div>
+<div class="p-space-md pt-0 grid grid-cols-2 gap-space-xs">
+<button class="btn-cart flex items-center justify-center gap-1 py-2 px-space-xs rounded-lg bg-surface-container text-on-surface hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-400 active:scale-95 transform transition-all duration-200 text-center font-label-sm text-label-sm" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary">shopping_bag</span>
+<span class="btn-cart-text">أضف للسلة</span>
+</button>
+<a class="flex items-center justify-center gap-1 py-2 px-space-xs rounded-lg bg-primary text-on-primary hover:bg-[#204613] hover:shadow-md active:scale-95 transform transition-all duration-200 text-center font-label-sm text-label-sm font-semibold" href="https://wa.me/9671000000?text=أود%20طلب%20بن%20برعي%20درجة%20أولى" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+<span>واتساب</span>
+</a>
+</div>
+</div>
+<!-- بطاقة 7: بن أنسي مزارع الأودية -->
+<div class="product-card group cursor-pointer flex flex-col justify-between bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 ease-out border border-transparent hover:border-emerald-600/30" data-category="green" data-details="1 كجم - حبوب خضراء كاملة" data-id="p7" data-image="https://lh3.googleusercontent.com/aida-public/AB6AXuDIl0bwqX8d1WapRZciWxWLOltYcvB-pY2fP3qGYmGexjDe20-Ai3BlzPODw0EdxmuAWtd1z-BY4Z4JdO0TwWcXoPkBa7JjmnKsZ4XAqnOlujK0fHf1VxEbWUuc4Y4v1T3I-Sckva6gInNILmWsn41groGnIQkpNmouKbLq9D5HWObb855B0bcFOII9CtAs3RgERC1G6i1UA6l8KToLI_2uC-LwGGcK8o0rndMhu_0K" data-name="بن أنسي مزارع الأودية" data-price="48.00" data-yer="12000">
+<div>
+<div class="relative w-full aspect-square bg-surface-container-low overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" data-alt="Highland raw green coffee beans from Anis valley, packed neatly in an airtight transparent valve container showcasing consistent size and deep pale jade hue, clean natural botanical light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIl0bwqX8d1WapRZciWxWLOltYcvB-pY2fP3qGYmGexjDe20-Ai3BlzPODw0EdxmuAWtd1z-BY4Z4JdO0TwWcXoPkBa7JjmnKsZ4XAqnOlujK0fHf1VxEbWUuc4Y4v1T3I-Sckva6gInNILmWsn41groGnIQkpNmouKbLq9D5HWObb855B0bcFOII9CtAs3RgERC1G6i1UA6l8KToLI_2uC-LwGGcK8o0rndMhu_0K"/>
+<div class="absolute top-space-xs right-space-xs bg-tertiary-container text-on-primary px-space-sm py-1 rounded-md font-label-sm text-label-sm shadow-sm">
+                بن أخضر حبوب كاملة
+              </div>
+</div>
+<div class="p-space-md space-y-space-xs">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold line-clamp-1 group-hover:text-primary transition-colors duration-200">بن أنسي مزارع الأودية</h3>
+<p class="font-body-sm text-body-sm text-secondary font-medium">1 كجم - حبوب خضراء كاملة</p>
+<div class="pt-space-xs">
+<span class="font-headline-md text-headline-md text-primary font-bold">48.00 $</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant mr-1">(12,000 ر.ي)</span>
+</div>
+</div>
+</div>
+<div class="p-space-md pt-0 grid grid-cols-2 gap-space-xs">
+<button class="btn-cart flex items-center justify-center gap-1 py-2 px-space-xs rounded-lg bg-surface-container text-on-surface hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-400 active:scale-95 transform transition-all duration-200 text-center font-label-sm text-label-sm" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary">shopping_bag</span>
+<span class="btn-cart-text">أضف للسلة</span>
+</button>
+<a class="flex items-center justify-center gap-1 py-2 px-space-xs rounded-lg bg-primary text-on-primary hover:bg-[#204613] hover:shadow-md active:scale-95 transform transition-all duration-200 text-center font-label-sm text-label-sm font-semibold" href="https://wa.me/9671000000?text=أود%20طلب%20بن%20أنسي%20مزارع%20الأودية" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+<span>واتساب</span>
+</a>
+</div>
+</div>
+<!-- بطاقة 8: خلطة موكا يمنية مختصة -->
+<div class="product-card group cursor-pointer flex flex-col justify-between bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 ease-out border border-transparent hover:border-emerald-600/30" data-category="blends roasted" data-details="500 جرام - تحميص متوسط داكن" data-id="p8" data-image="https://lh3.googleusercontent.com/aida-public/AB6AXuB8WCXjYZtpsfrFgWB2RkZVHojDZhJYXubAT-ruOLWnInydnDVXgdsrzE1NPdptD3CRXGBOwlfBUJa4UekezHp_fEH8TGMF1XPcHNUBxN3EZ2iJJuwP85HfUv_sczuylRYv5jIMKzXzFK7KTE7wgpegiGKMkw1Uh1ajve0FAvn1y7h_8_6Zw44V5lWSflf12mA3mQpW5jlh5w4lhU_SVJaA_1rgiGVfCuLAHIBcpubL" data-name="خلطة موكا يمنية مختصة" data-price="29.00" data-yer="7250">
+<div>
+<div class="relative w-full aspect-square bg-surface-container-low overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" data-alt="Signature specialty Yemeni Mocha espresso beans, glistening roasted beans with hints of cocoa and wild berry notes, artisanal packaging on slate surface, elegant culinary composition." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8WCXjYZtpsfrFgWB2RkZVHojDZhJYXubAT-ruOLWnInydnDVXgdsrzE1NPdptD3CRXGBOwlfBUJa4UekezHp_fEH8TGMF1XPcHNUBxN3EZ2iJJuwP85HfUv_sczuylRYv5jIMKzXzFK7KTE7wgpegiGKMkw1Uh1ajve0FAvn1y7h_8_6Zw44V5lWSflf12mA3mQpW5jlh5w4lhU_SVJaA_1rgiGVfCuLAHIBcpubL"/>
+<div class="absolute top-space-xs right-space-xs bg-primary text-on-primary px-space-sm py-1 rounded-md font-label-sm text-label-sm shadow-sm">
+                إسبريسو غني ومعقد
+              </div>
+</div>
+<div class="p-space-md space-y-space-xs">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold line-clamp-1 group-hover:text-primary transition-colors duration-200">خلطة موكا يمنية مختصة</h3>
+<p class="font-body-sm text-body-sm text-secondary font-medium">500 جرام - تحميص متوسط داكن</p>
+<div class="pt-space-xs">
+<span class="font-headline-md text-headline-md text-primary font-bold">29.00 $</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant mr-1">(7,250 ر.ي)</span>
+</div>
+</div>
+</div>
+<div class="p-space-md pt-0 grid grid-cols-2 gap-space-xs">
+<button class="btn-cart flex items-center justify-center gap-1 py-2 px-space-xs rounded-lg bg-surface-container text-on-surface hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-400 active:scale-95 transform transition-all duration-200 text-center font-label-sm text-label-sm" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary">shopping_bag</span>
+<span class="btn-cart-text">أضف للسلة</span>
+</button>
+<a class="flex items-center justify-center gap-1 py-2 px-space-xs rounded-lg bg-primary text-on-primary hover:bg-[#204613] hover:shadow-md active:scale-95 transform transition-all duration-200 text-center font-label-sm text-label-sm font-semibold" href="https://wa.me/9671000000?text=أود%20طلب%20خلطة%20موكا%20يمنية%20مختصة" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+<span>واتساب</span>
+</a>
+</div>
+</div></div>
+</div>
+</section>
+<!-- مؤشر تفاعلي عائم لسلة الطلبات (Floating Quick Cart Pill / Notification) -->
+<div aria-live="polite" class="fixed bottom-6 left-1/2 -translate-x-1/2 sm:left-auto sm:right-8 sm:translate-x-0 z-40 transform translate-y-36 opacity-0 transition-all duration-400 ease-out pointer-events-none w-[92%] sm:w-auto sm:max-w-md" id="floating-cart-notification">
+<div class="bg-surface-container-lowest/95 backdrop-blur-xl border border-primary/20 p-3 sm:p-4 rounded-2xl shadow-[0_12px_40px_rgba(24,80,4,0.18)] flex items-center justify-between gap-3 sm:gap-4 pointer-events-auto">
+<div class="flex items-center gap-3 min-w-0">
+<!-- أيقونة السلة مع مؤشر صح أخضر متألق -->
+<div class="relative flex-shrink-0 w-11 h-11 rounded-xl bg-primary-container/15 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[24px]">shopping_bag</span>
+<span class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-primary text-on-primary flex items-center justify-center shadow">
+<span class="material-symbols-outlined text-[11px] font-bold">check</span>
+</span>
+</div>
+<!-- تفاصيل المنتج والإشعار -->
+<div class="flex flex-col min-w-0 text-right">
+<div class="flex items-center gap-1.5">
+<span class="font-label-sm text-label-sm font-bold text-primary">تمت الإضافة بنجاح</span>
+<span class="text-xs text-on-surface-variant">•</span>
+<span class="font-label-sm text-label-sm text-secondary font-medium" id="floating-cart-count">1 منتج بالسلة</span>
+</div>
+<p class="font-body-sm text-body-sm font-bold text-on-surface truncate max-w-[190px] sm:max-w-[210px]" id="floating-cart-product-title">بن حراز مجفف طبيعي</p>
+</div>
+</div>
+<!-- أزرار الإجراءات السريعة وزر الإغلاق -->
+<div class="flex items-center gap-1.5 flex-shrink-0">
+<button class="flex items-center gap-1 px-3 py-2 rounded-xl bg-primary text-on-primary hover:bg-[#204613] active:scale-95 transition-all text-xs font-bold shadow-sm" id="floating-cart-open-drawer" type="button">
+<span class="material-symbols-outlined text-[16px]">shopping_cart_checkout</span>
+<span>معاينة السلة</span>
+</button>
+<button aria-label="إغلاق الإشعار" class="p-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" id="floating-cart-close" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</div>
+</div>
+<script>
+    (function() {
+      // 1. إدارة شاشة التحميل الخفيفة والانتقال السلس (Loading Overlay)
+      const loadingOverlay = document.getElementById('loading-overlay');
+      let loadingTimeout = null;
+
+      function triggerLoadingTransition(callback) {
+        if (!loadingOverlay) {
+          if (callback) callback();
+          return;
+        }
+        clearTimeout(loadingTimeout);
+        loadingOverlay.classList.remove('opacity-0', 'pointer-events-none');
+        loadingOverlay.classList.add('opacity-100');
+
+        setTimeout(() => {
+          if (callback) callback();
+          loadingOverlay.classList.remove('opacity-100');
+          loadingOverlay.classList.add('opacity-0', 'pointer-events-none');
+        }, 420);
+      }
+
+      // تفاعل روابط التنقل مع شاشة الانتقال
+      const navLinks = document.querySelectorAll('header nav a.nav-link');
+      navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          navLinks.forEach(l => {
+            l.className = 'nav-link font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-1';
+            l.removeAttribute('aria-current');
+          });
+          link.className = 'nav-link transition-colors py-1 text-primary font-bold border-b-2 border-primary pb-1';
+          link.setAttribute('aria-current', 'page');
+          triggerLoadingTransition();
+        });
+      });
+
+      // تفاعل الفلترة السريعة (Filter Pills) مع شاشة التحميل الخفيفة
+      const pills = document.querySelectorAll('.filter-pill');
+      const cards = document.querySelectorAll('.product-card');
+
+      pills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          const filter = pill.getAttribute('data-filter');
+
+          triggerLoadingTransition(() => {
+            // تحديث تصميم الأزرار
+            pills.forEach(p => {
+              p.classList.remove('bg-primary-container', 'text-on-primary', 'shadow-sm');
+              p.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+            });
+            pill.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+            pill.classList.add('bg-primary-container', 'text-on-primary', 'shadow-sm');
+
+            // فلترة المنتجات
+            cards.forEach(card => {
+              const categories = card.getAttribute('data-category') || '';
+              if (filter === 'all' || categories.includes(filter)) {
+                card.style.display = 'flex';
+              } else {
+                card.style.display = 'none';
+              }
+            });
+          });
+        });
+      });
+
+      // 2. إدارة سلة المشتريات المتقدمة (Cart State)
+      // بنية العنصر: { id, name, details, price, yer, image, qty }
+      let cartItems = [];
+
+      const cartDrawer = document.getElementById('cart-drawer');
+      const cartBackdrop = document.getElementById('cart-drawer-backdrop');
+      const cartDrawerClose = document.getElementById('cart-drawer-close');
+      const cartDrawerItemsContainer = document.getElementById('drawer-cart-items');
+      const drawerCountBadge = document.getElementById('drawer-cart-count-badge');
+      const headerCartBadge = document.getElementById('header-cart-badge');
+      const drawerTotalUsd = document.getElementById('drawer-total-usd');
+      const drawerTotalYer = document.getElementById('drawer-total-yer');
+      const buyerNameInput = document.getElementById('buyer-name');
+      const buyerAddressInput = document.getElementById('buyer-address');
+      const drawerAlert = document.getElementById('drawer-form-alert');
+      const whatsappSubmitBtn = document.getElementById('drawer-whatsapp-submit');
+
+      function openDrawer() {
+        if (!cartDrawer || !cartBackdrop) return;
+        renderCartDrawer();
+        cartBackdrop.classList.remove('opacity-0', 'pointer-events-none');
+        cartBackdrop.classList.add('opacity-100');
+        cartDrawer.classList.remove('-translate-x-full');
+        cartDrawer.classList.add('translate-x-0');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeDrawer() {
+        if (!cartDrawer || !cartBackdrop) return;
+        cartBackdrop.classList.remove('opacity-100');
+        cartBackdrop.classList.add('opacity-0', 'pointer-events-none');
+        cartDrawer.classList.remove('translate-x-0');
+        cartDrawer.classList.add('-translate-x-full');
+        document.body.style.overflow = '';
+      }
+
+      if (cartDrawerClose) cartDrawerClose.addEventListener('click', closeDrawer);
+      if (cartBackdrop) cartBackdrop.addEventListener('click', closeDrawer);
+
+      // ربط زر الهيدر لفتح النافذة الجانبية
+      const headerCartBtn = document.getElementById('header-cart-btn');
+      if (headerCartBtn) {
+        headerCartBtn.addEventListener('click', openDrawer);
+      }
+
+      function getTotalItemsCount() {
+        return cartItems.reduce((acc, item) => acc + item.qty, 0);
+      }
+
+      function updateBadges() {
+        const count = getTotalItemsCount();
+        if (headerCartBadge) {
+          headerCartBadge.textContent = count;
+          headerCartBadge.classList.add('scale-125');
+          setTimeout(() => headerCartBadge.classList.remove('scale-125'), 250);
+        }
+        if (drawerCountBadge) {
+          drawerCountBadge.textContent = count;
+        }
+      }
+
+      function renderCartDrawer() {
+        if (!cartDrawerItemsContainer) return;
+
+        if (cartItems.length === 0) {
+          cartDrawerItemsContainer.innerHTML = `
+            <div class="h-full flex flex-col items-center justify-center text-center p-8 space-y-3">
+              <div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
+                <span class="material-symbols-outlined text-[32px]">remove_shopping_cart</span>
+              </div>
+              <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">سلتك فارغة حالياً</h3>
+              <p class="font-body-sm text-body-sm text-on-surface-variant max-w-xs">تصفح محاصيل المدرجات الجبلية وأضف بنك المفضل لبدء الطلب الطازج.</p>
+            </div>
+          `;
+          if (drawerTotalUsd) drawerTotalUsd.textContent = '0.00 $';
+          if (drawerTotalYer) drawerTotalYer.textContent = '(0 ر.ي)';
+          return;
+        }
+
+        let totalUsd = 0;
+        let totalYer = 0;
+        let html = '';
+
+        cartItems.forEach(item => {
+          const itemTotalUsd = item.price * item.qty;
+          const itemTotalYer = item.yer * item.qty;
+          totalUsd += itemTotalUsd;
+          totalYer += itemTotalYer;
+
+          html += `
+            <div class="flex items-center gap-3 p-3 bg-surface-container-lowest border border-surface-container rounded-xl shadow-xs" data-item-id="${item.id}">
+              <img src="${item.image}" alt="${item.name}" class="w-16 h-16 rounded-lg object-cover flex-shrink-0 bg-surface-container-low" />
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-1">
+                  <h4 class="font-headline-sm text-[15px] font-bold text-on-surface truncate">${item.name}</h4>
+                  <button type="button" class="btn-remove-item text-on-surface-variant hover:text-error p-1 transition-colors" data-id="${item.id}" aria-label="حذف">
+                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                  </button>
+                </div>
+                <p class="font-body-sm text-[12px] text-secondary font-medium truncate">${item.details}</p>
+                <div class="flex items-center justify-between mt-2">
+                  <div class="flex items-center gap-1.5 bg-surface-container-low rounded-lg p-1">
+                    <button type="button" class="btn-qty-minus w-6 h-6 rounded flex items-center justify-center bg-surface hover:bg-white text-on-surface shadow-xs active:scale-90" data-id="${item.id}">-</button>
+                    <span class="font-label-md text-label-md font-bold px-1.5 text-on-surface">${item.qty}</span>
+                    <button type="button" class="btn-qty-plus w-6 h-6 rounded flex items-center justify-center bg-surface hover:bg-white text-on-surface shadow-xs active:scale-90" data-id="${item.id}">+</button>
+                  </div>
+                  <div class="text-left">
+                    <div class="font-headline-sm text-[14px] text-primary font-bold">${itemTotalUsd.toFixed(2)} $</div>
+                    <div class="text-[11px] text-on-surface-variant">${itemTotalYer.toLocaleString()} ر.ي</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        cartDrawerItemsContainer.innerHTML = html;
+
+        if (drawerTotalUsd) drawerTotalUsd.textContent = totalUsd.toFixed(2) + ' $';
+        if (drawerTotalYer) drawerTotalYer.textContent = '(' + totalYer.toLocaleString() + ' ر.ي)';
+
+        // ربط أزرار الكميات والحذف
+        cartDrawerItemsContainer.querySelectorAll('.btn-qty-plus').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-id');
+            const found = cartItems.find(i => i.id === id);
+            if (found) {
+              found.qty += 1;
+              updateBadges();
+              renderCartDrawer();
+            }
+          });
+        });
+
+        cartDrawerItemsContainer.querySelectorAll('.btn-qty-minus').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-id');
+            const found = cartItems.find(i => i.id === id);
+            if (found) {
+              if (found.qty > 1) {
+                found.qty -= 1;
+              } else {
+                cartItems = cartItems.filter(i => i.id !== id);
+              }
+              updateBadges();
+              renderCartDrawer();
+            }
+          });
+        });
+
+        cartDrawerItemsContainer.querySelectorAll('.btn-remove-item').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-id');
+            cartItems = cartItems.filter(i => i.id !== id);
+            updateBadges();
+            renderCartDrawer();
+          });
+        });
+      }
+
+      // إضافة منتج للسلة
+      function addItemToCart(card) {
+        const id = card.getAttribute('data-id') || 'p_' + Math.random().toString(36).substr(2, 9);
+        const name = card.getAttribute('data-name') || card.querySelector('h3').textContent.trim();
+        const details = card.getAttribute('data-details') || card.querySelector('p').textContent.trim();
+        const price = parseFloat(card.getAttribute('data-price') || 22.0);
+        const yer = parseInt(card.getAttribute('data-yer') || 5500, 10);
+        const image = card.getAttribute('data-image') || card.querySelector('img').src;
+
+        const existing = cartItems.find(item => item.id === id);
+        if (existing) {
+          existing.qty += 1;
+        } else {
+          cartItems.push({ id, name, details, price, yer, image, qty: 1 });
+        }
+
+        updateBadges();
+        showFloatingCart(name);
+      }
+
+      // 3. مؤشر تفاعلي عائم لسلة الطلبات (Floating Quick Cart Toast)
+      const floatingCart = document.getElementById('floating-cart-notification');
+      const floatingProductTitle = document.getElementById('floating-cart-product-title');
+      const floatingCartCount = document.getElementById('floating-cart-count');
+      const floatingCartClose = document.getElementById('floating-cart-close');
+      const floatingCartOpenDrawer = document.getElementById('floating-cart-open-drawer');
+      let hideToastTimeout = null;
+
+      function showFloatingCart(productName) {
+        if (!floatingCart) return;
+
+        if (floatingProductTitle) {
+          floatingProductTitle.textContent = productName;
+        }
+        const total = getTotalItemsCount();
+        if (floatingCartCount) {
+          floatingCartCount.textContent = total === 1 ? 'منتج واحد بالسلة' : (total === 2 ? 'منتجان بالسلة' : total + ' منتجات بالسلة');
+        }
+
+        floatingCart.classList.remove('translate-y-36', 'opacity-0');
+        floatingCart.classList.add('translate-y-0', 'opacity-100');
+
+        if (hideToastTimeout) clearTimeout(hideToastTimeout);
+        hideToastTimeout = setTimeout(() => {
+          hideFloatingCart();
+        }, 4200);
+      }
+
+      function hideFloatingCart() {
+        if (!floatingCart) return;
+        floatingCart.classList.add('translate-y-36', 'opacity-0');
+        floatingCart.classList.remove('translate-y-0', 'opacity-100');
+      }
+
+      if (floatingCartClose) {
+        floatingCartClose.addEventListener('click', hideFloatingCart);
+      }
+
+      if (floatingCartOpenDrawer) {
+        floatingCartOpenDrawer.addEventListener('click', () => {
+          hideFloatingCart();
+          openDrawer();
+        });
+      }
+
+      // ربط أزرار "أضف للسلة" في بطاقات المنتجات
+      const cartButtons = document.querySelectorAll('.btn-cart');
+      cartButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const card = btn.closest('.product-card');
+          if (card) {
+            addItemToCart(card);
+          }
+
+          // تأثير مرئي سريع على الزر نفسه
+          const textSpan = btn.querySelector('.btn-cart-text') || btn.querySelector('span:not(.material-symbols-outlined)');
+          const iconSpan = btn.querySelector('.material-symbols-outlined');
+          const originalText = textSpan ? textSpan.textContent : 'أضف للسلة';
+          const originalIcon = iconSpan ? iconSpan.textContent : 'shopping_bag';
+
+          btn.classList.add('bg-primary', 'text-on-primary');
+          btn.classList.remove('bg-surface-container', 'text-on-surface');
+          if (textSpan) textSpan.textContent = 'تمت الإضافة ✓';
+          if (iconSpan) {
+            iconSpan.textContent = 'check_circle';
+            iconSpan.classList.remove('text-primary');
+            iconSpan.classList.add('text-on-primary');
+          }
+
+          setTimeout(() => {
+            btn.classList.remove('bg-primary', 'text-on-primary');
+            btn.classList.add('bg-surface-container', 'text-on-surface');
+            if (textSpan) textSpan.textContent = originalText;
+            if (iconSpan) {
+              iconSpan.textContent = originalIcon;
+              iconSpan.classList.add('text-primary');
+              iconSpan.classList.remove('text-on-primary');
+            }
+          }, 1400);
+        });
+      });
+
+      // 4. إرسال الطلب عبر واتساب مع التحقق من الحقلين فقط
+      if (whatsappSubmitBtn) {
+        whatsappSubmitBtn.addEventListener('click', () => {
+          const name = buyerNameInput ? buyerNameInput.value.trim() : '';
+          const address = buyerAddressInput ? buyerAddressInput.value.trim() : '';
+
+          if (cartItems.length === 0) {
+            if (drawerAlert) {
+              drawerAlert.textContent = 'السلة فارغة، يرجى إضافة منتجات أولاً.';
+              drawerAlert.classList.remove('hidden');
+              setTimeout(() => drawerAlert.classList.add('hidden'), 3500);
+            }
+            return;
+          }
+
+          if (!name || !address) {
+            if (drawerAlert) {
+              drawerAlert.textContent = 'يرجى إدخال اسم المشتري وعنوان التوصيل بالتفصيل لإتمام الطلب.';
+              drawerAlert.classList.remove('hidden');
+            }
+            if (!name && buyerNameInput) buyerNameInput.focus();
+            else if (!address && buyerAddressInput) buyerAddressInput.focus();
+            return;
+          }
+
+          if (drawerAlert) {
+            drawerAlert.classList.add('hidden');
+          }
+
+          // بناء نص رسالة الواتساب المنسقة
+          let totalUsd = 0;
+          let totalYer = 0;
+          let itemsListText = '';
+
+          cartItems.forEach((item, index) => {
+            const itemTotalUsd = item.price * item.qty;
+            const itemTotalYer = item.yer * item.qty;
+            totalUsd += itemTotalUsd;
+            totalYer += itemTotalYer;
+            itemsListText += `${index + 1}. *${item.name}*\n   - المواصفات: ${item.details}\n   - الكمية: ${item.qty}\n   - الإجمالي: ${itemTotalUsd.toFixed(2)}$ (${itemTotalYer.toLocaleString()} ر.ي)\n\n`;
+          });
+
+          const message = `*طلب جديد من منصة سوق البن الفاخر - AgriTech*\n` +
+            `-----------------------------------\n` +
+            `👤 *اسم المشتري:* ${name}\n` +
+            `📍 *عنوان التوصيل:* ${address}\n` +
+            `-----------------------------------\n` +
+            `☕ *المنتجات المطلوبة:*\n\n${itemsListText}` +
+            `-----------------------------------\n` +
+            `💰 *إجمالي الطلب:* ${totalUsd.toFixed(2)}$ (${totalYer.toLocaleString()} ر.ي)\n` +
+            `🌱 *نوع الشحن:* مباشر من المزرعة / المحطة المختصة\n` +
+            `-----------------------------------\n` +
+            `أرجو تأكيد توفر المحاصيل وإرسال تفاصيل الشحن والتوصيل.`;
+
+          const encodedMessage = encodeURIComponent(message);
+          const whatsappUrl = `https://wa.me/9671000000?text=${encodedMessage}`;
+          window.open(whatsappUrl, '_blank');
+        });
+      }
+    })();
+  </script>
+</div></main><footer class="w-full bg-surface-container-low mt-space-xl"><div class="max-w-7xl mx-auto px-margin py-space-xl"><div class="grid grid-cols-1 md:grid-cols-4 gap-space-xl pb-space-lg"><div class="flex flex-col gap-space-sm md:col-span-1"><div class="flex items-center gap-space-xs"><div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary"><span class="material-symbols-outlined text-[20px]">agriculture</span></div><span class="font-headline-sm text-headline-sm text-primary">سوق البن الفاخر</span></div><p class="font-body-md text-body-md text-on-surface-variant">منظومة زراعية رقمية تربط مزارعي المدرجات الجبلية العالية بأسواق القهوة المختصة بأحدث تقنيات الفرز والتتبع.</p></div><div class="flex flex-col gap-space-xs"><h3 class="font-headline-sm text-headline-sm text-on-surface">المحاصيل والمنتجات</h3><nav class="flex flex-col gap-space-xs"><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" data-path="roasted-coffee" href="#">محاصيل البن المحمص</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" data-path="green-coffee" href="#">حبوب البن الأخضر المختص</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" data-path="special-blends" href="#">خلطات المدرجات الجبلية</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" data-path="traceability" href="#">سجل التتبع والمصدر</a></nav></div><div class="flex flex-col gap-space-xs"><h3 class="font-headline-sm text-headline-sm text-on-surface">التقنيات الزراعية</h3><nav class="flex flex-col gap-space-xs"><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" data-path="smart-farming" href="#">مستشعرات الرطوبة والري</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" data-path="harvest-guide" href="#">دليل القطف الانتقائي</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" data-path="processing-stations" href="#">محطات المعالجة المائية والتجفيف</a></nav></div><div class="flex flex-col gap-space-xs"><h3 class="font-headline-sm text-headline-sm text-on-surface">التواصل والدعم الميداني</h3><div class="flex items-center gap-space-xs text-on-surface-variant"><span class="material-symbols-outlined text-[20px] text-primary">location_on</span><span class="font-body-md text-body-md">مركز الإرشاد الزراعي - صنعاء / الرياض</span></div><div class="flex items-center gap-space-xs text-on-surface-variant"><span class="material-symbols-outlined text-[20px] text-primary">call</span><span class="font-body-md text-body-md" dir="ltr">+967 1 234 567</span></div><div class="flex items-center gap-space-xs text-on-surface-variant"><span class="material-symbols-outlined text-[20px] text-primary">mail</span><span class="font-body-md text-body-md">support@agritech-coffee.com</span></div></div></div><div class="pt-space-lg flex flex-col md:flex-row items-center justify-between gap-space-md bg-surface-container-lowest/60 p-space-md rounded-xl"><p class="font-body-sm text-body-sm text-on-surface-variant">جميع الحقوق محفوظة © 2025 سوق البن الفاخر - المنصة الزراعية الذكية للقهوة المختصة</p><div class="flex items-center gap-space-md"><span class="font-label-sm text-label-sm text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">verified</span>توثيق زراعي بيئي معتمد</span><span class="font-label-sm text-label-sm text-primary flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">local_shipping</span>شحن مباشر من المزرعة</span></div></div></div></footer>
+</body></html>

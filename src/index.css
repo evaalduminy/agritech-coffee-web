@@ -1,0 +1,153 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Cairo', sans-serif;
+    background-color: #f8faf5;
+    color: #191c1a;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+}
+
+@layer utilities {
+  /* إخفاء شريط التمرير مع المحافظة على التمرير الأفقي والرأسي السلس */
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* 1. تخصيصات الوضع الليلي (Dark Mode) */
+html.dark {
+  background-color: #111411;
+  color: #e2e5e0;
+}
+html.dark body {
+  background-color: #111411;
+  color: #e2e5e0;
+}
+html.dark .bg-surface {
+  background-color: #111411 !important;
+}
+html.dark .bg-surface\/90 {
+  background-color: rgba(17, 20, 17, 0.9) !important;
+}
+html.dark .bg-surface\/85 {
+  background-color: rgba(17, 20, 17, 0.85) !important;
+}
+html.dark .bg-surface-container-lowest,
+html.dark .bg-surface-container-lowest\/60 {
+  background-color: #171b17 !important;
+}
+html.dark .bg-surface-container-low {
+  background-color: #1c211c !important;
+}
+html.dark .bg-surface-container {
+  background-color: #232923 !important;
+}
+html.dark .bg-surface-container-high {
+  background-color: #2b322b !important;
+}
+html.dark .text-on-surface {
+  color: #e2e5e0 !important;
+}
+html.dark .text-on-surface-variant {
+  color: #9ea699 !important;
+}
+html.dark .border-surface-container {
+  border-color: #262e26 !important;
+}
+html.dark .border-outline-variant {
+  border-color: #3b4438 !important;
+}
+html.dark input,
+html.dark textarea {
+  background-color: #1c211c !important;
+  color: #e2e5e0 !important;
+  border-color: #2b322b !important;
+}
+
+/* 2. نسق البن المحمص والذهبي (Roasted Coffee Theme) */
+[data-theme="roasted"] .bg-primary {
+  background-color: #5c381e !important;
+}
+[data-theme="roasted"] .bg-primary-container {
+  background-color: #794d2c !important;
+}
+[data-theme="roasted"] .text-primary {
+  color: #794d2c !important;
+}
+[data-theme="roasted"] .border-primary {
+  border-color: #794d2c !important;
+}
+[data-theme="roasted"] .bg-primary-fixed {
+  background-color: #fed6a7 !important;
+}
+[data-theme="roasted"] .text-on-primary-container {
+  color: #fed6a7 !important;
+}
+[data-theme="roasted"] .hover\:bg-primary:hover {
+  background-color: #5c381e !important;
+}
+[data-theme="roasted"] .hover\:text-primary:hover {
+  color: #794d2c !important;
+}
+[data-theme="roasted"] .border-primary\/30 {
+  border-color: rgba(121, 77, 44, 0.3) !important;
+}
+[data-theme="roasted"] .border-t-primary {
+  border-top-color: #794d2c !important;
+}
+
+/* 3. نسق الفحمي الكلاسيكي (Obsidian Slate Theme) */
+[data-theme="obsidian"] .bg-primary {
+  background-color: #24292e !important;
+}
+[data-theme="obsidian"] .bg-primary-container {
+  background-color: #38414e !important;
+}
+[data-theme="obsidian"] .text-primary {
+  color: #38414e !important;
+}
+[data-theme="obsidian"] .border-primary {
+  border-color: #38414e !important;
+}
+[data-theme="obsidian"] .bg-primary-fixed {
+  background-color: #c5d1e0 !important;
+}
+[data-theme="obsidian"] .text-on-primary-container {
+  color: #c5d1e0 !important;
+}
+[data-theme="obsidian"] .hover\:bg-primary:hover {
+  background-color: #24292e !important;
+}
+[data-theme="obsidian"] .hover\:text-primary:hover {
+  color: #38414e !important;
+}
+[data-theme="obsidian"] .border-primary\/30 {
+  border-color: rgba(56, 65, 78, 0.3) !important;
+}
+[data-theme="obsidian"] .border-t-primary {
+  border-top-color: #38414e !important;
+}
+
+/* 4. نمط انحناء الأزرار (Button Styles) */
+[data-btn-style="pill"] button:not(.rounded-full),
+[data-btn-style="pill"] a.rounded-xl,
+[data-btn-style="pill"] a.rounded-2xl {
+  border-radius: 9999px !important;
+}
+
+[data-btn-style="sharp"] button:not(.rounded-full),
+[data-btn-style="sharp"] a.rounded-xl,
+[data-btn-style="sharp"] a.rounded-2xl {
+  border-radius: 4px !important;
+}

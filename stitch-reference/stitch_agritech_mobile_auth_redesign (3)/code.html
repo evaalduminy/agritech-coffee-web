@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="ar"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"on-primary-fixed-variant":"#1a5206","on-primary-container":"#a7e78b","tertiary":"#274e29","primary-fixed-dim":"#98d77d","on-secondary-fixed":"#2a1800","surface-container":"#ecefea","surface-variant":"#e1e3de","surface-container-high":"#e7e9e4","error-container":"#ffdad6","inverse-primary":"#98d77d","on-surface":"#191c1a","secondary-fixed":"#ffddb6","surface-container-low":"#f2f4ef","tertiary-fixed-dim":"#a5d2a2","on-secondary-fixed-variant":"#5c421f","on-tertiary-fixed":"#002106","tertiary-container":"#3e663f","primary":"#185004","secondary":"#765934","surface":"#f8faf5","secondary-fixed-dim":"#e6c093","on-secondary-container":"#795b36","surface-dim":"#d8dbd6","surface-bright":"#f8faf5","secondary-container":"#fed6a7","on-tertiary-fixed-variant":"#284f2a","inverse-on-surface":"#eff1ec","on-surface-variant":"#41493c","error":"#ba1a1a","on-secondary":"#ffffff","on-tertiary":"#ffffff","on-background":"#191c1a","outline":"#727a6b","on-primary":"#ffffff","surface-container-highest":"#e1e3de","surface-tint":"#336b1f","outline-variant":"#c1c9b8","inverse-surface":"#2e312e","on-primary-fixed":"#052100","on-error-container":"#93000a","primary-container":"#31691d","tertiary-fixed":"#c1eebc","on-error":"#ffffff","primary-fixed":"#b3f496","background":"#f8faf5","on-tertiary-container":"#b5e2b0","surface-container-lowest":"#ffffff"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"margin":"1.25rem","gutter":"1rem","space-xl":"2.25rem","space-md":"1rem","space-lg":"1.5rem","space-xs":"0.25rem","space-sm":"0.5rem"},"fontFamily":{"body-sm":["Cairo"],"label-lg":["Cairo"],"body-md":["Cairo"],"headline-lg":["Cairo"],"body-lg":["Cairo"],"headline-sm":["Cairo"],"label-md":["Cairo"],"headline-md":["Cairo"],"label-sm":["Cairo"]},"fontSize":{"body-sm":["12px",{"lineHeight":"20px","fontWeight":"400"}],"label-lg":["15px",{"lineHeight":"24px","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"24px","fontWeight":"400"}],"headline-lg":["26px",{"lineHeight":"38px","fontWeight":"700"}],"body-lg":["16px",{"lineHeight":"26px","fontWeight":"500"}],"headline-sm":["18px",{"lineHeight":"28px","fontWeight":"600"}],"label-md":["13px",{"lineHeight":"20px","fontWeight":"600"}],"headline-md":["22px",{"lineHeight":"32px","fontWeight":"700"}],"label-sm":["11px",{"lineHeight":"16px","fontWeight":"500"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased">
+<!-- 1. شاشة انتقال وتحميل خفيفة (Loading Overlay) -->
+<div class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#f8faf5]/85 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300" id="loading-overlay">
+<div class="flex flex-col items-center gap-4 text-center p-6">
+<div class="relative flex items-center justify-center">
+<div class="w-16 h-16 rounded-2xl bg-primary-container text-on-primary flex items-center justify-center shadow-lg relative z-10 animate-pulse">
+<span class="material-symbols-outlined text-[34px]">eco</span>
+</div>
+<div class="absolute inset-0 -m-2 rounded-3xl border-2 border-primary/30 border-t-primary animate-spin"></div>
+</div>
+<div class="flex flex-col items-center gap-1 mt-2">
+<span class="font-headline-sm text-headline-sm text-primary font-bold">سوق البن الفاخر</span>
+<span class="font-label-sm text-label-sm text-secondary tracking-wider font-semibold">AgriTech Platform</span>
+</div>
+<div class="flex items-center gap-1.5 mt-1 text-primary text-xs font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-bounce"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-bounce [animation-delay:0.15s]"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-bounce [animation-delay:0.3s]"></span>
+<span class="mr-1 text-on-surface-variant font-label-sm text-label-sm">جاري التحديث والتصفية...</span>
+</div>
+</div>
+</div>
+<!-- نافذة تسجيل الدخول السريعة (Quick Login / Register Modal) -->
+<div aria-labelledby="auth-modal-title" aria-modal="true" class="fixed inset-0 z-50 flex items-center justify-center bg-black/55 backdrop-blur-md p-4 transition-all duration-300" id="auth-modal" role="dialog"><div class="relative bg-white rounded-3xl shadow-2xl border border-stone-200 max-w-md w-full p-6 md:p-8 text-right overflow-hidden transform scale-100 transition-all duration-300" id="auth-modal-card"><button aria-label="إغلاق نافذة تسجيل الدخول" class="absolute top-5 left-5 w-9 h-9 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors shadow-xs" id="auth-modal-close" onclick="document.getElementById('auth-modal').classList.add('hidden')" type="button"><span class="material-symbols-outlined text-[20px]">close</span></button><div class="flex flex-col items-center text-center mb-5"><div class="relative mb-3"><div class="w-14 h-14 rounded-2xl bg-primary text-white flex items-center justify-center shadow-lg"><span class="material-symbols-outlined text-[28px]">eco</span></div><div class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center border-2 border-white shadow-xs"><span class="material-symbols-outlined text-[13px] font-bold">verified</span></div></div><div class="flex items-center gap-1.5 justify-center"><h3 class="font-headline-sm text-headline-sm text-primary font-bold">سوق البن الفاخر</h3><span class="px-2 py-0.5 rounded-full bg-primary-container/15 text-primary text-[11px] font-bold">منصة المزارع</span></div><h2 class="font-headline-sm text-[18px] text-on-surface font-bold mt-1.5" id="auth-modal-title">سجّل دخولك لإتمام طلبك وحفظ حجوزاتك</h2><p class="font-body-sm text-[12px] text-on-surface-variant mt-1 max-w-xs leading-relaxed">احصل على تتبع فوري للمحاصيل المختارة عبر واتساب وتوثيق رسمي للحجز من المزارع مباشرة.</p></div><div class="grid grid-cols-2 gap-1 p-1 bg-surface-container-low rounded-xl mb-5 border border-surface-container" role="tablist"><button aria-selected="true" class="auth-tab py-2.5 rounded-lg font-label-md text-label-md font-bold bg-primary text-white shadow-sm transition-all duration-200 flex items-center justify-center gap-1.5" id="tab-btn-login" onclick="switchAuthTab('login')" role="tab" type="button"><span class="material-symbols-outlined text-[18px]">login</span><span>تسجيل الدخول</span></button><button aria-selected="false" class="auth-tab py-2.5 rounded-lg font-label-md text-label-md font-semibold text-on-surface-variant hover:text-on-surface transition-all duration-200 flex items-center justify-center gap-1.5" id="tab-btn-register" onclick="switchAuthTab('register')" role="tab" type="button"><span class="material-symbols-outlined text-[18px]">person_add</span><span>حساب جديد</span></button></div><form class="space-y-3.5" id="form-login-tab" onsubmit="event.preventDefault(); alert('تم تسجيل الدخول بنجاح ومتابعة الطلب!');"><div class="space-y-1.5"><label class="block font-label-md text-[13px] text-on-surface font-bold" for="modal-login-id">رقم الهاتف أو البريد الإلكتروني <span class="text-error">*</span></label><div class="relative flex items-center"><span class="material-symbols-outlined text-[19px] text-on-surface-variant absolute right-3.5 pointer-events-none">mail</span><input class="w-full text-sm pr-11 pl-3.5 py-2.5 rounded-xl border border-outline-variant bg-surface-container-lowest focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-body-md transition-all" id="modal-login-id" placeholder="مثال: 770000000 أو name@domain.com" required="" type="text" value="771234567"/></div></div><div class="space-y-1.5"><label class="block font-label-md text-[13px] text-on-surface font-bold" for="modal-login-pass">كلمة المرور <span class="text-error">*</span></label><div class="relative flex items-center"><span class="material-symbols-outlined text-[19px] text-on-surface-variant absolute right-3.5 pointer-events-none">lock</span><input class="w-full text-sm pr-11 pl-11 py-2.5 rounded-xl border border-outline-variant bg-surface-container-lowest focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-body-md transition-all" id="modal-login-pass" placeholder="••••••••" required="" type="password" value="coffeelover2025"/><button aria-label="إظهار أو إخفاء كلمة المرور" class="absolute left-3.5 text-on-surface-variant hover:text-primary transition-colors flex items-center" onclick="const el=document.getElementById('modal-login-pass'); el.type = el.type === 'password' ? 'text' : 'password';" type="button"><span class="material-symbols-outlined text-[20px]">visibility</span></button></div></div><div class="flex items-center justify-between text-body-sm text-[12px] pt-0.5"><label class="flex items-center gap-1.5 cursor-pointer text-on-surface-variant hover:text-on-surface"><input checked="" class="rounded text-primary focus:ring-primary border-outline-variant" type="checkbox"/><span>تذكر بياناتي</span></label><a class="font-label-sm text-primary hover:underline font-bold" href="#">نسيت كلمة المرور؟</a></div><button class="w-full py-3 px-4 rounded-xl bg-primary hover:bg-[#204613] text-white hover:shadow-lg active:scale-[0.98] transform transition-all duration-200 font-label-lg text-label-lg font-bold shadow-md flex items-center justify-center gap-2 mt-2" type="submit"><span class="material-symbols-outlined text-[20px]">check_circle</span><span>دخول ومتابعة الطلب</span></button></form><form class="space-y-3.5 hidden" id="form-register-tab" onsubmit="event.preventDefault(); alert('تم إنشاء الحساب بنجاح ومتابعة الطلب!');"><div class="space-y-1.5"><label class="block font-label-md text-[13px] text-on-surface font-bold" for="modal-reg-name">الاسم الكامل <span class="text-error">*</span></label><div class="relative flex items-center"><span class="material-symbols-outlined text-[19px] text-on-surface-variant absolute right-3.5 pointer-events-none">badge</span><input class="w-full text-sm pr-11 pl-3.5 py-2.5 rounded-xl border border-outline-variant bg-surface-container-lowest focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-body-md transition-all" id="modal-reg-name" placeholder="مثال: عبد الرحمن اليافعي" type="text"/></div></div><div class="space-y-1.5"><label class="block font-label-md text-[13px] text-on-surface font-bold" for="modal-reg-id">رقم الهاتف أو البريد الإلكتروني <span class="text-error">*</span></label><div class="relative flex items-center"><span class="material-symbols-outlined text-[19px] text-on-surface-variant absolute right-3.5 pointer-events-none">call</span><input class="w-full text-sm pr-11 pl-3.5 py-2.5 rounded-xl border border-outline-variant bg-surface-container-lowest focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-body-md transition-all" id="modal-reg-id" placeholder="مثال: 770000000" type="text"/></div></div><div class="space-y-1.5"><label class="block font-label-md text-[13px] text-on-surface font-bold" for="modal-reg-pass">كلمة المرور الجديدة <span class="text-error">*</span></label><div class="relative flex items-center"><span class="material-symbols-outlined text-[19px] text-on-surface-variant absolute right-3.5 pointer-events-none">lock_reset</span><input class="w-full text-sm pr-11 pl-3.5 py-2.5 rounded-xl border border-outline-variant bg-surface-container-lowest focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-body-md transition-all" id="modal-reg-pass" placeholder="•••••••• (6 خانات على الأقل)" type="password"/></div></div><button class="w-full py-3 px-4 rounded-xl bg-primary hover:bg-[#204613] text-white hover:shadow-lg active:scale-[0.98] transform transition-all duration-200 font-label-lg text-label-lg font-bold shadow-md flex items-center justify-center gap-2 mt-2" type="submit"><span class="material-symbols-outlined text-[20px]">person_add</span><span>إنشاء حساب ومتابعة الطلب</span></button></form><div class="relative my-4"><div class="absolute inset-0 flex items-center"><div class="w-full border-t border-surface-container"></div></div><div class="relative flex justify-center text-xs"><span class="px-2.5 bg-white text-on-surface-variant font-medium">أو المتابعة السريعة</span></div></div><div class="grid grid-cols-2 gap-2.5"><button class="py-2 px-3 rounded-xl border border-outline-variant hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2 text-xs font-bold text-on-surface" onclick="alert('تسجيل الدخول السريع عبر Google')" type="button"><svg class="w-4 h-4" viewbox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"></path><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"></path></svg><span>Google</span></button><button class="py-2 px-3 rounded-xl border border-[#31691D]/30 bg-primary-container/10 hover:bg-primary-container/20 text-primary transition-colors flex items-center justify-center gap-2 text-xs font-bold" onclick="alert('التواصل المباشر مع دعم الطلبات عبر واتساب')" type="button"><span class="material-symbols-outlined text-[18px]">chat</span><span>عبر واتساب</span></button></div><div class="mt-4 pt-3 border-t border-surface-container text-center flex items-center justify-center gap-1.5 text-on-surface-variant font-label-sm text-[11px]"><span class="material-symbols-outlined text-[15px] text-primary">security</span><span>حماية تامة لبياناتك الزراعية وحجوزات المحاصيل بنسبة 100%</span></div></div></div><script>function switchAuthTab(tab){const loginBtn=document.getElementById('tab-btn-login');const regBtn=document.getElementById('tab-btn-register');const loginForm=document.getElementById('form-login-tab');const regForm=document.getElementById('form-register-tab');if(tab==='login'){loginBtn.className='auth-tab py-2.5 rounded-lg font-label-md text-label-md font-bold bg-primary text-white shadow-sm transition-all duration-200 flex items-center justify-center gap-1.5';regBtn.className='auth-tab py-2.5 rounded-lg font-label-md text-label-md font-semibold text-on-surface-variant hover:text-on-surface transition-all duration-200 flex items-center justify-center gap-1.5';loginForm.classList.remove('hidden');regForm.classList.add('hidden');}else{regBtn.className='auth-tab py-2.5 rounded-lg font-label-md text-label-md font-bold bg-primary text-white shadow-sm transition-all duration-200 flex items-center justify-center gap-1.5';loginBtn.className='auth-tab py-2.5 rounded-lg font-label-md text-label-md font-semibold text-on-surface-variant hover:text-on-surface transition-all duration-200 flex items-center justify-center gap-1.5';regForm.classList.remove('hidden');loginForm.classList.add('hidden');}}</script>
+<!-- 2. نافذة سلة الطلبات الجانبية (Slide-over Cart Drawer) -->
+<div class="fixed inset-0 z-40 bg-black/45 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none hidden" id="cart-drawer-backdrop"></div>
+<aside aria-label="سلة محاصيل البن" class="fixed top-0 left-0 bottom-0 h-full w-full sm:w-[480px] max-w-full bg-surface shadow-2xl z-40 flex flex-col border-r border-[#d8dbd6] overflow-hidden hidden pointer-events-none" id="cart-drawer"></aside>
+<header class="fixed top-0 w-full z-40 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(49,105,29,0.04)]"><div class="h-20 max-w-7xl mx-auto px-margin flex items-center justify-between gap-space-lg"><div class="flex items-center gap-space-xl"><a class="flex items-center gap-space-sm group nav-link" data-path="home" href="#"><div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center text-on-primary shadow-sm"><span class="material-symbols-outlined text-[24px]">eco</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary leading-tight tracking-tight">سوق البن الفاخر</span><span class="font-label-sm text-label-sm text-secondary tracking-wide">AgriTech Platform</span></div></a><nav class="hidden xl:flex items-center gap-space-lg" data-active-classes="text-primary font-bold border-b-2 border-primary pb-1"><a class="nav-link font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-1" data-path="home" href="#">الرئيسية</a><a class="nav-link font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-1" data-path="roasted-coffee" href="#">البن المحمص</a><a class="nav-link font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-1" data-path="green-coffee" href="#">البن الأخضر</a><a class="nav-link font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-1" data-path="special-blends" href="#">الخلطات الخاصة</a><a class="nav-link font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-1" data-path="contact" href="#">تواصل معنا</a></nav></div><div class="flex items-center gap-space-md"><a class="hidden md:flex items-center gap-space-xs px-space-md py-space-xs rounded-xl bg-surface-container-low hover:bg-surface-container-high transition-colors text-on-surface-variant" href="tel:+9671000000"><span class="material-symbols-outlined text-[18px] text-primary">phone_in_talk</span><span class="font-label-md text-label-md text-on-surface">خدمة المزارعين</span></a><button aria-label="سلة المشتريات" class="relative p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container-high transition-colors flex items-center justify-center text-on-surface" id="header-cart-btn" type="button"><span class="material-symbols-outlined text-[24px] text-primary">shopping_bag</span><span class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-primary text-on-primary font-label-sm text-label-sm flex items-center justify-center shadow-sm transition-transform duration-300" id="header-cart-badge">3</span></button><button aria-label="تسجيل الدخول أو الحساب الشخصي" class="w-8 h-8 rounded-full bg-primary flex items-center justify-center cursor-pointer hover:opacity-90 active:scale-95 transition-all" id="header-profile-btn" type="button"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></button></div></div></header><main class="w-full pt-20 bg-surface"><div class="flex flex-col w-full relative">
+<!-- Interactive Floating Toggle Switcher for UX Showcase -->
+<div class="fixed bottom-6 right-6 z-[999] flex items-center gap-3 bg-surface-container-lowest/95 backdrop-blur-xl px-4 py-2.5 rounded-full shadow-xl">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-primary animate-pulse" id="toggle-indicator-dot"></span>
+<span class="font-label-md text-label-md text-on-surface">وضع العرض:</span>
+<span class="font-label-md text-label-md text-primary font-bold" id="toggle-status-text">شاشة التحميل نشطة</span>
+</div>
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary text-on-primary font-label-sm text-label-sm shadow-sm hover:opacity-90 active:scale-95 transition-all" id="toggle-overlay-btn" type="button">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+<span>تبديل / معاينة المتجر</span>
+</button>
+</div>
+<!-- ======================================================== -->
+<!-- 1. FULL-SCREEN SOPHISTICATED TRANSITION & LOADING OVERLAY -->
+<!-- ======================================================== -->
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-surface/80 backdrop-blur-xl transition-all duration-700 ease-out select-none" id="luxury-loading-overlay">
+<!-- Background Organic Ambient Blobs -->
+<div class="absolute inset-0 overflow-hidden pointer-events-none">
+<div class="absolute top-1/4 -right-24 w-96 h-96 bg-primary-container/10 rounded-full blur-3xl animate-pulse"></div>
+<div class="absolute bottom-1/4 -left-24 w-96 h-96 bg-secondary-container/30 rounded-full blur-3xl animate-pulse" style="animation-delay: 1.5s;"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-tertiary-fixed/20 rounded-full blur-[100px] pointer-events-none"></div>
+</div>
+<!-- Centerpiece Frosted Floating Emblem Card -->
+<div class="relative z-10 w-full max-w-md mx-4 p-8 sm:p-10 rounded-full sm:rounded-3xl bg-surface-container-lowest/90 backdrop-blur-2xl shadow-xl flex flex-col items-center text-center">
+<!-- Terrace Altitude Badge -->
+<div class="flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-surface-container text-primary mb-6">
+<span class="material-symbols-outlined text-[16px]">landscape</span>
+<span class="font-label-sm text-label-sm font-semibold tracking-wide">مدرجات حراز وبني مطر • ارتفاع +2,300م</span>
+</div>
+<!-- Coffee Plant Sprout & Cherries Dual Rotating Ring Emblem -->
+<div class="relative w-32 h-32 flex items-center justify-center mb-6">
+<!-- Outer Track Ring -->
+<div class="absolute inset-0 rounded-full bg-surface-container"></div>
+<!-- Animated Rotating Emerald Orbit with Cherry Accent -->
+<div class="absolute inset-0 rounded-full animate-spin" style="animation-duration: 3.5s; animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);">
+<div class="w-full h-full rounded-full flex items-start justify-center">
+<span class="w-3.5 h-3.5 rounded-full bg-primary shadow-sm -mt-1 flex items-center justify-center">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-fixed"></span>
+</span>
+</div>
+</div>
+<!-- Reverse Counter Gyroscope Subtle Ring -->
+<div class="absolute inset-2 rounded-full animate-spin" style="animation-duration: 6s; animation-direction: reverse;">
+<div class="w-full h-full rounded-full flex items-end justify-center">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary -mb-1"></span>
+</div>
+</div>
+<!-- Central Terraced Motif Core Icon -->
+<div class="relative z-10 w-20 h-20 rounded-full bg-primary-container text-on-primary flex flex-col items-center justify-center shadow-lg">
+<span class="material-symbols-outlined text-[42px] leading-none" style="font-variation-settings: 'FILL' 1;">eco</span>
+<span class="w-6 h-0.5 bg-on-primary-container rounded-full mt-1 opacity-70"></span>
+</div>
+</div>
+<!-- Typography & Identity -->
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight font-bold mb-1">
+        سوق البن الفاخر
+      </h1>
+<p class="font-label-md text-label-md text-secondary font-semibold tracking-wider mb-4">
+        AGRITECH SPECIALTY COFFEE
+      </p>
+<!-- Dynamic Loading Status Narrative -->
+<div class="min-h-[44px] flex flex-col items-center justify-center mb-5">
+<p class="font-body-md text-body-md text-on-surface-variant transition-opacity duration-300" id="loading-dynamic-phrase">
+          جاري جلب بيانات المحاصيل وحالة الرطوبة من المزارع...
+        </p>
+</div>
+<!-- Precision Botanical Linear Progress Bar -->
+<div class="w-full max-w-xs bg-surface-container h-1.5 rounded-full overflow-hidden mb-3">
+<div class="h-full bg-primary rounded-full transition-all duration-300 ease-out" id="loading-progress-bar" style="width: 62%;"></div>
+</div>
+<!-- Micro-Data Telemetry Row -->
+<div class="flex items-center justify-between w-full max-w-xs text-on-surface-variant font-label-sm text-label-sm mb-6">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">sensors</span>
+<span>مجسات المعالجة: متصلة</span>
+</span>
+<span class="font-mono font-bold text-primary" id="loading-percentage">62%</span>
+</div>
+<!-- Trust Assurance & Traceability Tagline -->
+<div class="pt-4 flex items-center justify-center gap-2 text-on-surface-variant font-body-sm text-body-sm bg-surface-container-low px-4 py-2 rounded-xl w-full">
+<span class="material-symbols-outlined text-[18px] text-primary" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span>منصة زراعية ذكية تربط المزارع بالمشتري مباشرة وتضمن المصدر 100%</span>
+</div>
+<!-- Manual Dismiss Action for instant testing -->
+<button class="mt-5 text-on-surface-variant hover:text-primary font-label-sm text-label-sm flex items-center gap-1 transition-colors" id="dismiss-overlay-btn" type="button">
+<span>تخطي والتوجه للمتجر الآن</span>
+<span class="material-symbols-outlined text-[14px]">arrow_back</span>
+</button>
+</div>
+</div>
+<!-- ======================================================== -->
+<!-- 2. UNDERLYING LUXURY MARKETPLACE CONTENT VIEW           -->
+<!-- ======================================================== -->
+<div class="w-full max-w-7xl mx-auto px-margin py-space-lg flex flex-col gap-space-xl">
+<!-- Hero Terraced Showcase Banner -->
+<section class="relative w-full rounded-3xl overflow-hidden bg-primary-container text-on-primary shadow-lg">
+<div class="absolute inset-0 bg-cover bg-center mix-blend-overlay opacity-30" data-alt="High altitude lush green mountain terraces of Yemen coffee farms during golden hour mist with stone houses and ripe red coffee cherries on branches" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBhXXtobkimy78ll8L2SKhZQ0bK15eeqZgL2e2j9DTt8prwodW3FDtWKuI3nxyfWMQnVbSCqDZt-fjHRwn6ppOLulNgVItexHvIUjFu1Yn0qbVi4jDzUjZy2uhY8v1AFVpNQyHDs0L9CHW5_LIb_g08-_MSybUNILtacfMmP5C6tFzRU-l0Ne5qDeKJhSYxtzlvTjjs8ibF6IzvokuiwIH73TOVLAoCFPuhz_rdwgkM')"></div>
+<div class="relative z-10 p-8 md:p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+<div class="max-w-2xl flex flex-col gap-3">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-lowest/20 backdrop-blur-md text-on-primary font-label-sm text-label-sm w-fit">
+<span class="material-symbols-outlined text-[16px]">local_florist</span>
+<span>موسم حصاد 2025 الجديد متوفر الآن من أعالي قمم حراز</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg md:text-[34px] leading-tight font-bold">
+            محاصيل نادرة ومعالجة لا هوائية من المزارع اليمنية العتيقة
+          </h2>
+<p class="font-body-lg text-body-lg text-on-primary-container max-w-xl">
+            كل حبة بن تحكي قصة مدرج جبلي شُيّد باليد عبر آلاف السنين، تُجنى حبات الكرز بدرجة نضج مثالية وتُفرز بنظام الاستشعار البصري الدقيق.
+          </p>
+<div class="flex flex-wrap items-center gap-4 pt-2">
+<button class="px-6 py-3 rounded-xl bg-surface-container-lowest text-primary font-label-lg text-label-lg font-bold shadow-md hover:bg-surface-container-low transition-all">
+              استكشف المحاصيل المتوفرة
+            </button>
+<button class="px-6 py-3 rounded-xl bg-primary/40 backdrop-blur-md text-on-primary font-label-lg text-label-lg font-bold hover:bg-primary/60 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">qr_code_scanner</span>
+<span>سجل التتبع التوثيقي</span>
+</button>
+</div>
+</div>
+<!-- Metric Highlight Bento Widget -->
+<div class="flex flex-col gap-3 bg-surface-container-lowest/10 backdrop-blur-md p-6 rounded-2xl w-full md:w-auto">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-xl bg-surface-container-lowest/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-[28px] text-secondary-fixed">stars</span>
+</div>
+<div>
+<span class="font-headline-md text-headline-md font-bold block">+88.75</span>
+<span class="font-label-sm text-label-sm text-on-primary-container">متوسط تقييم الجمعية الأمريكية (SCA)</span>
+</div>
+</div>
+<div class="h-0.5 bg-surface-container-lowest/20 w-full"></div>
+<div class="flex items-center justify-between gap-4 font-label-sm text-label-sm">
+<span>ارتفاع المزارع: 2,100م - 2,450م</span>
+<span class="text-secondary-fixed font-bold">100% قطف يدوي</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Category Filter Bar -->
+<section class="flex flex-wrap items-center justify-between gap-4 bg-surface-container-lowest p-3 rounded-2xl shadow-sm">
+<div class="flex flex-wrap items-center gap-2">
+<button class="px-5 py-2.5 rounded-xl bg-primary text-on-primary font-label-md text-label-md font-bold shadow-xs">
+          جميع المحاصيل (18)
+        </button>
+<button class="px-5 py-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-md text-label-md transition-colors">
+          البن المحمص المختص
+        </button>
+<button class="px-5 py-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-md text-label-md transition-colors">
+          أكياس البن الأخضر المعبأ
+        </button>
+<button class="px-5 py-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-md text-label-md transition-colors">
+          خلطات الإسبريسو والفلتر
+        </button>
+<button class="px-5 py-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-md text-label-md transition-colors">
+          إصدارات المزادات المحدودة
+        </button>
+</div>
+<div class="flex items-center gap-2">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined text-[20px] text-on-surface-variant absolute right-3 pointer-events-none">search</span>
+<input class="pr-10 pl-4 py-2 rounded-xl bg-surface-container-low text-on-surface font-body-sm text-body-sm placeholder:text-on-surface-variant focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary w-64" placeholder="ابحث باسم المزرعة، المنطقة أو المعالجة..." type="text"/>
+</div>
+</div>
+</section>
+<!-- Product Grid of Specialty Yemeni Coffees -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Product Card 1: Haraz Natural Roasted -->
+<article class="flex flex-col bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all group">
+<div class="relative h-60 w-full overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Artisanal dark kraft specialty coffee bag labeled Haraz Natural with fresh roasted dark brown coffee beans spilling over a rustic wooden farm table with raw burlap" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtJRkDwxBH0TIDpD6kiq5BuhxPPNzP-jtiSqpdb8J7BC1xAqeNIk9UYidcX3BpyQ5z2klAC7akukHyIq1954TZ3CyB-8_gbP46gNVwjEpO4bd2z9fDlb-FV_PWNsb6yEebH8ARIMFNcByEnvdS1AC__8D0u42wFyRYHGOKlU-3W7vQdKUTHA6C2oaIpepnGBBZ-aE5eawA8ZIY1kz-XAGXRv9muu12O6BcqoOUv7jN"/>
+<span class="absolute top-3 right-3 px-3 py-1 rounded-full bg-primary text-on-primary font-label-sm text-label-sm font-bold shadow-xs">
+            تقييم 89.25 SCA
+          </span>
+<span class="absolute bottom-3 right-3 px-2.5 py-1 rounded-md bg-surface-container-lowest/90 backdrop-blur-sm text-on-surface font-label-sm text-label-sm">
+            مجفف طبيعي لا هوائي
+          </span>
+</div>
+<div class="p-5 flex flex-col flex-1 justify-between gap-4">
+<div>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm mb-1">
+<span>حراز، جبل القضاة</span>
+<span>2,250 متر</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">
+              بن حرازي فاخر - محصول النجوم
+            </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1.5 line-clamp-2">
+              إيحاءات الفراولة المجففة، العنب الأسود، وشوكولاتة الحليب الفاخرة مع قوام حريري ممتد.
+            </p>
+</div>
+<div class="pt-3 flex items-center justify-between bg-surface-container-low/50 -mx-5 -mb-5 p-5 rounded-b-2xl">
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block">سعر العبوة (250جم)</span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">115 ر.س</span>
+</div>
+<button class="w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center hover:opacity-90 active:scale-95 transition-all shadow-xs" title="إضافة إلى السلة">
+<span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Product Card 2: Ismaili Green Coffee Beans -->
+<article class="flex flex-col bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all group">
+<div class="relative h-60 w-full overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Dense pale jade green raw specialty unroasted coffee beans of the rare Ismaili variety held in hands over a traditional woven basket in Sanaa mountain terraces" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLw22ewUrXiV0-39n1W3znYEpKNJQzgq2XEgwScoRjbnr2B3umZXNk9QIiTY_zwEnSbsnyjCgdxw3u33CyC1MzNKnpj3N1sQtT_UG_kpddF9G_bWo4vf2krDZR3xT6HTW8w7QfUKIUzheRQqGAUSHLWGSPcHTxWFzGwpdl3gWK_nq6YBJTmghpS_44QEz4FVmWJIxilK4xkNHPJ7IRcUjFfK6Z6gsVWd9hzM0TEyoR"/>
+<span class="absolute top-3 right-3 px-3 py-1 rounded-full bg-secondary text-on-secondary font-label-sm text-label-sm font-bold shadow-xs">
+            بن أخضر مختص
+          </span>
+<span class="absolute bottom-3 right-3 px-2.5 py-1 rounded-md bg-surface-container-lowest/90 backdrop-blur-sm text-on-surface font-label-sm text-label-sm">
+            معالجة عسلية حمراء
+          </span>
+</div>
+<div class="p-5 flex flex-col flex-1 justify-between gap-4">
+<div>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm mb-1">
+<span>مناخة، وادي بني إسماعيل</span>
+<span>2,380 متر</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">
+              حبوب إسماعيلي خضراء نقية
+            </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1.5 line-clamp-2">
+              سلالة عتيقة ذات كثافة حبوب استثنائية ونسبة سكريات عالية، خالية من العيوب برطوبة متوازنة 10.8%.
+            </p>
+</div>
+<div class="pt-3 flex items-center justify-between bg-surface-container-low/50 -mx-5 -mb-5 p-5 rounded-b-2xl">
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block">سعر الكيلوغرام</span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">240 ر.س</span>
+</div>
+<button class="w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center hover:opacity-90 active:scale-95 transition-all shadow-xs" title="إضافة إلى السلة">
+<span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Product Card 3: Matari Roast -->
+<article class="flex flex-col bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all group">
+<div class="relative h-60 w-full overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A stylish modern bag of Matari roasted coffee next to a glass server of pour over coffee with rich amber crema and steam under warm sunlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbE2ShnbYrmHcv8WibvZez6zndfLVXgpUxT6rlT_6ta4h0MxnY8KvclnHV8WKcKBUK-TIBuse-yccTPncF3crYOJrDb3rhoaDvPZfuHfq1rm0SzzDx8UbjTpJ5eTLCv3b0xmppn_B2HE4eaVeqsvfwFxNLZmSY0Cl1SeNsMlS0SR0jXPz3zJ4Ls-ndcRwGAvGAGDR9u5ASuTfkR-giiVmO-WGms36A7lniYtT21OKr"/>
+<span class="absolute top-3 right-3 px-3 py-1 rounded-full bg-primary text-on-primary font-label-sm text-label-sm font-bold shadow-xs">
+            تقييم 88.50 SCA
+          </span>
+<span class="absolute bottom-3 right-3 px-2.5 py-1 rounded-md bg-surface-container-lowest/90 backdrop-blur-sm text-on-surface font-label-sm text-label-sm">
+            مجفف على أسرة مرتفعة
+          </span>
+</div>
+<div class="p-5 flex flex-col flex-1 justify-between gap-4">
+<div>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm mb-1">
+<span>بني مطر، حصن الغراب</span>
+<span>2,150 متر</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">
+              بن مطري أصيل - تحميص فلتر
+            </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1.5 line-clamp-2">
+              طابع كلاسيكي فريد يجمع بين نكهة حب الهيل الأخضر، المشمش المجفف، ورائحة الياسمين الجبلي.
+            </p>
+</div>
+<div class="pt-3 flex items-center justify-between bg-surface-container-low/50 -mx-5 -mb-5 p-5 rounded-b-2xl">
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block">سعر العبوة (250جم)</span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">128 ر.س</span>
+</div>
+<button class="w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center hover:opacity-90 active:scale-95 transition-all shadow-xs" title="إضافة إلى السلة">
+<span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Product Card 4: Heritage Terrace Blend -->
+<article class="flex flex-col bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all group">
+<div class="relative h-60 w-full overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Traditional patterned ceramic cup filled with rich golden-crema espresso blend surrounded by roasted coffee beans and roasted spices on dark stone slab" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzfQX-aumrfkyGG45ElFH7LbmmQvRI6HvNUk6SKqUiVXG-vRLOTtPvVZZ7agN1wX5k3Zs5_dNpqZqqaewksrnWB0Rzs7sQ_zm2n8Hyf3TRjn7aHSF_NC-UqWfn9z0CNFg86oROBDuVB1GGpFObZlCgPtjh8K-5x2AWJkXSl1EH73b3KXOIEOpE6_LwaVFM-zjxyzuFIxm--6iyi8wZ3foHpd3yEsclMW7CoUSfd4xV"/>
+<span class="absolute top-3 right-3 px-3 py-1 rounded-full bg-tertiary text-on-tertiary font-label-sm text-label-sm font-bold shadow-xs">
+            خلطة خاصة حصرية
+          </span>
+<span class="absolute bottom-3 right-3 px-2.5 py-1 rounded-md bg-surface-container-lowest/90 backdrop-blur-sm text-on-surface font-label-sm text-label-sm">
+            توليفة إسبريسو غنية
+          </span>
+</div>
+<div class="p-5 flex flex-col flex-1 justify-between gap-4">
+<div>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm mb-1">
+<span>خلطة حراز &amp; برع</span>
+<span>تدرج ارتفاعات</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">
+              خلطة صنعاء التراثية المتوازنة
+            </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1.5 line-clamp-2">
+              مصممة خصيصاً لمشروبات الحليب والإسبريسو، بإيحاء الكراميل المملح، المكسرات المحمصة، ونهاية شوكولاتية.
+            </p>
+</div>
+<div class="pt-3 flex items-center justify-between bg-surface-container-low/50 -mx-5 -mb-5 p-5 rounded-b-2xl">
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block">سعر الكيلوغرام</span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">195 ر.س</span>
+</div>
+<button class="w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center hover:opacity-90 active:scale-95 transition-all shadow-xs" title="إضافة إلى السلة">
+<span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</article>
+</section>
+<!-- Agritech Quality Control & Traceability Highlights -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6 bg-surface-container-low p-8 rounded-3xl">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-2xl bg-primary-container text-on-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[24px]">water_drop</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-bold">مراقبة الرطوبة الذكية</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+            مجسات إنترنت الأشياء (IoT) الميدانية تتابع رطوبة الأسرة المرتفعة كل 15 دقيقة لضمان ثبات الجودة.
+          </p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-2xl bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[24px]">handshake</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-bold">تجارة عادلة ومباشرة 100%</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+            يحصل المزارع على أكثر من 70% من القيمة الإجمالية للطلب مباشرة في حسابه دون وسطاء استغلاليين.
+          </p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-2xl bg-tertiary-container text-on-tertiary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[24px]">verified</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-bold">شهادات أصل منشأ مشفرة</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+            كل كيس يحتوي على رمز تتبع رقمي يستعرض موقع المزرعة على الخريطة واسم العائلة المنتجة وتاريخ القطف.
+          </p>
+</div>
+</div>
+</section>
+</div>
+<!-- Inline Script for interactive showcase controls & dynamic loading simulation -->
+<script>
+    (function initLuxuryOverlaySimulation() {
+      const overlay = document.getElementById('luxury-loading-overlay');
+      const toggleBtn = document.getElementById('toggle-overlay-btn');
+      const dismissBtn = document.getElementById('dismiss-overlay-btn');
+      const statusText = document.getElementById('toggle-status-text');
+      const indicatorDot = document.getElementById('toggle-indicator-dot');
+      const phraseEl = document.getElementById('loading-dynamic-phrase');
+      const progressEl = document.getElementById('loading-progress-bar');
+      const percentEl = document.getElementById('loading-percentage');
+
+      const phrases = [
+        "جاري جلب بيانات المحاصيل وحالة الرطوبة من المزارع...",
+        "فحص شهادات جودة المختبر ونقاط التقييم الحسي...",
+        "تحديث أسعار مزاد البن الأخضر المباشر...",
+        "ننتقل بك الآن إلى مدرجات البن في أعالي القمم..."
+      ];
+
+      let phraseIdx = 0;
+      let progress = 40;
+      let isVisible = true;
+
+      // Realistic Progress & Micro-narrative Simulation
+      const progressInterval = setInterval(() => {
+        if (!isVisible) return;
+        progress += Math.floor(Math.random() * 8) + 3;
+        if (progress > 98) progress = 98;
+        
+        if (progressEl) progressEl.style.width = progress + '%';
+        if (percentEl) percentEl.textContent = progress + '%';
+
+        if (progress > 65 && phraseIdx === 0) {
+          phraseIdx = 1;
+          updatePhrase(phrases[1]);
+        } else if (progress > 85 && phraseIdx === 1) {
+          phraseIdx = 2;
+          updatePhrase(phrases[2]);
+        }
+      }, 700);
+
+      function updatePhrase(text) {
+        if (!phraseEl) return;
+        phraseEl.style.opacity = '0';
+        setTimeout(() => {
+          phraseEl.textContent = text;
+          phraseEl.style.opacity = '1';
+        }, 300);
+      }
+
+      function toggleOverlay() {
+        isVisible = !isVisible;
+        if (isVisible) {
+          overlay.classList.remove('opacity-0', 'pointer-events-none', 'scale-95');
+          overlay.classList.add('opacity-100', 'scale-100');
+          statusText.textContent = "شاشة التحميل نشطة";
+          statusText.classList.replace('text-on-surface-variant', 'text-primary');
+          indicatorDot.className = "w-2.5 h-2.5 rounded-full bg-primary animate-pulse";
+          progress = 45;
+          phraseIdx = 0;
+          updatePhrase(phrases[0]);
+        } else {
+          overlay.classList.add('opacity-0', 'pointer-events-none', 'scale-95');
+          overlay.classList.remove('opacity-100', 'scale-100');
+          statusText.textContent = "المتجر مكشوف للمعاينة";
+          statusText.classList.replace('text-primary', 'text-on-surface-variant');
+          indicatorDot.className = "w-2.5 h-2.5 rounded-full bg-secondary";
+        }
+      }
+
+      if (toggleBtn) toggleBtn.addEventListener('click', toggleOverlay);
+      if (dismissBtn) dismissBtn.addEventListener('click', () => {
+        if (isVisible) toggleOverlay();
+      });
+
+      // Keyboard shortcut for presentation: press 'L' or Escape to toggle
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' || e.key === 'l' || e.key === 'L') {
+          toggleOverlay();
+        }
+      });
+    })();
+  </script>
+</div></main><footer class="w-full bg-surface-container-low mt-space-xl"><div class="max-w-7xl mx-auto px-margin py-space-xl"><div class="grid grid-cols-1 md:grid-cols-4 gap-space-xl pb-space-lg"><div class="flex flex-col gap-space-sm md:col-span-1"><div class="flex items-center gap-space-xs"><div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary"><span class="material-symbols-outlined text-[20px]">agriculture</span></div><span class="font-headline-sm text-headline-sm text-primary">سوق البن الفاخر</span></div><p class="font-body-md text-body-md text-on-surface-variant">منظومة زراعية رقمية تربط مزارعي المدرجات الجبلية العالية بأسواق القهوة المختصة بأحدث تقنيات الفرز والتتبع.</p></div><div class="flex flex-col gap-space-xs"><h3 class="font-headline-sm text-headline-sm text-on-surface">المحاصيل والمنتجات</h3><nav class="flex flex-col gap-space-xs"><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" data-path="roasted-coffee" href="#">محاصيل البن المحمص</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" data-path="green-coffee" href="#">حبوب البن الأخضر المختص</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" data-path="special-blends" href="#">خلطات المدرجات الجبلية</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" data-path="traceability" href="#">سجل التتبع والمصدر</a></nav></div><div class="flex flex-col gap-space-xs"><h3 class="font-headline-sm text-headline-sm text-on-surface">التقنيات الزراعية</h3><nav class="flex flex-col gap-space-xs"><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" data-path="smart-farming" href="#">مستشعرات الرطوبة والري</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" data-path="harvest-guide" href="#">دليل القطف الانتقائي</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" data-path="processing-stations" href="#">محطات المعالجة المائية والتجفيف</a></nav></div><div class="flex flex-col gap-space-xs"><h3 class="font-headline-sm text-headline-sm text-on-surface">التواصل والدعم الميداني</h3><div class="flex items-center gap-space-xs text-on-surface-variant"><span class="material-symbols-outlined text-[20px] text-primary">location_on</span><span class="font-body-md text-body-md">مركز الإرشاد الزراعي - صنعاء / الرياض</span></div><div class="flex items-center gap-space-xs text-on-surface-variant"><span class="material-symbols-outlined text-[20px] text-primary">call</span><span class="font-body-md text-body-md" dir="ltr">+967 1 234 567</span></div><div class="flex items-center gap-space-xs text-on-surface-variant"><span class="material-symbols-outlined text-[20px] text-primary">mail</span><span class="font-body-md text-body-md">support@agritech-coffee.com</span></div></div></div><div class="pt-space-lg flex flex-col md:flex-row items-center justify-between gap-space-md bg-surface-container-lowest/60 p-space-md rounded-xl"><p class="font-body-sm text-body-sm text-on-surface-variant">جميع الحقوق محفوظة © 2025 سوق البن الفاخر - المنصة الزراعية الذكية للقهوة المختصة</p><div class="flex items-center gap-space-md"><span class="font-label-sm text-label-sm text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">verified</span>توثيق زراعي بيئي معتمد</span><span class="font-label-sm text-label-sm text-primary flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">local_shipping</span>شحن مباشر من المزرعة</span></div></div></div></footer>
+</body></html>
