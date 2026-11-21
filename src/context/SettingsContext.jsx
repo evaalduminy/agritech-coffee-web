@@ -9,7 +9,7 @@ const DEFAULT_SETTINGS = {
   themeMode: 'light', // 'light' | 'dark'
   language: 'ar', // 'ar' | 'en'
   colorTheme: 'agritech', // 'agritech' | 'roasted' | 'obsidian'
-  heroBackground: 'ambient', // 'ambient' | 'minimal'
+  heroBackground: 'ambient', // 'ambient' | 'particles' | 'minimal'
   buttonStyle: 'soft', // 'soft' | 'pill' | 'sharp'
   loaderStyle: 'logo', // 'logo' | 'bar' | 'none'
 };

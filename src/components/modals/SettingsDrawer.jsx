@@ -372,31 +372,45 @@ export default function SettingsDrawer() {
                       <Sparkles className="w-4 h-4 text-primary" />
                       <span>{t('settings.heroEffects')}</span>
                     </div>
-                    <div className="grid grid-cols-2 gap-2.5">
+                    <div className="grid grid-cols-3 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => updateSetting('heroBackground', 'particles')}
+                        className={`flex flex-col items-center justify-center py-2.5 px-2 rounded-xl border text-center transition-all cursor-pointer ${
+                          settings.heroBackground === 'particles'
+                            ? 'border-primary bg-primary-container text-on-primary shadow-xs'
+                            : 'border-surface-container bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
+                        }`}
+                      >
+                        <Zap className="w-4 h-4 mb-1" />
+                        <span className="text-xs font-bold">{t('settings.heroParticles')}</span>
+                      </button>
+
                       <button
                         type="button"
                         onClick={() => updateSetting('heroBackground', 'ambient')}
-                        className={`flex items-center justify-center gap-2 py-3 px-3 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
+                        className={`flex flex-col items-center justify-center py-2.5 px-2 rounded-xl border text-center transition-all cursor-pointer ${
                           settings.heroBackground === 'ambient'
                             ? 'border-primary bg-primary-container text-on-primary shadow-xs'
                             : 'border-surface-container bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
                         }`}
                       >
-                        <Sparkles className="w-4 h-4" />
-                        <span>{t('settings.heroAmbient')}</span>
+                        <Sparkles className="w-4 h-4 mb-1" />
+                        <span className="text-xs font-bold">{t('settings.heroAmbient')}</span>
+                        <span className="text-[10px] opacity-80">{t('settings.defaultBadge')}</span>
                       </button>
 
                       <button
                         type="button"
                         onClick={() => updateSetting('heroBackground', 'minimal')}
-                        className={`flex items-center justify-center gap-2 py-3 px-3 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
+                        className={`flex flex-col items-center justify-center py-2.5 px-2 rounded-xl border text-center transition-all cursor-pointer ${
                           settings.heroBackground === 'minimal'
                             ? 'border-primary bg-primary-container text-on-primary shadow-xs'
                             : 'border-surface-container bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
                         }`}
                       >
-                        <Eye className="w-4 h-4" />
-                        <span>{t('settings.heroMinimal')}</span>
+                        <Eye className="w-4 h-4 mb-1" />
+                        <span className="text-xs font-bold">{t('settings.heroMinimal')}</span>
                       </button>
                     </div>
                   </div>
