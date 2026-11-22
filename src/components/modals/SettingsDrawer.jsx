@@ -28,6 +28,7 @@ export default function SettingsDrawer() {
   const {
     settings,
     updateSetting,
+    updateAdminSettings,
     resetSettings,
     isSettingsOpen,
     closeSettings,
@@ -52,10 +53,13 @@ export default function SettingsDrawer() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isSettingsOpen, closeSettings]);
 
-  // دالة حفظ وتعميم الإعدادات للمالك (مؤقتاً حفظ محلي لحين الربط مع مسار PUT /api/admin/settings)
-  const handleAdminSaveAndBroadcast = () => {
+  // دالة حفظ وتعميم الإعدادات للمالك (حفظ محلي واستدعاء PUT /api/v1/admin/settings في الوضع الحي)
+  const handleAdminSaveAndBroadcast = async () => {
     try {
       localStorage.setItem('agritech_settings', JSON.stringify(settings));
+      if (typeof updateAdminSettings === 'function') {
+        await updateAdminSettings(settings);
+      }
       setSaveSuccess(true);
       setTimeout(() => {
         setSaveSuccess(false);

@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useSettings } from '../../context/SettingsContext';
+import { USE_MOCK_API } from '../../services/api';
 import BrandLogo from '../common/BrandLogo';
 
 // مكوّن نافذة تسجيل الدخول وإنشاء الحساب المنبثقة (AuthModal) مع دعم اللغتين
@@ -498,46 +499,51 @@ export default function AuthModal() {
               </form>
             )}
 
-            {/* فاصل المتابعة السريعة */}
-            <div className="relative my-4">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-surface-container dark:border-emerald-900/30" />
-              </div>
-              <div className="relative flex justify-center text-xs">
-                <span className="px-2.5 bg-white dark:bg-[#122019] text-on-surface-variant dark:text-gray-400 font-medium">
-                  {t('auth.orQuick')}
-                </span>
-              </div>
-            </div>
+            {/* قسم المتابعة السريعة (يظهر في الوضع التجريبي فقط لتفادي تضارب الجلسة في الوضع الحي) */}
+            {USE_MOCK_API && (
+              <>
+                {/* فاصل المتابعة السريعة */}
+                <div className="relative my-4">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-surface-container dark:border-emerald-900/30" />
+                  </div>
+                  <div className="relative flex justify-center text-xs">
+                    <span className="px-2.5 bg-white dark:bg-[#122019] text-on-surface-variant dark:text-gray-400 font-medium">
+                      {t('auth.orQuick')}
+                    </span>
+                  </div>
+                </div>
 
-            {/* أزرار الدخول السريع */}
-            <div className="grid grid-cols-2 gap-2.5">
-              <button
-                type="button"
-                disabled={isGoogleLoading}
-                onClick={handleGoogleLogin}
-                className="py-2.5 px-3 rounded-xl border border-outline-variant dark:border-emerald-900/50 hover:bg-surface-container-low dark:hover:bg-emerald-950/40 transition-colors flex items-center justify-center gap-2 text-xs font-bold text-on-surface dark:text-white cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
-              >
-                {isGoogleLoading ? (
-                  <Loader2 className="w-4 h-4 animate-spin text-primary dark:text-emerald-400" />
-                ) : (
-                  <LogIn className="w-4 h-4 text-primary dark:text-emerald-300" />
-                )}
-                <span>{isGoogleLoading ? (isEnglish ? 'Connecting...' : 'جاري الاتصال...') : t('auth.viaGoogle')}</span>
-              </button>
+                {/* أزرار الدخول السريع */}
+                <div className="grid grid-cols-2 gap-2.5">
+                  <button
+                    type="button"
+                    disabled={isGoogleLoading}
+                    onClick={handleGoogleLogin}
+                    className="py-2.5 px-3 rounded-xl border border-outline-variant dark:border-emerald-900/50 hover:bg-surface-container-low dark:hover:bg-emerald-950/40 transition-colors flex items-center justify-center gap-2 text-xs font-bold text-on-surface dark:text-white cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    {isGoogleLoading ? (
+                      <Loader2 className="w-4 h-4 animate-spin text-primary dark:text-emerald-400" />
+                    ) : (
+                      <LogIn className="w-4 h-4 text-primary dark:text-emerald-300" />
+                    )}
+                    <span>{isGoogleLoading ? (isEnglish ? 'Connecting...' : 'جاري الاتصال...') : t('auth.viaGoogle')}</span>
+                  </button>
 
-              <button
-                type="button"
-                onClick={() => {
-                  login({ identifier: '771234567', name: 'عبد الرحمن اليافعي' });
-                  closeAuthModal();
-                }}
-                className="py-2.5 px-3 rounded-xl border border-primary-container/30 bg-primary-container/10 hover:bg-primary-container/20 text-primary dark:text-emerald-300 transition-colors flex items-center justify-center gap-2 text-xs font-bold cursor-pointer"
-              >
-                <User className="w-4 h-4" />
-                <span>{t('auth.viaWhatsApp')}</span>
-              </button>
-            </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      login({ identifier: '771234567', name: 'عبد الرحمن اليافعي' });
+                      closeAuthModal();
+                    }}
+                    className="py-2.5 px-3 rounded-xl border border-primary-container/30 bg-primary-container/10 hover:bg-primary-container/20 text-primary dark:text-emerald-300 transition-colors flex items-center justify-center gap-2 text-xs font-bold cursor-pointer"
+                  >
+                    <User className="w-4 h-4" />
+                    <span>{t('auth.viaWhatsApp')}</span>
+                  </button>
+                </div>
+              </>
+            )}
 
             {/* إشعار الأمان والحماية */}
             <div className="mt-4 pt-3 border-t border-surface-container dark:border-emerald-900/30 text-center flex items-center justify-center gap-1.5 text-on-surface-variant dark:text-gray-400 font-label-sm text-[11px]">
