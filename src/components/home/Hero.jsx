@@ -12,6 +12,7 @@ import {
   PhoneCall,
   Search,
   ShoppingBag,
+  Sprout,
 } from 'lucide-react';
 import HeroAmbientBackground from './HeroAmbientBackground';
 import HeroParticlesBackground from './HeroParticlesBackground';
@@ -196,14 +197,39 @@ export default function Hero({
           {/* ============================================================== */}
           <div className="lg:col-span-7 flex flex-col items-start text-start">
             
+            {/* شارة AgriMarket الزجاجية الراقية مع أيقونة Sprout ونقطة المؤشر الزمردية */}
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/70 dark:bg-emerald-950/70 backdrop-blur-md border border-emerald-500/20 dark:border-emerald-400/25 shadow-xs text-xs font-semibold mb-3">
+              <div className="w-5 h-5 rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-white shadow-xs ring-1 ring-emerald-400/20">
+                <Sprout className="w-3.5 h-3.5" />
+              </div>
+              <span dir="ltr" className="inline-flex items-baseline font-bold tracking-tight">
+                <span className="font-extrabold text-emerald-950 dark:text-white">Agri</span>
+                <span className="font-extrabold text-emerald-600 dark:text-emerald-400">Market</span>
+              </span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-secondary dark:text-emerald-300/80 text-[11px] font-medium border-r rtl:border-r-0 rtl:border-l border-emerald-900/10 dark:border-emerald-400/20 px-1.5">
+                {isEnglish ? 'Smart Agricultural Marketplace' : 'منصة التسويق الزراعي'}
+              </span>
+            </div>
+
             {/* الشارة التوثيقية العلوية الزجاجية */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/40 dark:bg-emerald-950/60 backdrop-blur-md border border-emerald-900/10 dark:border-emerald-700/40 text-primary dark:text-emerald-300 shadow-xs text-xs font-semibold">
               <BadgeCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               <span>{t('hero.badge')}</span>
             </div>
 
-            {/* العنوان الرئيسي الجريء بدون أي صندوق خانق */}
+            {/* العنوان الرئيسي الجريء مع لمسة تدرج خفيفة على اسم المنصة */}
             <h1 className="font-headline-lg text-3xl sm:text-4xl lg:text-[44px] lg:leading-[54px] font-black text-on-surface dark:text-white tracking-tight mt-4 mb-3">
+              <span className="block text-sm sm:text-base font-bold text-emerald-700 dark:text-emerald-400 mb-1.5 tracking-normal">
+                {isEnglish ? 'Welcome to ' : 'مرحباً بكم في '}
+                <span dir="ltr" className="inline-flex items-baseline font-extrabold bg-gradient-to-r from-emerald-700 via-emerald-600 to-emerald-500 dark:from-emerald-400 dark:via-emerald-300 dark:to-emerald-200 bg-clip-text text-transparent">
+                  AgriMarket
+                </span>
+                <span className="text-on-surface-variant/60 dark:text-emerald-300/40 font-normal mx-1.5">|</span>
+                <span className="font-medium text-xs sm:text-sm text-secondary dark:text-emerald-300/80">
+                  {isEnglish ? 'Specialty Agricultural Hub' : 'وجهة المحاصيل الزراعية الفاخرة'}
+                </span>
+              </span>
               {t('hero.title')}
             </h1>
 

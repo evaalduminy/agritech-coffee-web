@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useSettings } from '../context/SettingsContext';
+import { SITE_CONFIG } from '../config/siteConfig';
 import { mockOrders, mockProducts } from '../data/mockData';
 import { openWhatsApp } from '../services/whatsapp';
 import {
@@ -91,8 +92,8 @@ export default function BuyerDashboard({ onReturnToStore = () => {} }) {
 
   // بيانات التوصيل والتواصل المحفوظة للمشتري
   const [deliveryDetails, setDeliveryDetails] = useState({
-    name: user?.name || (isEnglish ? 'Coffee Market Client' : 'عميل سوق البن'),
-    phone: user?.phone || user?.emailOrPhone || '+967 770 123 456',
+    name: user?.name || (isEnglish ? `${SITE_CONFIG.brand.name} Client` : `عميل ${SITE_CONFIG.brand.name}`),
+    phone: user?.phone || user?.emailOrPhone || SITE_CONFIG.contact.phone,
     address: isEnglish ? "Sana'a, Sixtieth Street, Near Agricultural Center" : 'صنعاء، شارع الستين، قرب المركز الزراعي',
   });
 
@@ -525,7 +526,7 @@ export default function BuyerDashboard({ onReturnToStore = () => {} }) {
                 {t('dashboard.advisorDesc')}
               </p>
               <a
-                href="https://wa.me/967770000000"
+                href={`https://wa.me/${SITE_CONFIG.contact.whatsappNumber}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-space-xs w-full py-2.5 px-space-md bg-primary hover:bg-[#204613] text-on-primary font-label-md text-label-md rounded-xl flex items-center justify-center gap-2 transition-colors shadow-sm"

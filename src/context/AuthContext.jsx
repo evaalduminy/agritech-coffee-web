@@ -11,6 +11,7 @@ import {
   authApi,
   tokenStorage,
 } from '../services/api';
+import { SITE_CONFIG } from '../config/siteConfig';
 
 // إنشاء سياق إدارة حالة المصادقة وحسابات المستخدمين
 const AuthContext = createContext(null);
@@ -23,25 +24,40 @@ const sanitizePhone = (val) => {
   return String(val || '').replace(/[\s\-_]/g, '').trim();
 };
 
-// فحص ما إذا كان الرقم يطابق رقم الأدمن
-const checkIsAdminPhone = (val) => {
-  const clean = sanitizePhone(val);
-  return clean === '777000000' || clean.endsWith('777000000');
+// فحص ما إذا كان المعرف يطابق حساب المالك التجريبي (في الوضع التجريبي فقط)
+const checkIsAdminMock = (val) => {
+  if (!USE_MOCK_API) return false;
+  const raw = String(val || '').trim().toLowerCase();
+  const cleanPhone = sanitizePhone(raw);
+  return (
+    cleanPhone === '770000000' ||
+    cleanPhone.endsWith('770000000') ||
+    cleanPhone === '777000000' ||
+    cleanPhone.endsWith('777000000') ||
+    raw === 'admin@agrimarket.com'
+  );
 };
 
 // مزود سياق المصادقة لكافة أنحاء التطبيق
 export function AuthProvider({ children }) {
-  // حالة المستخدم الحالي مع استرجاع الصلاحية دور المشتري أو المالك
+  // حالة المستخدم الحالي مع استرجاع الصلاحية (دور المشتري أو المالك)
   const [user, setUser] = useState(() => {
     try {
       const saved = localStorage.getItem(AUTH_STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        const isPhoneAdmin = checkIsAdminPhone(parsed.phone) || checkIsAdminPhone(parsed.emailOrPhone);
-        if (isPhoneAdmin) {
-          parsed.role = 'admin';
-          if (!parsed.name || parsed.name === 'عميل سوق البن' || parsed.name === 'إدارة المنصة (المالك)') {
-            parsed.name = 'مدير المنصة';
+        // في وضع المحاكاة فقط: التأكد من مطابقة صلاحية المالك
+        if (USE_MOCK_API) {
+          const isMockAdmin =
+            checkIsAdminMock(parsed.phone) ||
+            checkIsAdminMock(parsed.emailOrPhone) ||
+            checkIsAdminMock(parsed.email);
+          if (isMockAdmin) {
+            parsed.role = 'admin';
+            parsed.badge = 'مالك المنصة';
+            if (!parsed.name || parsed.name === 'عميل سوق البن' || parsed.name === `عميل ${SITE_CONFIG.brand.name}` || parsed.name === 'مدير المنصة') {
+              parsed.name = 'مالك المنصة';
+            }
           }
         } else if (!parsed.role) {
           parsed.role = 'buyer';
@@ -140,7 +156,7 @@ export function AuthProvider({ children }) {
         }
 
         const apiUser = res?.data?.user || res?.user || res?.data || {};
-        const fullName = [apiUser.first_name, apiUser.last_name].filter(Boolean).join(' ') || apiUser.name || 'عميل سوق البن';
+        const fullName = [apiUser.first_name, apiUser.last_name].filter(Boolean).join(' ') || apiUser.name || `عميل ${SITE_CONFIG.brand.name}`;
 
         const loggedUser = {
           ...apiUser,
@@ -160,16 +176,16 @@ export function AuthProvider({ children }) {
       }
     }
 
-    // 2. في حال وضع المحاكاة المحلية
+    // 2. في حال وضع المحاكاة المحلية (حساب المالك التجريبي برقم 770000000 أو البريد admin@agrimarket.com)
     const hasExplicitName = Boolean(credentials.name && credentials.name.trim());
-    const isAdminUser = checkIsAdminPhone(cleanIdentifier);
+    const isAdminUser = USE_MOCK_API && (checkIsAdminMock(cleanIdentifier) || checkIsAdminMock(rawIdentifier));
     const userRole = isAdminUser ? 'admin' : 'buyer';
 
-    let displayName = 'عميل سوق البن';
+    let displayName = `عميل ${SITE_CONFIG.brand.name}`;
     if (hasExplicitName) {
       displayName = credentials.name.trim();
     } else if (isAdminUser) {
-      displayName = 'مدير المنصة';
+      displayName = 'مالك المنصة';
     }
 
     const nameParts = displayName.trim().split(/\s+/);
@@ -181,9 +197,11 @@ export function AuthProvider({ children }) {
       name: displayName,
       first_name: firstName,
       last_name: lastName,
-      phone: cleanIdentifier || '771234567',
-      emailOrPhone: rawIdentifier.trim() || cleanIdentifier || '771234567',
+      phone: cleanIdentifier || (userRole === 'admin' ? '770000000' : '771234567'),
+      emailOrPhone: rawIdentifier.trim() || cleanIdentifier || (userRole === 'admin' ? '770000000' : '771234567'),
+      email: rawIdentifier.includes('@') ? rawIdentifier.trim() : (userRole === 'admin' ? 'admin@agrimarket.com' : 'buyer@agrimarket.com'),
       role: userRole,
+      badge: userRole === 'admin' ? 'مالك المنصة' : '',
       isFarmerPartner: false,
     };
 
@@ -245,20 +263,21 @@ export function AuthProvider({ children }) {
     }
 
     // 2. في حال وضع المحاكاة المحلية
-    const fullName = [firstName, lastName].filter(Boolean).join(' ') || userData.name || 'عميل سوق البن';
-    const isAdminUser = checkIsAdminPhone(cleanPhone);
+    const fullName = [firstName, lastName].filter(Boolean).join(' ') || userData.name || `عميل ${SITE_CONFIG.brand.name}`;
+    const isAdminUser = USE_MOCK_API && (checkIsAdminMock(cleanPhone) || checkIsAdminMock(email));
     const assignedRole = isAdminUser ? 'admin' : 'buyer';
 
     const newUser = {
-      id: `USR-${Date.now().toString().slice(-4)}`,
+      id: assignedRole === 'admin' ? 'USR-ADMIN-01' : `USR-${Date.now().toString().slice(-4)}`,
       first_name: firstName,
       last_name: lastName,
-      name: fullName,
+      name: assignedRole === 'admin' && (!fullName || fullName === `عميل ${SITE_CONFIG.brand.name}`) ? 'مالك المنصة' : fullName,
       username: username || `user_${Date.now().toString().slice(-4)}`,
-      email: email,
-      phone: cleanPhone || '770000000',
-      emailOrPhone: cleanPhone || email || '770000000',
+      email: email || (assignedRole === 'admin' ? 'admin@agrimarket.com' : 'buyer@agrimarket.com'),
+      phone: cleanPhone || (assignedRole === 'admin' ? '770000000' : '771234567'),
+      emailOrPhone: cleanPhone || email || (assignedRole === 'admin' ? '770000000' : '771234567'),
       role: assignedRole,
+      badge: assignedRole === 'admin' ? 'مالك المنصة' : '',
       isFarmerPartner: false,
       provider: 'local',
     };

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Smartphone, Play, Download, Bell, X } from 'lucide-react';
 import { useSettings } from '../../context/SettingsContext';
+import { SITE_CONFIG } from '../../config/siteConfig';
 
 // مكوّن بانر تحميل التطبيق الزراعي للهواتف الذكية مع إشعار التوفر القريب
 export default function AppDownloadBanner() {
@@ -21,9 +22,22 @@ export default function AppDownloadBanner() {
     return () => clearTimeout(timer);
   }, [showToast]);
 
-  // معالجة النقر على أزرار التحميل
-  const handleDownloadClick = () => {
-    setShowToast(true);
+  // معالجة النقر على زر متجر Google Play
+  const handlePlayStoreClick = () => {
+    if (SITE_CONFIG.appDownload.playStoreUrl) {
+      window.open(SITE_CONFIG.appDownload.playStoreUrl, '_blank', 'noopener,noreferrer');
+    } else {
+      setShowToast(true);
+    }
+  };
+
+  // معالجة النقر على زر تحميل ملف APK المباشر
+  const handleApkClick = () => {
+    if (SITE_CONFIG.appDownload.apkUrl) {
+      window.open(SITE_CONFIG.appDownload.apkUrl, '_blank', 'noopener,noreferrer');
+    } else {
+      setShowToast(true);
+    }
   };
 
   return (
@@ -57,7 +71,7 @@ export default function AppDownloadBanner() {
               {/* زر متجر Google Play */}
               <button
                 type="button"
-                onClick={handleDownloadClick}
+                onClick={handlePlayStoreClick}
                 className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white text-emerald-950 hover:bg-emerald-50 active:scale-95 transition-all text-xs sm:text-sm font-bold shadow-md cursor-pointer"
               >
                 <Play className="w-4 h-4 fill-current" />
@@ -67,7 +81,7 @@ export default function AppDownloadBanner() {
               {/* زر تحميل ملف APK المباشر */}
               <button
                 type="button"
-                onClick={handleDownloadClick}
+                onClick={handleApkClick}
                 className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 active:scale-95 text-white border border-white/20 transition-all text-xs sm:text-sm font-semibold cursor-pointer backdrop-blur-md"
               >
                 <Download className="w-4 h-4" />

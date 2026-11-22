@@ -1,5 +1,4 @@
 import {
-  Sprout,
   ShieldCheck,
   PhoneCall,
   User,
@@ -13,7 +12,8 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useSettings } from '../../context/SettingsContext';
-import { DEFAULT_WHATSAPP_PHONE } from '../../services/whatsapp';
+import { SITE_CONFIG } from '../../config/siteConfig';
+import BrandLogo from '../common/BrandLogo';
 
 // أيقونة منصة فيسبوك (Facebook)
 function FacebookIcon({ className = 'w-4 h-4' }) {
@@ -71,51 +71,25 @@ function YoutubeIcon({ className = 'w-4 h-4' }) {
   );
 }
 
-// مصفوفة روابط شبكات التواصل الاجتماعي القابلة للتخصيص والتعديل السهل
-const SOCIAL_LINKS = [
-  {
-    id: 'whatsapp',
-    label: 'واتساب | WhatsApp',
-    href: `https://wa.me/${DEFAULT_WHATSAPP_PHONE}`,
-    icon: WhatsAppIcon,
-    hoverBg: 'hover:bg-emerald-500/10 hover:border-emerald-500/40 hover:text-emerald-600 dark:hover:text-emerald-400',
-  },
-  {
-    id: 'facebook',
-    label: 'فيسبوك | Facebook',
-    href: 'https://facebook.com',
-    icon: FacebookIcon,
-    hoverBg: 'hover:bg-blue-600/10 hover:border-blue-600/40 hover:text-blue-600 dark:hover:text-blue-400',
-  },
-  {
-    id: 'instagram',
-    label: 'إنستغرام | Instagram',
-    href: 'https://instagram.com',
-    icon: InstagramIcon,
-    hoverBg: 'hover:bg-pink-600/10 hover:border-pink-600/40 hover:text-pink-600 dark:hover:text-pink-400',
-  },
-  {
-    id: 'x',
-    label: 'إكس | X (Twitter)',
-    href: 'https://x.com',
-    icon: XIcon,
-    hoverBg: 'hover:bg-zinc-800/10 hover:border-zinc-800/40 hover:text-zinc-900 dark:hover:bg-white/10 dark:hover:border-white/40 dark:hover:text-white',
-  },
-  {
-    id: 'telegram',
-    label: 'تيليجرام | Telegram',
-    href: 'https://t.me',
-    icon: TelegramIcon,
-    hoverBg: 'hover:bg-sky-500/10 hover:border-sky-500/40 hover:text-sky-500 dark:hover:text-sky-400',
-  },
-  {
-    id: 'youtube',
-    label: 'يوتيوب | YouTube',
-    href: 'https://youtube.com',
-    icon: YoutubeIcon,
-    hoverBg: 'hover:bg-red-600/10 hover:border-red-600/40 hover:text-red-600 dark:hover:text-red-400',
-  },
-];
+// خريطة أيقونات منصات التواصل
+const SOCIAL_ICONS = {
+  whatsapp: WhatsAppIcon,
+  facebook: FacebookIcon,
+  instagram: InstagramIcon,
+  x: XIcon,
+  telegram: TelegramIcon,
+  youtube: YoutubeIcon,
+};
+
+// خريطة أنماط التمرير لأزرار التواصل
+const SOCIAL_HOVER_STYLES = {
+  whatsapp: 'hover:bg-emerald-500/10 hover:border-emerald-500/40 hover:text-emerald-600 dark:hover:text-emerald-400',
+  facebook: 'hover:bg-blue-600/10 hover:border-blue-600/40 hover:text-blue-600 dark:hover:text-blue-400',
+  instagram: 'hover:bg-pink-600/10 hover:border-pink-600/40 hover:text-pink-600 dark:hover:text-pink-400',
+  x: 'hover:bg-zinc-800/10 hover:border-zinc-800/40 hover:text-zinc-900 dark:hover:bg-white/10 dark:hover:border-white/40 dark:hover:text-white',
+  telegram: 'hover:bg-sky-500/10 hover:border-sky-500/40 hover:text-sky-500 dark:hover:text-sky-400',
+  youtube: 'hover:bg-red-600/10 hover:border-red-600/40 hover:text-red-600 dark:hover:text-red-400',
+};
 
 // مكوّن التذييل السفلي المتجاوب للمنصة (Footer) مع شريط شبكات التواصل ودعم كامل للترجمة
 export default function Footer({
@@ -150,10 +124,10 @@ export default function Footer({
   };
 
   // رابط واتساب المباشر للاستفسار العام
-  const whatsappUrl = `https://wa.me/${DEFAULT_WHATSAPP_PHONE}?text=${encodeURIComponent(
+  const whatsappUrl = `https://wa.me/${SITE_CONFIG.contact.whatsappNumber}?text=${encodeURIComponent(
     isEnglish
-      ? 'Hello, I would like to inquire about authentic Yemeni specialty coffee lots and AgriTech platform services.'
-      : 'السلام عليكم، أود الاستفسار عن محاصيل البن اليمني الفاخر وخدمات منصة سوق البن.'
+      ? `Hello, I would like to inquire about authentic Yemeni specialty coffee lots and ${SITE_CONFIG.brand.name} platform services.`
+      : `السلام عليكم، أود الاستفسار عن محاصيل البن اليمني الفاخر وخدمات منصة ${SITE_CONFIG.brand.name}.`
   )}`;
 
   return (
@@ -168,19 +142,7 @@ export default function Footer({
           
           {/* العمود الأول: هوية المنصة والرؤية وشبكات التواصل */}
           <div className="flex flex-col gap-space-sm text-start">
-            <div className="flex items-center gap-space-xs">
-              <div className="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center text-on-primary shadow-xs">
-                <Sprout className="w-6 h-6" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-headline-sm text-headline-sm text-primary font-bold leading-tight">
-                  {t('footer.brand')}
-                </span>
-                <span className="font-label-sm text-label-sm text-secondary tracking-wide">
-                  {t('footer.brandSubtitle')}
-                </span>
-              </div>
-            </div>
+            <BrandLogo size="md" showSubtitle={true} />
 
             <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
               {t('footer.vision')}
@@ -203,8 +165,9 @@ export default function Footer({
                 {t('footer.followUs')}
               </span>
               <div className="flex flex-wrap items-center gap-2">
-                {SOCIAL_LINKS.map((item) => {
-                  const Icon = item.icon;
+                {SITE_CONFIG.socialLinks.map((item) => {
+                  const Icon = SOCIAL_ICONS[item.platform] || SOCIAL_ICONS[item.id] || MessageSquare;
+                  const hoverBg = SOCIAL_HOVER_STYLES[item.platform] || SOCIAL_HOVER_STYLES[item.id] || '';
                   return (
                     <a
                       key={item.id}
@@ -213,7 +176,7 @@ export default function Footer({
                       rel="noopener noreferrer"
                       aria-label={item.label}
                       title={item.label}
-                      className={`w-10 h-10 rounded-xl bg-emerald-950/5 dark:bg-white/5 border border-emerald-900/10 dark:border-emerald-400/15 text-on-surface-variant dark:text-gray-300 flex items-center justify-center transition-all duration-200 hover:-translate-y-1 shadow-xs ${item.hoverBg}`}
+                      className={`w-10 h-10 rounded-xl bg-emerald-950/5 dark:bg-white/5 border border-emerald-900/10 dark:border-emerald-400/15 text-on-surface-variant dark:text-gray-300 flex items-center justify-center transition-all duration-200 hover:-translate-y-1 shadow-xs ${hoverBg}`}
                     >
                       <Icon className="w-4 h-4" />
                     </a>
@@ -314,7 +277,7 @@ export default function Footer({
 
               <div className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-primary shrink-0" />
-                <span dir="ltr" className="font-bold text-on-surface">+967 770 000 000</span>
+                <span dir="ltr" className="font-bold text-on-surface">{SITE_CONFIG.contact.phone}</span>
               </div>
 
               <div className="flex items-center gap-2">

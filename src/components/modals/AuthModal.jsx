@@ -3,8 +3,6 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   X,
-  Sprout,
-  BadgeCheck,
   LogIn,
   UserPlus,
   Mail,
@@ -21,6 +19,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useSettings } from '../../context/SettingsContext';
+import BrandLogo from '../common/BrandLogo';
 
 // مكوّن نافذة تسجيل الدخول وإنشاء الحساب المنبثقة (AuthModal) مع دعم اللغتين
 export default function AuthModal() {
@@ -223,22 +222,14 @@ export default function AuthModal() {
               <X className="w-5 h-5" />
             </button>
 
-            {/* ترويسة الشعار والترحيب */}
+            {/* ترويسة الشعار والترحيب الموحّد */}
             <div className="flex flex-col items-center text-center mb-5">
-              <div className="relative mb-3">
-                <div className="w-14 h-14 rounded-2xl bg-primary text-white flex items-center justify-center shadow-lg">
-                  <Sprout className="w-8 h-8" />
-                </div>
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center border-2 border-white shadow-xs">
-                  <BadgeCheck className="w-4 h-4 text-secondary font-bold" />
-                </div>
+              <div className="mb-3">
+                <BrandLogo size="lg" showSubtitle={false} />
               </div>
 
               <div className="flex items-center gap-1.5 justify-center">
-                <h3 className="font-headline-sm text-headline-sm text-primary dark:text-white font-bold">
-                  {t('auth.title')}
-                </h3>
-                <span className="px-2 py-0.5 rounded-full bg-primary-container/15 text-primary dark:text-emerald-300 text-[11px] font-bold">
+                <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-400/20 text-emerald-800 dark:text-emerald-300 text-[11px] font-bold border border-emerald-500/20">
                   {t('auth.badge')}
                 </span>
               </div>

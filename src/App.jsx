@@ -15,6 +15,7 @@ import BuyerDashboard from './pages/BuyerDashboard';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { SettingsProvider, useSettings } from './context/SettingsContext';
+import { SITE_CONFIG } from './config/siteConfig';
 import { mockProducts } from './data/mockData';
 import { openWhatsApp } from './services/whatsapp';
 import {
@@ -48,6 +49,12 @@ const CATEGORY_TO_TAB_MAP = {
 // المكوّن الداخلي للتطبيق بعد تغليفه بمزودات السياق
 function AppContent() {
   const { openSettings, isEnglish } = useSettings();
+
+  // مزامنة عنوان المتصفح مع اسم المنصة والشعار الفرعي حسب اللغة النشطة
+  useEffect(() => {
+    const lang = isEnglish ? 'en' : 'ar';
+    document.title = `${SITE_CONFIG.brand.name} | ${SITE_CONFIG.brand.subtitle[lang]}`;
+  }, [isEnglish]);
 
   // حالة العرض الحالي: المتجر الرئيسي أو لوحة حساب المشتري
   const [currentView, setCurrentView] = useState('home');
@@ -248,6 +255,26 @@ function AppContent() {
     setActiveTab(matchingTab);
   };
 
+  // دالة تصفح المحاصيل من أي مكان مع التبديل الفوري للصفحة الرئيسية والتمرير السلس لقسم المتجر
+  const handleBrowseProducts = () => {
+    if (currentView !== 'home') {
+      setCurrentView('home');
+      setActiveTab('crops');
+      setTimeout(() => {
+        const cropsSection = document.getElementById('coffee-products');
+        if (cropsSection) {
+          cropsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 120);
+    } else {
+      setActiveTab('crops');
+      const cropsSection = document.getElementById('coffee-products');
+      if (cropsSection) {
+        cropsSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
   // دالة الطلب المباشر عبر واتساب لمحصول فردي
   const handleWhatsAppOrder = async (product) => {
     const singleOrder = {
@@ -316,7 +343,7 @@ function AppContent() {
       <TabLoader isLoading={isLoading} />
 
       {/* 3. نافذة السلة الجانبية المنزلقة */}
-      <CartDrawer />
+      <CartDrawer onBrowseProducts={handleBrowseProducts} />
 
       {/* طبقة تأثير طيران المنتج نحو السلة */}
       <FlyToCartOverlay />

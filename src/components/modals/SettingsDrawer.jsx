@@ -36,7 +36,7 @@ export default function SettingsDrawer() {
   } = useSettings();
 
   // جلب حالة المستخدم والصلاحية من سياق المصادقة
-  const { isAdmin } = useAuth();
+  const { isAdmin, user } = useAuth();
 
   // حالة عرض تأكيد الحفظ والتعميم للمالك
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -101,7 +101,7 @@ export default function SettingsDrawer() {
                     </h2>
                     {isAdmin && (
                       <span className="px-2 py-0.5 rounded-md bg-primary text-on-primary text-[10px] font-bold">
-                        {t('settings.ownerBadge')}
+                        {user?.badge || t('settings.ownerBadge')}
                       </span>
                     )}
                   </div>

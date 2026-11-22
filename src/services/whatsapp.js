@@ -1,5 +1,7 @@
-// رقم الهاتف الافتراضي للتواصل وخدمة العملاء
-export const DEFAULT_WHATSAPP_PHONE = '967770000000';
+import { SITE_CONFIG } from '../config/siteConfig';
+
+// رقم الهاتف الافتراضي للتواصل وخدمة العملاء من ملف الإعدادات المركزي
+export const DEFAULT_WHATSAPP_PHONE = SITE_CONFIG.contact.whatsappNumber;
 
 // خريطة حالات الطلب والحجز بالعربية
 const STATUS_LABELS = {
@@ -26,7 +28,7 @@ export function formatOrderMessage(order, customerInfo = {}) {
   // تجميع أسطر الترويسة الأساسية للرسالة
   const lines = [
     `*${title}*`,
-    'منصة سوق البن الفاخر (AgriTech Platform)',
+    `منصة ${SITE_CONFIG.brand.name} - ${SITE_CONFIG.brand.subtitle.ar}`,
     '---------------------------------------',
     `*رقم المعاملة:* ${order.id || 'جديد'}`,
     `*التاريخ:* ${orderDate}`,

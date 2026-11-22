@@ -21,7 +21,7 @@ import { openWhatsApp } from '../../services/whatsapp';
 import { USE_MOCK_API, ordersApi } from '../../services/api';
 
 // مكوّن السلة الجانبية المنبثقة مع فرض تسجيل الدخول عند تأكيد الطلب وحفظ المعاملة
-export default function CartDrawer() {
+export default function CartDrawer({ onBrowseProducts }) {
   const {
     cartItems,
     isCartOpen,
@@ -62,6 +62,21 @@ export default function CartDrawer() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isCartOpen, closeCart]);
+
+  // معالجة النقر على زر تصفح المحاصيل مع إغلاق السلة والتمرير لقسم المحاصيل
+  const handleBrowseClick = () => {
+    closeCart();
+    if (onBrowseProducts) {
+      onBrowseProducts();
+    } else {
+      setTimeout(() => {
+        const cropsSection = document.getElementById('coffee-products');
+        if (cropsSection) {
+          cropsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 120);
+    }
+  };
 
   // دالة تأكيد الطلب مع الربط المباشر بـ Laravel في الوضع الحي
   const handleCheckoutWhatsApp = async () => {
@@ -291,10 +306,7 @@ export default function CartDrawer() {
                   </div>
                   <button
                     type="button"
-                    onClick={() => {
-                      closeCart();
-                      document.getElementById('coffee-products')?.scrollIntoView({ behavior: 'smooth' });
-                    }}
+                    onClick={handleBrowseClick}
                     className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-on-primary font-label-md font-bold hover:bg-[#204613] transition-all shadow-sm cursor-pointer"
                   >
                     <span>{t('cart.browseNow')}</span>

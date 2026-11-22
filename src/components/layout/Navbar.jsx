@@ -1,8 +1,9 @@
 import { motion } from 'framer-motion';
-import { Sprout, PhoneCall, ShoppingBag, User, Sliders } from 'lucide-react';
+import { PhoneCall, ShoppingBag, User, Sliders } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { useSettings } from '../../context/SettingsContext';
+import BrandLogo from '../common/BrandLogo';
 
 // مكوّن شريط التنقل الزجاجي العائم مع الشعار والتبويبات الشاملة وأزرار الإجراءات
 export default function Navbar({
@@ -72,24 +73,12 @@ export default function Navbar({
         {/* الصف العلوي: الشعار، التبويبات للشاشات الكبيرة، وحزمة الأدوات */}
         <div className="h-16 sm:h-18 px-3.5 sm:px-6 flex items-center justify-between gap-3 sm:gap-6">
           
-          {/* قسم الشعار واسم المنصة */}
-          <button
-            type="button"
+          {/* قسم الشعار واسم المنصة الموحّد */}
+          <BrandLogo
+            size="md"
+            showSubtitle={true}
             onClick={() => handleTabClick('home')}
-            className="flex items-center gap-2.5 sm:gap-3 group text-start cursor-pointer select-none"
-          >
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-primary/10 dark:bg-emerald-500/15 border border-primary/20 dark:border-emerald-400/20 flex items-center justify-center text-primary dark:text-emerald-300 shadow-xs group-hover:bg-primary group-hover:text-white transition-all">
-              <Sprout className="w-5 h-5 sm:w-5.5 sm:h-5.5" />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-bold text-sm sm:text-base text-primary dark:text-white leading-tight tracking-tight">
-                {t('navbar.brand')}
-              </span>
-              <span className="text-[11px] sm:text-xs text-secondary dark:text-emerald-400/80 font-medium tracking-wide">
-                {t('navbar.brandSubtitle')}
-              </span>
-            </div>
-          </button>
+          />
 
           {/* تبويبات التصفح الرئيسية للشاشات الكبيرة مع المؤشر المنزلق */}
           <nav className="hidden lg:flex items-center gap-1.5 p-1 rounded-xl bg-surface-container-low/60 dark:bg-[#122019]/60 border border-emerald-900/5 dark:border-emerald-400/10" aria-label="التنقل الرئيسي">

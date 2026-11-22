@@ -1,5 +1,7 @@
+import { SITE_CONFIG } from '../config/siteConfig';
+
 /**
- * قاموس الترجمة الشامل لمنصة سوق البن الفاخر (AgriTech Coffee Platform)
+ * قاموس الترجمة الشامل لمنصة AgriMarket
  * يدعم اللغتين العربية (ar) والإنجليزية (en) لجميع أجزاء المنصة
  */
 
@@ -7,8 +9,8 @@ export const translations = {
   ar: {
     // 1. شريط التنقل العلوي
     navbar: {
-      brand: 'سوق البن الفاخر',
-      brandSubtitle: 'AgriTech Platform',
+      brand: SITE_CONFIG.brand.name,
+      brandSubtitle: SITE_CONFIG.brand.subtitle.ar,
       home: 'الرئيسية',
       crops: 'المتجر والمحاصيل',
       origins: 'المصادر والمزارعون',
@@ -21,7 +23,7 @@ export const translations = {
       settingsLabel: 'إعدادات المظهر والمنصة',
       profileTitle: 'تسجيل الدخول أو الحساب الشخصي',
       login: 'تسجيل الدخول',
-      guestName: 'عميل سوق البن',
+      guestName: `عميل ${SITE_CONFIG.brand.name}`,
     },
 
     // 2. الواجهة الترحيبية (Hero)
@@ -57,7 +59,7 @@ export const translations = {
       trustAuthentic: 'محاصيل يمنية أصيلة',
       trustShipping: 'شحن مباشر',
       phoneSearchPlaceholder: 'ابحث في محاصيل اليمن...',
-      phoneAppTitle: 'سوق البن الفاخر',
+      phoneAppTitle: SITE_CONFIG.brand.name,
       phoneFeaturedTag: 'المحاصيل المتاحة',
     },
 
@@ -143,8 +145,8 @@ export const translations = {
 
     // 6. نافذة تسجيل الدخول وإنشاء الحساب (AuthModal)
     auth: {
-      title: 'سوق البن الفاخر',
-      badge: 'منصة المزارع',
+      title: SITE_CONFIG.brand.name,
+      badge: SITE_CONFIG.brand.subtitle.ar,
       loginHeading: 'سجّل دخولك لإتمام طلبك وحفظ حجوزاتك',
       loginSubtitle: 'احصل على تتبع فوري للمحاصيل المختارة عبر واتساب وتوثيق رسمي للحجز من المزارع مباشرة.',
       loginTab: 'تسجيل الدخول',
@@ -190,7 +192,7 @@ export const translations = {
     // 7. صفحة حساب المشتري (BuyerDashboard)
     dashboard: {
       breadcrumbHome: 'الرئيسية',
-      breadcrumbStore: 'سوق البن الفاخر',
+      breadcrumbStore: SITE_CONFIG.brand.name,
       breadcrumbCurrent: 'حساب المشتري',
       returnToStore: 'العودة للمتجر',
       welcome: 'أهلاً بك،',
@@ -258,8 +260,8 @@ export const translations = {
 
     // 8. التذييل السفلي (Footer)
     footer: {
-      brand: 'سوق البن الفاخر',
-      brandSubtitle: 'AgriTech Platform',
+      brand: SITE_CONFIG.brand.name,
+      brandSubtitle: SITE_CONFIG.brand.subtitle.ar,
       vision: 'منظومة زراعية رقمية مبتكرة تربط مزارعي مدرجات البن العالية في حراز ويافع وبني مطر مباشرة بمتذوقي ورواد القهوة المختصة، بنقاء نكهات فريد وتوريد طازج بدون وسطاء.',
       certifiedFarm: 'توثيق زراعي معتمد 100%',
       farmShipping: 'شحن مباشر من المزرعة',
@@ -274,11 +276,11 @@ export const translations = {
       linkSettings: 'إعدادات المظهر والتفضيلات',
       linkGuarantee: 'الضمان الزراعي وجودة التنقيط SCAA',
       contactTitle: 'التواصل والدعم الميداني',
-      location: 'صنعاء - اليمن • مزارع حراز ويافع وبني مطر',
-      workHours: 'ساعات العمل: يومياً 08:00 ص - 10:00 م',
+      location: SITE_CONFIG.contact.location.ar,
+      workHours: SITE_CONFIG.contact.workingHours.ar,
       whatsappSupport: 'محادثة فورية عبر واتساب',
       followUs: 'تابعنا على المنصات:',
-      copyright: '© 2026 سوق البن الفاخر - AgriTech Platform. جميع الحقوق محفوظة.',
+      copyright: `© ${SITE_CONFIG.brand.year} ${SITE_CONFIG.brand.name}. جميع الحقوق محفوظة.`,
       noGatewayNotice: 'تأكيد الطلب والحجز يتم مباشرة عبر واتساب مع المزارعين بدون بوابات دفع إلكتروني.',
       backToTop: 'العودة لأعلى الصفحة',
     },
@@ -398,7 +400,7 @@ export const translations = {
       q3: 'كيف يمكنني كمزارع أو جمعية ربط محصولي بالتطبيق؟',
       a3: 'يمكن للمزارعين والتعاونيات الزراعية الانضمام عبر زر "بوابة المزارعين" في الشريط العلوي، ليقوم فريقنا الميداني بزيارة المزرعة وتوثيق المحاصيل واعتمادها ورفعها مباشرة للمشترين.',
       q4: 'هل تتوفر أو ستتوفر محاصيل زراعية أخرى غير البن؟',
-      a4: 'نعم، المنصة مصممة كبنية زراعية متكاملة (AgriTech Platform)، وبدأت بأجود أنواع البن اليمني وستتوسع تدريجياً لتشمل العسل الجبلي، اللوز، والتمور الفاخرة بنفس معايير التوثيق.',
+      a4: `نعم، المنصة مصممة كبنية زراعية متكاملة (${SITE_CONFIG.brand.name})، وبدأت بأجود أنواع البن اليمني وستتوسع تدريجياً لتشمل العسل الجبلي، اللوز، والتمور الفاخرة بنفس معايير التوثيق.`,
     },
 
     // 15. الأزرار العائمة الذكية (Floating Actions)
@@ -406,15 +408,15 @@ export const translations = {
       whatsappSupport: 'محادثة الدعم الفوري',
       whatsappTooltip: 'تواصل مع خدمة العملاء عبر واتساب',
       scrollToTop: 'العودة للأعلى',
-      supportMessage: 'مرحباً، أود الاستفسار عن منصة سوق البن وخدمات المحاصيل',
+      supportMessage: `مرحباً، أود الاستفسار عن منصة ${SITE_CONFIG.brand.name} وخدمات المحاصيل`,
     },
   },
 
   en: {
     // 1. Navigation Bar
     navbar: {
-      brand: 'Yemeni Specialty Coffee',
-      brandSubtitle: 'AgriTech Platform',
+      brand: SITE_CONFIG.brand.name,
+      brandSubtitle: SITE_CONFIG.brand.subtitle.en,
       home: 'Home',
       crops: 'Store & Crops',
       origins: 'Origins & Farmers',
@@ -427,7 +429,7 @@ export const translations = {
       settingsLabel: 'Appearance & Platform Settings',
       profileTitle: 'Sign In or Buyer Account',
       login: 'Sign In',
-      guestName: 'Coffee Market Guest',
+      guestName: `${SITE_CONFIG.brand.name} Guest`,
     },
 
     // 2. Hero Section
@@ -463,7 +465,7 @@ export const translations = {
       trustAuthentic: '100% Authentic Yemeni',
       trustShipping: 'Direct Shipping',
       phoneSearchPlaceholder: 'Search Yemeni coffee lots...',
-      phoneAppTitle: 'Specialty Coffee',
+      phoneAppTitle: SITE_CONFIG.brand.name,
       phoneFeaturedTag: 'Available Lots',
     },
 
@@ -549,8 +551,8 @@ export const translations = {
 
     // 6. Auth Modal
     auth: {
-      title: 'Yemeni Specialty Coffee',
-      badge: 'Farmer Platform',
+      title: SITE_CONFIG.brand.name,
+      badge: SITE_CONFIG.brand.subtitle.en,
       loginHeading: 'Sign in to complete your order and reserve lots',
       loginSubtitle: 'Receive real-time harvest tracking via WhatsApp and official direct-from-farm reservation certificates.',
       loginTab: 'Sign In',
@@ -596,7 +598,7 @@ export const translations = {
     // 7. Buyer Dashboard
     dashboard: {
       breadcrumbHome: 'Home',
-      breadcrumbStore: 'Coffee Market',
+      breadcrumbStore: SITE_CONFIG.brand.name,
       breadcrumbCurrent: 'Buyer Dashboard',
       returnToStore: 'Back to Store',
       welcome: 'Welcome,',
@@ -664,8 +666,8 @@ export const translations = {
 
     // 8. Footer Section
     footer: {
-      brand: 'Yemeni Specialty Coffee',
-      brandSubtitle: 'AgriTech Platform',
+      brand: SITE_CONFIG.brand.name,
+      brandSubtitle: SITE_CONFIG.brand.subtitle.en,
       vision: 'An innovative digital agriculture platform connecting highland terrace farmers in Haraz, Yafa, and Bani Matar directly with specialty coffee roasters and connoisseurs, with unmatched cup clarity and zero middlemen.',
       certifiedFarm: '100% Certified Agricultural Traceability',
       farmShipping: 'Direct Harvest Dispatch',
@@ -680,11 +682,11 @@ export const translations = {
       linkSettings: 'Appearance & Platform Settings',
       linkGuarantee: 'SCAA Cupping Quality Guarantee',
       contactTitle: 'Contact & Field Support',
-      location: 'Sanaa, Yemen • Mountain Terraces of Haraz, Yafa & Bani Matar',
-      workHours: 'Working Hours: Daily 08:00 AM - 10:00 PM',
+      location: SITE_CONFIG.contact.location.en,
+      workHours: SITE_CONFIG.contact.workingHours.en,
       whatsappSupport: 'Instant WhatsApp Assistance',
       followUs: 'Follow Us:',
-      copyright: '© 2026 Yemeni Specialty Coffee - AgriTech Platform. All rights reserved.',
+      copyright: `© ${SITE_CONFIG.brand.year} ${SITE_CONFIG.brand.name}. All rights reserved.`,
       noGatewayNotice: 'Order and reservation confirmation is conducted directly with farmers via WhatsApp without electronic payment gateways.',
       backToTop: 'Back to Top',
     },
@@ -753,7 +755,7 @@ export const translations = {
 
     // 12. Platform Features
     features: {
-      badge: 'Why AgriTech?',
+      badge: `Why ${SITE_CONFIG.brand.name}?`,
       title: 'Integrated Digital Ecosystem for Authentic Yemeni Coffee Farmers & Roasters',
       desc: 'Combining smart field documentation, AI diagnostics, and direct trade to ensure the highest standards of cup quality and traceability.',
       f1Number: '01',
@@ -772,7 +774,7 @@ export const translations = {
 
     // 13. App Download Banner
     appBanner: {
-      title: 'Download the AgriTech App Now',
+      title: `Download the ${SITE_CONFIG.brand.name} App Now`,
       desc: 'Monitor your crops, diagnose diseases, track orders, and market harvest directly from your phone.',
       googlePlay: 'Get it on Google Play',
       directApk: 'Direct APK Download',
@@ -804,7 +806,7 @@ export const translations = {
       q3: 'How can I connect my farm or cooperative to the app?',
       a3: 'Farmers and agricultural cooperatives can register via the Farmers Portal button in the navbar, prompting our field team to document and verify crops.',
       q4: 'Are other agricultural crops available or planned?',
-      a4: 'Yes, the platform is designed as an all-in-one AgriTech ecosystem, starting with authentic Yemeni coffee and expanding to mountain honey, almonds, and luxury dates.',
+      a4: `Yes, the platform is designed as an all-in-one ${SITE_CONFIG.brand.name} ecosystem, starting with authentic Yemeni coffee and expanding to mountain honey, almonds, and luxury dates.`,
     },
 
     // 15. Floating Smart Actions
@@ -812,7 +814,7 @@ export const translations = {
       whatsappSupport: 'Instant Support Chat',
       whatsappTooltip: 'Contact customer service on WhatsApp',
       scrollToTop: 'Back to Top',
-      supportMessage: 'Hello, I would like to inquire about the AgriTech Coffee Platform and crop services',
+      supportMessage: `Hello, I would like to inquire about ${SITE_CONFIG.brand.name} and crop services`,
     },
   },
 };
