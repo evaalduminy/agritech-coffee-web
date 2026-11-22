@@ -11,6 +11,7 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { useSettings } from '../../context/SettingsContext';
+import { SITE_CONFIG } from '../../config/siteConfig';
 import { DEFAULT_WHATSAPP_PHONE } from '../../services/whatsapp';
 
 // مكوّن نافذة خدمة المزارعين والتعاونيات الزراعية المنبثقة
@@ -31,8 +32,8 @@ export default function FarmersModal({ isOpen = false, onClose = () => {} }) {
   // رابط واتساب المباشر لمكتب خدمة المزارعين
   const whatsappUrl = `https://wa.me/${DEFAULT_WHATSAPP_PHONE}?text=${encodeURIComponent(
     isEnglish
-      ? 'Hello, I am a coffee farmer / cooperative representative and would like to register our harvest lots on the AgriTech platform.'
-      : 'السلام عليكم، أنا مزارع بن / ممثل تعاونية زراعية وأود تسجيل محصولنا الزراعي في منصة سوق البن الفاخر.'
+      ? `Hello, I am a coffee farmer / cooperative representative and would like to register our harvest lots on the ${SITE_CONFIG.brand.name} platform.`
+      : `السلام عليكم، أنا مزارع بن / ممثل تعاونية زراعية وأود تسجيل محصولنا الزراعي في منصة ${SITE_CONFIG.brand.name}.`
   )}`;
 
   return (

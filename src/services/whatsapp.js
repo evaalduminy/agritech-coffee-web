@@ -96,7 +96,7 @@ export function formatInquiryMessage(product, isEnglish = false) {
 
   const lines = [
     '*استفسار عن محصول بن فاخر*',
-    'منصة سوق البن الفاخر (AgriTech Platform)',
+    `منصة ${SITE_CONFIG.brand.name} (${SITE_CONFIG.brand.subtitle.ar})`,
     '---------------------------------------',
     `المحصول: *${name}*`,
     origin ? `المصدر: ${origin}` : '',
@@ -133,7 +133,7 @@ export function openWhatsAppInquiry(product, isEnglish = false, phoneNumber = DE
 // دالة فتح محادثة واتساب للدعم الفني وخدمة العملاء العامة
 export function openWhatsAppSupport(customMessage = '', phoneNumber = DEFAULT_WHATSAPP_PHONE) {
   const cleanPhone = String(phoneNumber).replace(/[^0-9]/g, '');
-  const text = customMessage || 'مرحباً، أود الاستفسار عن منصة سوق البن وخدمات المحاصيل';
+  const text = customMessage || `مرحباً، أود الاستفسار عن منصة ${SITE_CONFIG.brand.name} وخدمات المحاصيل`;
   const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`;
   return window.open(url, '_blank', 'noopener,noreferrer');
 }

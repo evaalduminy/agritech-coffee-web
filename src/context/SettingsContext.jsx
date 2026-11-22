@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import translations from '../data/translations';
 import { USE_MOCK_API, settingsApi } from '../services/api';
+import { SITE_CONFIG } from '../config/siteConfig';
 
 // مفتاح حفظ الإعدادات في التخزين المحلي
 const STORAGE_KEY = 'agritech_settings';
@@ -146,7 +147,7 @@ export function SettingsProvider({ children }) {
   const updateAdminSettings = async (customPayload) => {
     const payload = customPayload || {
       theme: settings.themeMode,
-      platform_name: settings.platform_name || 'سوق البن الفاخر',
+      platform_name: settings.platform_name || SITE_CONFIG.brand.name,
     };
 
     if (!USE_MOCK_API) {

@@ -103,7 +103,7 @@ export function AuthProvider({ children }) {
         if (!isMounted) return;
         const apiUser = res?.data || res?.user || res;
         if (apiUser) {
-          const fullName = [apiUser.first_name, apiUser.last_name].filter(Boolean).join(' ') || apiUser.name || 'عميل سوق البن';
+          const fullName = [apiUser.first_name, apiUser.last_name].filter(Boolean).join(' ') || apiUser.name || `عميل ${SITE_CONFIG.brand.name}`;
           setUser({
             ...apiUser,
             name: fullName,
