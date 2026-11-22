@@ -41,16 +41,16 @@ export default function FarmersModal({ isOpen = false, onClose = () => {} }) {
         <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6"
+          className="fixed inset-0 z-[110] flex items-center justify-center p-4 sm:p-6"
         >
-          {/* الخلفية المعتمة القابلة للنقر للإغلاق */}
+          {/* الخلفية المعتمة القابلة للنقر للإغلاق مع z-[110] */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/55 backdrop-blur-md"
+            className="fixed inset-0 z-[110] bg-black/55 backdrop-blur-md"
           />
 
           {/* بطاقة النافذة المنبثقة */}
@@ -60,7 +60,7 @@ export default function FarmersModal({ isOpen = false, onClose = () => {} }) {
             exit={{ scale: 0.95, opacity: 0, y: 15 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
             onClick={(e) => e.stopPropagation()}
-            className="relative bg-white rounded-3xl shadow-2xl border border-stone-200 max-w-lg w-full p-6 sm:p-8 text-start overflow-hidden z-10"
+            className="relative bg-white rounded-3xl shadow-2xl border border-stone-200 max-w-lg w-full p-6 sm:p-8 text-start overflow-hidden z-[111]"
           >
             {/* زر إغلاق النافذة */}
             <button

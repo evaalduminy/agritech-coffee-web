@@ -1,15 +1,26 @@
 /**
  * بيانات تجريبية موحدة لمنصة سوق البن الفاخر (AgriTech Coffee Platform)
  * متوافقة حرفياً مع عقد البيانات الموحّد (Laravel API) المعرّف في PROJECT_RULES.md
- * تدعم الحقول الأصلية بالعربية والحقول المترجمة بالإنجليزية (_en)
+ * بنية ديناميكية مرنة (Data-Driven) تدعم اللغتين العربية والإنجليزية
  */
 
+// مصفوفة فئات المنتجات المعتمدة لتوليد أزرار التصفية ديناميكياً
+export const CATEGORIES = [
+  { id: 'all', name: 'الكل', name_en: 'All' },
+  { id: 'roasted', name: 'بن محمص مختص', name_en: 'Specialty Roasted' },
+  { id: 'green', name: 'بن أخضر خام', name_en: 'Raw Green Coffee' },
+  { id: 'blends', name: 'خلطات خاصة', name_en: 'Special Blends' },
+  { id: 'haraz', name: 'محاصيل حراز', name_en: 'Haraz Origins' },
+  { id: 'matari', name: 'محاصيل مطري', name_en: 'Matari Origins' },
+];
+
+// قائمة محاصيل المتجر التجريبية بالهيكل المرن المتكامل
 export const mockProducts = [
   {
     id: 1,
     name: "بن حراز مجفف طبيعي",
     name_en: "Harazi Natural Sun-Dried",
-    category: "roasted", // roasted | green | blends | haraz | matari
+    category: "roasted",
     price: 22.00,
     weight: "250 جرام",
     weight_en: "250g",
@@ -24,7 +35,41 @@ export const mockProducts = [
     badge_en: "Specialty Lot",
     is_reservable: true,
     farmer_name: "مزرعة الجبل",
-    farmer_name_en: "Al-Jabal Mountain Farm"
+    farmer_name_en: "Al-Jabal Mountain Farm",
+    freshness_tag: "محصول طازج 2026",
+    freshness_tag_en: "Fresh Harvest 2026",
+    subtitle: "250 جرام • تحميص متوسط",
+    subtitle_en: "250g • Medium Roast",
+    specs: [
+      { label: "المنطقة", label_en: "Origin", value: "حراز - 2200م", value_en: "Haraz - 2200m" },
+      { label: "المعالجة", label_en: "Process", value: "مجفف طبيعي هوائي", value_en: "Natural Sun-Dried" },
+      { label: "السلالة", label_en: "Variety", value: "عديني أصيل", value_en: "Heirloom Udaini" },
+    ],
+    variants: [
+      { id: "v-250g", label: "250 جرام", label_en: "250g", price: 22.00 },
+      { id: "v-500g", label: "500 جرام", label_en: "500g", price: 41.00 },
+      { id: "v-1kg", label: "1 كجم", label_en: "1 kg", price: 78.00 },
+    ],
+    custom_options: {
+      title: "نوع الطحن والتجهيز",
+      title_en: "Grind & Preparation",
+      choices: [
+        { id: "whole_beans", label: "حبوب كاملة (غير مطحون)", label_en: "Whole Beans" },
+        { id: "filter", label: "طحن فلتر وترشيح (V60)", label_en: "Filter / V60" },
+        { id: "espresso", label: "طحن ناعم / إسبريسو", label_en: "Fine / Espresso" },
+        { id: "arabic", label: "طحن دلة قهوة عربية", label_en: "Traditional Arabic Pot" },
+      ],
+    },
+    subscription_discount: 15,
+    usage_guide: {
+      title: "دليل التحضير الموصى به",
+      title_en: "Brewing Guide",
+      steps: [
+        { label: "نسبة التحضير", label_en: "Ratio", value: "1:15" },
+        { label: "حرارة الماء", label_en: "Water Temp", value: "92°C" },
+        { label: "وقت الاستخلاص", label_en: "Brew Time", value: "2:45 د" },
+      ],
+    },
   },
   {
     id: 2,
@@ -45,7 +90,40 @@ export const mockProducts = [
     badge_en: "Best Seller",
     is_reservable: true,
     farmer_name: "مزارع وادي السيل",
-    farmer_name_en: "Wadi Al-Sayl Farms"
+    farmer_name_en: "Wadi Al-Sayl Farms",
+    freshness_tag: "الأعلى طلباً هذا الموسم",
+    freshness_tag_en: "Top Seller This Season",
+    subtitle: "250 جرام • تحميص متوسط خفيف",
+    subtitle_en: "250g • Light-Medium Roast",
+    specs: [
+      { label: "المنطقة", label_en: "Origin", value: "بني مطر - 2100م", value_en: "Bani Matar - 2100m" },
+      { label: "المعالجة", label_en: "Process", value: "مجفف شمسي تقليدي", value_en: "Sun-Dried Natural" },
+      { label: "السلالة", label_en: "Variety", value: "مطري تاريخي", value_en: "Heirloom Matari" },
+    ],
+    variants: [
+      { id: "v-250g", label: "250 جرام", label_en: "250g", price: 26.50 },
+      { id: "v-500g", label: "500 جرام", label_en: "500g", price: 49.00 },
+      { id: "v-1kg", label: "1 كجم", label_en: "1 kg", price: 92.00 },
+    ],
+    custom_options: {
+      title: "نوع الطحن والتجهيز",
+      title_en: "Grind & Preparation",
+      choices: [
+        { id: "whole_beans", label: "حبوب كاملة (غير مطحون)", label_en: "Whole Beans" },
+        { id: "filter", label: "طحن فلتر وترشيح (V60)", label_en: "Filter / V60" },
+        { id: "espresso", label: "طحن ناعم / إسبريسو", label_en: "Fine / Espresso" },
+      ],
+    },
+    subscription_discount: 10,
+    usage_guide: {
+      title: "دليل التحضير الموصى به",
+      title_en: "Brewing Guide",
+      steps: [
+        { label: "نسبة التحضير", label_en: "Ratio", value: "1:16" },
+        { label: "حرارة الماء", label_en: "Water Temp", value: "90°C" },
+        { label: "وقت الاستخلاص", label_en: "Brew Time", value: "3:00 د" },
+      ],
+    },
   },
   {
     id: 3,
@@ -66,7 +144,25 @@ export const mockProducts = [
     badge_en: "Premium Green",
     is_reservable: false,
     farmer_name: "تعاونية حمومة الزراعية",
-    farmer_name_en: "Hamouma Farm Cooperative"
+    farmer_name_en: "Hamouma Farm Cooperative",
+    freshness_tag: "محصول خام للمحامص",
+    freshness_tag_en: "Raw Green Microlot",
+    subtitle: "1 كجم • حبوب خضراء نقية",
+    subtitle_en: "1 kg • Pure Green Beans",
+    specs: [
+      { label: "المنطقة", label_en: "Origin", value: "يافع - 2300م", value_en: "Yafa - 2300m" },
+      { label: "المعالجة", label_en: "Process", value: "فرز يدوي نخب أول", value_en: "Grade 1 Hand-Sorted" },
+      { label: "نسبة الرطوبة", label_en: "Moisture", value: "11.2%", value_en: "11.2%" },
+      { label: "السلالة", label_en: "Variety", value: "يافعي كرزي", value_en: "Yafai Cherry" },
+    ],
+    variants: [
+      { id: "v-1kg", label: "1 كجم", label_en: "1 kg", price: 34.00 },
+      { id: "v-5kg", label: "5 كجم (كيس مزارع)", label_en: "5 kg (Farm Bag)", price: 155.00 },
+      { id: "v-20kg", label: "20 كجم (خيشة معتمدة)", label_en: "20 kg (Jute Sack)", price: 580.00 },
+    ],
+    custom_options: null,
+    subscription_discount: 0,
+    usage_guide: null,
   },
   {
     id: 4,
@@ -87,7 +183,41 @@ export const mockProducts = [
     badge_en: "Signature Blend",
     is_reservable: false,
     farmer_name: "اتحاد المزارعين المستقلين",
-    farmer_name_en: "Independent Growers Guild"
+    farmer_name_en: "Independent Growers Guild",
+    freshness_tag: "تحميص أسبوعي طازج",
+    freshness_tag_en: "Weekly Fresh Batch",
+    subtitle: "250 جرام • تحميص داكن متوازن",
+    subtitle_en: "250g • Dark Roast Blend",
+    specs: [
+      { label: "التركيبة", label_en: "Composition", value: "حرازي ومطري", value_en: "Haraz & Matar" },
+      { label: "المعالجة", label_en: "Process", value: "توليفة مجففة مختارة", value_en: "Selected Natural Blend" },
+      { label: "القوام", label_en: "Body", value: "ممتلئ وغني", value_en: "Full & Syrupy" },
+      { label: "الإيحاءات", label_en: "Notes", value: "شوكولاتة داكنة وبهارات", value_en: "Dark Cocoa & Spices" },
+    ],
+    variants: [
+      { id: "v-250g", label: "250 جرام", label_en: "250g", price: 19.50 },
+      { id: "v-500g", label: "500 جرام", label_en: "500g", price: 36.00 },
+      { id: "v-1kg", label: "1 كجم", label_en: "1 kg", price: 68.00 },
+    ],
+    custom_options: {
+      title: "نوع الطحن والتجهيز",
+      title_en: "Grind & Preparation",
+      choices: [
+        { id: "whole_beans", label: "حبوب كاملة (غير مطحون)", label_en: "Whole Beans" },
+        { id: "arabic", label: "طحن قهوة عربية ناعم", label_en: "Fine Arabic Pot" },
+        { id: "espresso", label: "طحن إسبريسو", label_en: "Espresso" },
+      ],
+    },
+    subscription_discount: 10,
+    usage_guide: {
+      title: "طريقة إعداد الدلة التراثية",
+      title_en: "Traditional Pot Preparation",
+      steps: [
+        { label: "المقدار", label_en: "Dose", value: "3 ملاعق لكل لتر" },
+        { label: "الغليان", label_en: "Boiling", value: "10 دقائق هادئة" },
+        { label: "الإضافات", label_en: "Additions", value: "هيل وزنجبيل حسب الرغبة" },
+      ],
+    },
   },
   {
     id: 5,
@@ -108,7 +238,38 @@ export const mockProducts = [
     badge_en: "Limited Edition",
     is_reservable: true,
     farmer_name: "مزرعة الشيخ صالح",
-    farmer_name_en: "Sheikh Saleh Estate"
+    farmer_name_en: "Sheikh Saleh Estate",
+    freshness_tag: "إصدار ميكرولوت محدود",
+    freshness_tag_en: "Limited Microlot",
+    subtitle: "250 جرام • تحميص خفيف فلتر",
+    subtitle_en: "250g • Light Filter Roast",
+    specs: [
+      { label: "المنطقة", label_en: "Origin", value: "حراز - قرية اللاهاب", value_en: "Haraz - Al-Lahab" },
+      { label: "المعالجة", label_en: "Process", value: "تخمير لاهوائي 96 ساعة", value_en: "96h Anaerobic" },
+      { label: "الارتفاع", label_en: "Elevation", value: "2350م", value_en: "2350m" },
+    ],
+    variants: [
+      { id: "v-250g", label: "250 جرام", label_en: "250g", price: 30.00 },
+      { id: "v-500g", label: "500 جرام", label_en: "500g", price: 56.00 },
+    ],
+    custom_options: {
+      title: "نوع الطحن والتجهيز",
+      title_en: "Grind & Preparation",
+      choices: [
+        { id: "whole_beans", label: "حبوب كاملة (موصى به)", label_en: "Whole Beans (Recommended)" },
+        { id: "filter", label: "طحن فلتر وترشيح (V60)", label_en: "Filter / V60" },
+      ],
+    },
+    subscription_discount: 12,
+    usage_guide: {
+      title: "دليل الترشيح للقهوة المقطرة",
+      title_en: "Pour-Over Filter Guide",
+      steps: [
+        { label: "نسبة التحضير", label_en: "Ratio", value: "1:15" },
+        { label: "حرارة الماء", label_en: "Water Temp", value: "91°C" },
+        { label: "وقت الترطيب", label_en: "Bloom Time", value: "45 ثانية" },
+      ],
+    },
   },
   {
     id: 6,
@@ -129,7 +290,25 @@ export const mockProducts = [
     badge_en: "New Harvest",
     is_reservable: true,
     farmer_name: "مزارع مدرجات آنس",
-    farmer_name_en: "Anis Terrace Plantations"
+    farmer_name_en: "Anis Terrace Plantations",
+    freshness_tag: "قطاف الموسم الحالي",
+    freshness_tag_en: "Current Season Crop",
+    subtitle: "1 كجم • حبوب خضراء نقية",
+    subtitle_en: "1 kg • Clean Green Beans",
+    specs: [
+      { label: "المنطقة", label_en: "Origin", value: "آنس - ذمار 2000م", value_en: "Anis - Dhamar 2000m" },
+      { label: "المعالجة", label_en: "Process", value: "عسلية نظيفة", value_en: "Clean Honey Process" },
+      { label: "نسبة الرطوبة", label_en: "Moisture", value: "10.8%", value_en: "10.8%" },
+      { label: "السلالة", label_en: "Variety", value: "دوائري عتيق", value_en: "Dawairi Heirloom" },
+    ],
+    variants: [
+      { id: "v-1kg", label: "1 كجم", label_en: "1 kg", price: 31.00 },
+      { id: "v-5kg", label: "5 كجم", label_en: "5 kg", price: 142.00 },
+      { id: "v-20kg", label: "20 كجم", label_en: "20 kg", price: 530.00 },
+    ],
+    custom_options: null,
+    subscription_discount: 0,
+    usage_guide: null,
   },
   {
     id: 7,
@@ -150,7 +329,40 @@ export const mockProducts = [
     badge_en: "Certified Organic",
     is_reservable: false,
     farmer_name: "جمعية برع الحرفية",
-    farmer_name_en: "Bura'a Artisan Society"
+    farmer_name_en: "Bura'a Artisan Society",
+    freshness_tag: "عضوي معتمد من المحمية",
+    freshness_tag_en: "Reserve Certified Organic",
+    subtitle: "250 جرام • تحميص متوسط أومني",
+    subtitle_en: "250g • Medium Omni Roast",
+    specs: [
+      { label: "المنطقة", label_en: "Origin", value: "محمية جبل برع", value_en: "Mount Bura'a Reserve" },
+      { label: "المعالجة", label_en: "Process", value: "مجفف بالظل الجبلي", value_en: "Mountain Shade-Dried" },
+      { label: "السلالة", label_en: "Variety", value: "تفاحي جبلي", value_en: "Tuffahi Heirloom" },
+    ],
+    variants: [
+      { id: "v-250g", label: "250 جرام", label_en: "250g", price: 24.00 },
+      { id: "v-500g", label: "500 جرام", label_en: "500g", price: 44.00 },
+      { id: "v-1kg", label: "1 كجم", label_en: "1 kg", price: 82.00 },
+    ],
+    custom_options: {
+      title: "نوع الطحن والتجهيز",
+      title_en: "Grind & Preparation",
+      choices: [
+        { id: "whole_beans", label: "حبوب كاملة (غير مطحون)", label_en: "Whole Beans" },
+        { id: "omni", label: "طحن متعدد الاستخدام", label_en: "Omni Purpose" },
+        { id: "espresso", label: "طحن إسبريسو", label_en: "Espresso" },
+      ],
+    },
+    subscription_discount: 10,
+    usage_guide: {
+      title: "دليل التحضير للإسبريسو والفلتر",
+      title_en: "Espresso & Filter Guide",
+      steps: [
+        { label: "الجرعة", label_en: "Dose", value: "18 جرام" },
+        { label: "الاستخلاص", label_en: "Yield", value: "36 جرام" },
+        { label: "الوقت", label_en: "Time", value: "28 ثانية" },
+      ],
+    },
   },
   {
     id: 8,
@@ -171,15 +383,47 @@ export const mockProducts = [
     badge_en: "Rare Specialty",
     is_reservable: true,
     farmer_name: "مزرعة الحاج قاسم",
-    farmer_name_en: "Hajj Qasim Family Farm"
-  }
+    farmer_name_en: "Hajj Qasim Family Farm",
+    freshness_tag: "سلالة إسماعيلية نادرة",
+    freshness_tag_en: "Rare Heirloom Lot",
+    subtitle: "250 جرام • تحميص خفيف فلتر",
+    subtitle_en: "250g • Light Filter Roast",
+    specs: [
+      { label: "المنطقة", label_en: "Origin", value: "بني مطر - حقل المسلوب", value_en: "Bani Matar - Masloob" },
+      { label: "المعالجة", label_en: "Process", value: "مجفف طبيعي بطيء", value_en: "Slow Natural Dried" },
+      { label: "السلالة", label_en: "Variety", value: "إسماعيلي أصيل", value_en: "Ismaili Botanical" },
+    ],
+    variants: [
+      { id: "v-250g", label: "250 جرام", label_en: "250g", price: 28.00 },
+      { id: "v-500g", label: "500 جرام", label_en: "500g", price: 52.00 },
+    ],
+    custom_options: {
+      title: "نوع الطحن والتجهيز",
+      title_en: "Grind & Preparation",
+      choices: [
+        { id: "whole_beans", label: "حبوب كاملة (موصى به)", label_en: "Whole Beans (Recommended)" },
+        { id: "filter", label: "طحن فلتر وترشيح (V60)", label_en: "Filter / V60" },
+      ],
+    },
+    subscription_discount: 15,
+    usage_guide: {
+      title: "دليل الترشيح للقهوة المقطرة",
+      title_en: "Pour-Over Guide",
+      steps: [
+        { label: "نسبة التحضير", label_en: "Ratio", value: "1:16" },
+        { label: "حرارة الماء", label_en: "Water Temp", value: "93°C" },
+        { label: "وقت الاستخلاص", label_en: "Brew Time", value: "2:50 د" },
+      ],
+    },
+  },
 ];
 
+// سجل الطلبات والحجوزات التجريبية
 export const mockOrders = [
   {
     id: "ORD-2026-101",
-    type: "order", // order | reservation
-    status: "confirmed", // pending | confirmed | completed
+    type: "order",
+    status: "confirmed",
     total_price: 44.00,
     created_at: "2026-11-21",
     items: [
@@ -187,9 +431,9 @@ export const mockOrders = [
         product_id: 1,
         name: "بن حراز مجفف طبيعي",
         quantity: 2,
-        price: 22.00
-      }
-    ]
+        price: 22.00,
+      },
+    ],
   },
   {
     id: "RSV-2026-102",
@@ -202,21 +446,21 @@ export const mockOrders = [
         product_id: 5,
         name: "بن حرازي لاهابي معالجة لاهوائية",
         quantity: 3,
-        price: 30.00
+        price: 30.00,
       },
       {
         product_id: 2,
         name: "بن مطري إكسترا تحميص هوائي",
         quantity: 1,
-        price: 26.50
+        price: 26.50,
       },
       {
         product_id: 7,
         name: "بن برعي تحميص أومني فلتر واسبريسو",
         quantity: 1,
-        price: 24.00
-      }
-    ]
+        price: 24.00,
+      },
+    ],
   },
   {
     id: "ORD-2026-103",
@@ -229,13 +473,14 @@ export const mockOrders = [
         product_id: 3,
         name: "بن يافعي أخضر نيء كرزي",
         quantity: 2,
-        price: 34.00
-      }
-    ]
-  }
+        price: 34.00,
+      },
+    ],
+  },
 ];
 
 export default {
+  CATEGORIES,
   mockProducts,
-  mockOrders
+  mockOrders,
 };

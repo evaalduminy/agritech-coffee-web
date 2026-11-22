@@ -1,52 +1,61 @@
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { BadgeCheck, ArrowDown, Mountain, Award, Sparkles } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import {
+  BadgeCheck,
+  ArrowDown,
+  Mountain,
+  Award,
+  ShieldCheck,
+  Compass,
+  Check,
+  Sparkles,
+  PhoneCall,
+  Search,
+  ShoppingBag,
+} from 'lucide-react';
 import HeroAmbientBackground from './HeroAmbientBackground';
 import HeroParticlesBackground from './HeroParticlesBackground';
 import { useSettings } from '../../context/SettingsContext';
+import { mockProducts } from '../../data/mockData';
 
-// مكوّن العداد التصاعدي السلس للأرقام والإحصائيات
-function AnimatedNumber({ target, prefix = '', suffix = '', duration = 1500 }) {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    let startTimestamp = null;
-    let frameId;
-
-    const step = (timestamp) => {
-      if (!startTimestamp) startTimestamp = timestamp;
-      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-      // منحنى تخفيف ناعم وسريع في البداية وهادئ في النهاية
-      const easeProgress = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.floor(easeProgress * target));
-
-      if (progress < 1) {
-        frameId = requestAnimationFrame(step);
-      } else {
-        setCount(target);
-      }
-    };
-
-    frameId = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(frameId);
-  }, [target, duration]);
-
-  return (
-    <span>
-      {prefix}{count}{suffix}
-    </span>
-  );
-}
-
-// مكوّن القسم الترحيبي (Hero) مع بطاقات الإحصائيات المختصرة ودعم اللغتين
-export default function Hero() {
-  const { t, settings } = useSettings();
+// مكوّن الواجهة الترحيبية العصري المفتوح بمجسم هاتف ثلاثي الأبعاد وكرات زجاجية وإحصائيات عائمة
+export default function Hero({
+  onSelectProduct = () => {},
+  onOpenFarmersModal = () => {},
+}) {
+  const { t, settings, isEnglish } = useSettings();
   const heroBg = settings?.heroBackground || 'ambient';
 
-  // حالة الإزاحة المغناطيسية للزر
+  // تتبع إحداثيات مؤشر الماوس للمجسم ثلاثي الأبعاد والكرات العائمة
+  const heroContainerRef = useRef(null);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // نوابض فيزيائية ناعمة وسريعة الاستجابة لزوايا الميلان
+  const springConfig = { stiffness: 180, damping: 24 };
+  const smoothMouseX = useSpring(mouseX, springConfig);
+  const smoothMouseY = useSpring(mouseY, springConfig);
+
+  // زوايا دوران مجسم الهاتف ثلاثي الأبعاد
+  const phoneRotateX = useTransform(smoothMouseY, [-0.5, 0.5], ['10deg', '-10deg']);
+  const phoneRotateY = useTransform(smoothMouseX, [-0.5, 0.5], ['-16deg', '8deg']);
+
+  // حركة عمق Parallax خفيفة للكرات الزجاجية الثلاث
+  const sphere1X = useTransform(smoothMouseX, [-0.5, 0.5], ['-18px', '18px']);
+  const sphere1Y = useTransform(smoothMouseY, [-0.5, 0.5], ['-16px', '16px']);
+
+  const sphere2X = useTransform(smoothMouseX, [-0.5, 0.5], ['22px', '-22px']);
+  const sphere2Y = useTransform(smoothMouseY, [-0.5, 0.5], ['18px', '-18px']);
+
+  const sphere3X = useTransform(smoothMouseX, [-0.5, 0.5], ['-12px', '12px']);
+  const sphere3Y = useTransform(smoothMouseY, [-0.5, 0.5], ['14px', '-14px']);
+
+  // لمعة الإضاءة الزجاجية فوق شاشة الهاتف
+  const [phoneGlare, setPhoneGlare] = useState({ x: 50, y: 50, opacity: 0 });
+
+  // تفاعل الزر المغناطيسي
   const [magneticOffset, setMagneticOffset] = useState({ x: 0, y: 0 });
 
-  // تفاعل الزر المغناطيسي عند تحرك المؤشر فوقه
   const handleMagneticMove = (e) => {
     const { clientX, clientY, currentTarget } = e;
     const { left, top, width, height } = currentTarget.getBoundingClientRect();
@@ -58,12 +67,34 @@ export default function Hero() {
     });
   };
 
-  // استعادة موضع الزر الطبيعي عند مغادرة المؤشر
   const handleMagneticLeave = () => {
     setMagneticOffset({ x: 0, y: 0 });
   };
 
-  // دالة التمرير السلس إلى شبكة محاصيل المتجر
+  // معالجة حركة الماوس العامة في القسم الترحيبي
+  const handleHeroMouseMove = (e) => {
+    if (!heroContainerRef.current) return;
+    const rect = heroContainerRef.current.getBoundingClientRect();
+    const xPct = (e.clientX - rect.left) / rect.width - 0.5;
+    const yPct = (e.clientY - rect.top) / rect.height - 0.5;
+
+    mouseX.set(xPct);
+    mouseY.set(yPct);
+
+    setPhoneGlare({
+      x: ((e.clientX - rect.left) / rect.width) * 100,
+      y: ((e.clientY - rect.top) / rect.height) * 100,
+      opacity: 0.35,
+    });
+  };
+
+  const handleHeroMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+    setPhoneGlare((prev) => ({ ...prev, opacity: 0 }));
+  };
+
+  // دالة التمرير السلس إلى شبكة المحاصيل
   const handleScrollToProducts = () => {
     const productsSection = document.getElementById('coffee-products');
     if (productsSection) {
@@ -71,35 +102,123 @@ export default function Hero() {
     }
   };
 
+  // فتح نافذة بوابة المزارعين
+  const handleOpenFarmers = () => {
+    if (onOpenFarmersModal) {
+      onOpenFarmersModal();
+    }
+    window.dispatchEvent(new CustomEvent('open-farmers-modal'));
+  };
+
+  // اختيار أول 4 محاصيل حقيقية لعرضها في الشاشة المصغرة للهاتف
+  const miniCrops = mockProducts.slice(0, 4);
+
   return (
-    <section className="relative w-full overflow-hidden bg-gradient-to-b from-surface-container-low via-surface to-background dark:bg-[#0B1410] dark:from-[#0B1410] dark:via-[#0F1C16] dark:to-[#0B1410] pb-space-lg pt-28 md:pt-space-lg">
-      {/* عرض خلفية الواجهة الترحيبية حسب الإعداد المختار */}
+    <section
+      ref={heroContainerRef}
+      onMouseMove={handleHeroMouseMove}
+      onMouseLeave={handleHeroMouseLeave}
+      className="relative w-full overflow-hidden bg-transparent pt-28 md:pt-36 pb-16 md:pb-24 transition-colors duration-300"
+    >
+      {/* خلفية الواجهة الترحيبية التفاعلية حسب الإعداد المختار */}
       {heroBg === 'particles' && <HeroParticlesBackground />}
       {heroBg === 'ambient' && <HeroAmbientBackground />}
 
+      {/* نقشة هندسية ناعمة من النقاط الخافتة في الخلفية */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.06] dark:opacity-[0.08]"
+        style={{
+          backgroundImage: 'radial-gradient(circle, currentColor 1.2px, transparent 1.2px)',
+          backgroundSize: '24px 24px',
+        }}
+      />
+
+      {/* 3 كرات زجاجية لامعة ثلاثية الأبعاد تطفو في الخلفية مع حركة Parallax */}
+      {/* الكرة 1: كرة زمردية علوية */}
+      <motion.div
+        style={{ x: sphere1X, y: sphere1Y }}
+        animate={{ y: [0, -14, 0], x: [0, 8, 0] }}
+        transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+        className="pointer-events-none absolute top-16 rtl:right-10 ltr:left-10 w-32 h-32 sm:w-44 sm:h-44 rounded-full z-0 opacity-80 dark:opacity-90"
+      >
+        <div
+          className="w-full h-full rounded-full"
+          style={{
+            background:
+              'radial-gradient(circle at 35% 28%, rgba(52, 211, 153, 0.7), rgba(16, 185, 129, 0.3) 48%, rgba(5, 46, 23, 0.55) 85%)',
+            boxShadow:
+              '0 25px 50px -12px rgba(6, 78, 59, 0.45), inset -6px -6px 14px rgba(0, 0, 0, 0.45), inset 6px 6px 14px rgba(255, 255, 255, 0.4)',
+          }}
+        />
+      </motion.div>
+
+      {/* الكرة 2: كرة كهرمانية دافئة وسط المشهد */}
+      <motion.div
+        style={{ x: sphere2X, y: sphere2Y }}
+        animate={{ y: [0, 12, 0], x: [0, -6, 0] }}
+        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+        className="pointer-events-none absolute top-1/2 rtl:right-1/3 ltr:left-1/3 w-20 h-20 sm:w-28 sm:h-28 rounded-full z-0 opacity-75 dark:opacity-85"
+      >
+        <div
+          className="w-full h-full rounded-full"
+          style={{
+            background:
+              'radial-gradient(circle at 35% 30%, rgba(245, 158, 11, 0.65), rgba(217, 119, 6, 0.28) 50%, rgba(120, 53, 15, 0.45) 88%)',
+            boxShadow:
+              '0 20px 40px -10px rgba(180, 83, 9, 0.4), inset -4px -4px 10px rgba(0, 0, 0, 0.4), inset 5px 5px 12px rgba(255, 255, 255, 0.4)',
+          }}
+        />
+      </motion.div>
+
+      {/* الكرة 3: كرة زمردية عميقة في الأسفل */}
+      <motion.div
+        style={{ x: sphere3X, y: sphere3Y }}
+        animate={{ y: [0, -10, 0], x: [0, -10, 0] }}
+        transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+        className="pointer-events-none absolute bottom-10 rtl:left-12 ltr:right-12 w-36 h-36 sm:w-48 sm:h-48 rounded-full z-0 opacity-70 dark:opacity-85"
+      >
+        <div
+          className="w-full h-full rounded-full"
+          style={{
+            background:
+              'radial-gradient(circle at 32% 28%, rgba(16, 185, 129, 0.5), rgba(5, 46, 22, 0.38) 60%, rgba(2, 24, 11, 0.65) 90%)',
+            boxShadow:
+              '0 30px 60px -15px rgba(4, 47, 31, 0.55), inset -8px -8px 16px rgba(0, 0, 0, 0.5), inset 8px 8px 16px rgba(255, 255, 255, 0.3)',
+          }}
+        />
+      </motion.div>
+
       <div className="max-w-7xl mx-auto px-margin relative z-10">
-        <div className="flex flex-col items-center text-center max-w-3xl mx-auto space-y-space-md">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
-          {/* الشارة التوثيقية العلوية */}
-          <div className="inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-surface-container-high/80 text-primary shadow-xs backdrop-blur-sm dark:bg-emerald-950/80 dark:text-emerald-300 dark:border dark:border-emerald-800/50">
-            <BadgeCheck className="w-4 h-4 text-primary dark:text-emerald-300" />
-            <span className="font-label-md text-label-md tracking-wide">
-              {t('hero.badge')}
-            </span>
-          </div>
+          {/* ============================================================== */}
+          {/* الجهة اليمنى: النصوص والأزرار المفتوحة بدون أي صناديق تخنق النص */}
+          {/* ============================================================== */}
+          <div className="lg:col-span-7 flex flex-col items-start text-start">
+            
+            {/* الشارة التوثيقية العلوية الزجاجية */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/40 dark:bg-emerald-950/60 backdrop-blur-md border border-emerald-900/10 dark:border-emerald-700/40 text-primary dark:text-emerald-300 shadow-xs text-xs font-semibold">
+              <BadgeCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <span>{t('hero.badge')}</span>
+            </div>
 
-          {/* العنوان الرئيسي للواجهة */}
-          <h1 className="font-headline-lg text-headline-lg text-primary dark:text-white md:text-[34px] md:leading-[46px] tracking-tight font-bold">
-            {t('hero.title')}
-          </h1>
+            {/* العنوان الرئيسي الجريء بدون أي صندوق خانق */}
+            <h1 className="font-headline-lg text-3xl sm:text-4xl lg:text-[44px] lg:leading-[54px] font-black text-on-surface dark:text-white tracking-tight mt-4 mb-3">
+              {t('hero.title')}
+            </h1>
 
-          {/* الوصف الإرشادي المختصر للمنصة */}
-          <p className="font-body-lg text-body-lg text-on-surface-variant dark:text-gray-300 max-w-2xl leading-relaxed">
-            {t('hero.description')}
-          </p>
+            {/* شارة التمييز البارزة باللون الكهرماني الدافئ لكسر رتابة الأخضر */}
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 dark:bg-amber-400/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 text-xs font-bold shadow-xs mb-4">
+              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              <span>{t('hero.accentBadge')}</span>
+            </div>
 
-          {/* زر الانتقال المباشر للمنتجات مع تفاعل الزر المغناطيسي السلس */}
-          <div className="pt-space-xs">
+            {/* الوصف الإرشادي الواضح للمنصة */}
+            <p className="font-body-lg text-base sm:text-lg text-on-surface-variant dark:text-emerald-100/85 leading-relaxed mb-6 max-w-xl">
+              {t('hero.description')}
+            </p>
+
+            {/* الزر الرئيسي البارز مع التفاعل المغناطيسي */}
             <motion.button
               type="button"
               onClick={handleScrollToProducts}
@@ -107,71 +226,219 @@ export default function Hero() {
               onMouseLeave={handleMagneticLeave}
               animate={{ x: magneticOffset.x, y: magneticOffset.y }}
               transition={{ type: 'spring', stiffness: 220, damping: 14, mass: 0.15 }}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.96 }}
-              className="inline-flex items-center justify-center gap-space-sm px-space-xl py-3.5 rounded-xl bg-primary-container dark:bg-emerald-700 dark:hover:bg-emerald-600 text-on-primary hover:bg-[#204613] hover:shadow-lg active:scale-95 transform transition-all duration-300 shadow-md group cursor-pointer"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              className="inline-flex items-center justify-between gap-5 px-6 py-3.5 rounded-2xl bg-white text-emerald-950 hover:bg-emerald-50 active:scale-95 transition-all shadow-xl shadow-emerald-950/15 border border-emerald-900/10 dark:border-white/80 cursor-pointer group mb-3.5"
             >
-              <span className="font-label-lg text-label-lg font-bold">{t('hero.browseProducts')}</span>
-              <ArrowDown className="w-5 h-5 transition-transform duration-300 group-hover:translate-y-0.5" />
+              <div className="flex flex-col text-start">
+                <span className="font-bold text-base sm:text-lg text-emerald-950 leading-tight">
+                  {t('hero.browseStore')}
+                </span>
+                <span className="text-[11px] text-emerald-900/70 font-semibold mt-0.5">
+                  {t('hero.browseSubtext')}
+                </span>
+              </div>
+              <div className="w-9 h-9 rounded-xl bg-emerald-950 text-white flex items-center justify-center shrink-0 group-hover:translate-y-0.5 transition-transform shadow-sm">
+                <ArrowDown className="w-4 h-4" />
+              </div>
             </motion.button>
+
+            {/* الأزرار الثانوية المتناسقة: استكشف المصادر وبوابة المزارعين */}
+            <div className="flex flex-wrap items-center gap-2.5">
+              <button
+                type="button"
+                onClick={handleScrollToProducts}
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white/40 dark:bg-emerald-950/60 hover:bg-white/60 dark:hover:bg-emerald-900/60 backdrop-blur-md border border-emerald-900/10 dark:border-emerald-700/40 text-on-surface dark:text-white transition-all text-xs sm:text-sm font-semibold cursor-pointer shadow-xs active:scale-95"
+              >
+                <Compass className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                <span>{t('hero.exploreOrigins')}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleOpenFarmers}
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-amber-500/15 dark:bg-amber-400/15 hover:bg-amber-500/25 dark:hover:bg-amber-400/25 border border-amber-500/30 text-amber-800 dark:text-amber-200 transition-all text-xs sm:text-sm font-bold cursor-pointer shadow-xs active:scale-95"
+              >
+                <PhoneCall className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                <span>{t('hero.farmersAppBtn')}</span>
+              </button>
+            </div>
+
+            {/* سطر الثقة الناعم بثلاث علامات صح في الأسفل */}
+            <div className="flex flex-wrap items-center gap-3 pt-6 text-xs text-on-surface-variant dark:text-emerald-200/80 font-medium">
+              <div className="flex items-center gap-1.5">
+                <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 stroke-[2.5]" />
+                <span>{t('hero.trustVerified')}</span>
+              </div>
+              <span className="text-emerald-500/40">•</span>
+              <div className="flex items-center gap-1.5">
+                <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 stroke-[2.5]" />
+                <span>{t('hero.trustAuthentic')}</span>
+              </div>
+              <span className="text-emerald-500/40">•</span>
+              <div className="flex items-center gap-1.5">
+                <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 stroke-[2.5]" />
+                <span>{t('hero.trustShipping')}</span>
+              </div>
+            </div>
+
           </div>
 
-          {/* بطاقات الإحصائيات السريعة بتأثير زجاجي ناعم وتفاعل حركي خفيف */}
-          <div className="w-full pt-space-md">
-            <div className="grid grid-cols-3 gap-2 md:gap-space-md bg-white/75 backdrop-blur-md border border-emerald-900/10 p-2 sm:p-space-md rounded-2xl shadow-xs dark:bg-[#122019]/80 dark:border-emerald-800/40">
-              
-              {/* إحصائية عدد المزارع المعتمدة مع عداد تصاعدي سلس */}
+          {/* ============================================================== */}
+          {/* الجهة اليسرى: مجسم هاتف 3D تفاعلي مائل + بطاقات إحصائيات عائمة */}
+          {/* ============================================================== */}
+          <div className="lg:col-span-5 flex items-center justify-center relative pt-6 lg:pt-0">
+            
+            {/* حاوية المجسم ثلاثي الأبعاد مع منظور العمق */}
+            <div style={{ perspective: 1200 }} className="relative flex items-center justify-center">
+
+              {/* 1. البطاقة الإحصائية العائمة العلوية (+42 مزرعة موثقة) */}
               <motion.div
-                whileHover={{ y: -3, scale: 1.02 }}
-                transition={{ duration: 0.2, ease: 'easeOut' }}
-                className="flex flex-col items-center justify-center py-1.5 md:py-space-xs px-1 cursor-default rounded-xl transition-colors"
+                animate={{ y: [0, -8, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                className="absolute -top-3 rtl:-left-4 ltr:-right-4 z-20 pointer-events-none"
               >
-                <div className="flex items-center gap-1 sm:gap-1.5 text-primary dark:text-emerald-300">
-                  <Mountain className="w-4 h-4 md:w-5 md:h-5 text-primary dark:text-emerald-300" />
-                  <span className="text-base sm:text-headline-md font-bold">
-                    <AnimatedNumber target={42} prefix="+" />
-                  </span>
+                <div className="px-3 py-2 rounded-2xl bg-white/80 dark:bg-[#122019]/90 backdrop-blur-md border border-emerald-900/10 dark:border-emerald-500/30 text-on-surface dark:text-white shadow-xl flex items-center gap-2 text-start">
+                  <div className="w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                    <Mountain className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="block font-black text-xs sm:text-sm text-emerald-700 dark:text-emerald-400 leading-none">
+                      +42
+                    </span>
+                    <span className="block text-[10px] text-on-surface-variant dark:text-gray-300 font-medium mt-0.5 whitespace-nowrap">
+                      {t('hero.statsFarmsLabel')}
+                    </span>
+                  </div>
                 </div>
-                <span className="text-[10px] sm:text-label-sm text-on-surface-variant dark:text-gray-400 mt-1 text-center line-clamp-1 sm:line-clamp-none">
-                  {t('hero.statsFarmsLabel')}
-                </span>
               </motion.div>
 
-              {/* إحصائية تقييم الجودة التخصصية مع عداد تصاعدي سلس */}
+              {/* 2. البطاقة الإحصائية العائمة الجانبية (100% أصالة وتوثيق مصدر) */}
               <motion.div
-                whileHover={{ y: -3, scale: 1.02 }}
-                transition={{ duration: 0.2, ease: 'easeOut' }}
-                className="flex flex-col items-center justify-center py-1.5 md:py-space-xs px-1 bg-emerald-900/[0.04] dark:bg-emerald-900/20 rounded-xl cursor-default transition-colors"
+                animate={{ y: [0, -6, 0] }}
+                transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+                className="absolute top-1/2 rtl:-left-8 ltr:-right-8 z-20 pointer-events-none"
               >
-                <div className="flex items-center gap-1 sm:gap-1.5 text-primary dark:text-emerald-300">
-                  <Award className="w-4 h-4 md:w-5 md:h-5 text-primary dark:text-emerald-300" />
-                  <span className="text-base sm:text-headline-md font-bold">
-                    <AnimatedNumber target={85} suffix="+" />
-                  </span>
+                <div className="px-3 py-2 rounded-2xl bg-white/80 dark:bg-[#122019]/90 backdrop-blur-md border border-emerald-900/10 dark:border-emerald-500/30 text-on-surface dark:text-white shadow-xl flex items-center gap-2 text-start">
+                  <div className="w-7 h-7 rounded-lg bg-emerald-700 text-white flex items-center justify-center shrink-0">
+                    <ShieldCheck className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="block font-black text-xs sm:text-sm text-emerald-700 dark:text-emerald-400 leading-none">
+                      100%
+                    </span>
+                    <span className="block text-[10px] text-on-surface-variant dark:text-gray-300 font-medium mt-0.5 whitespace-nowrap">
+                      {t('hero.statsAuthenticityLabel')}
+                    </span>
+                  </div>
                 </div>
-                <span className="text-[10px] sm:text-label-sm text-on-surface-variant dark:text-gray-400 mt-1 text-center line-clamp-1 sm:line-clamp-none">
-                  {t('hero.statsScoringLabel')}
-                </span>
               </motion.div>
 
-              {/* إحصائية الأصالة والنقاء مع عداد تصاعدي سلس */}
+              {/* 3. البطاقة الإحصائية العائمة السفلية (85+ تقييم SCAA مختص) */}
               <motion.div
-                whileHover={{ y: -3, scale: 1.02 }}
-                transition={{ duration: 0.2, ease: 'easeOut' }}
-                className="flex flex-col items-center justify-center py-1.5 md:py-space-xs px-1 cursor-default rounded-xl transition-colors"
+                animate={{ y: [0, 8, 0] }}
+                transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+                className="absolute -bottom-4 rtl:-right-6 ltr:-left-6 z-20 pointer-events-none"
               >
-                <div className="flex items-center gap-1 sm:gap-1.5 text-primary dark:text-emerald-300">
-                  <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-primary dark:text-emerald-300" />
-                  <span className="text-base sm:text-headline-md font-bold">
-                    <AnimatedNumber target={100} suffix="%" />
-                  </span>
+                <div className="px-3 py-2 rounded-2xl bg-white/80 dark:bg-[#122019]/90 backdrop-blur-md border border-amber-500/30 text-on-surface dark:text-white shadow-xl flex items-center gap-2 text-start">
+                  <div className="w-7 h-7 rounded-lg bg-amber-500 text-white flex items-center justify-center shrink-0">
+                    <Award className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="block font-black text-xs sm:text-sm text-amber-600 dark:text-amber-400 leading-none">
+                      85+
+                    </span>
+                    <span className="block text-[10px] text-on-surface-variant dark:text-gray-300 font-medium mt-0.5 whitespace-nowrap">
+                      {t('hero.statsScoringLabel')}
+                    </span>
+                  </div>
                 </div>
-                <span className="text-[10px] sm:text-label-sm text-on-surface-variant dark:text-gray-400 mt-1 text-center line-clamp-1 sm:line-clamp-none">
-                  {t('hero.statsExperienceLabel')}
-                </span>
+              </motion.div>
+
+              {/* مجسم الهاتف ثلاثي الأبعاد المائل مع تفاعل حركة الماوس */}
+              <motion.div
+                style={{
+                  rotateX: phoneRotateX,
+                  rotateY: phoneRotateY,
+                  transformStyle: 'preserve-3d',
+                }}
+                className="w-[270px] sm:w-[290px] aspect-[9/18.5] rounded-[44px] border-[7px] border-emerald-950/80 dark:border-emerald-700/80 bg-[#0d1c15] p-2.5 shadow-2xl shadow-emerald-950/80 relative overflow-hidden select-none"
+              >
+                {/* شريط الكاميرا والحساسات العلوي (Dynamic Island) */}
+                <div className="w-24 h-4 rounded-full bg-black mx-auto mb-2 flex items-center justify-center gap-1.5 shadow-inner z-20 relative">
+                  <span className="w-2 h-2 rounded-full bg-emerald-900/40" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/60" />
+                </div>
+
+                {/* شاشة الهاتف الحقيقية المصغّرة لمتجر سوق البن */}
+                <div className="bg-[#0B1712] text-white rounded-[34px] p-3 flex flex-col h-[calc(100%-24px)] overflow-hidden">
+                  
+                  {/* ترويسة التطبيق المصغرة */}
+                  <div className="flex items-center justify-between pb-2 border-b border-white/10 mb-2">
+                    <span className="text-[11px] font-bold text-emerald-300 truncate">
+                      {t('hero.phoneAppTitle')}
+                    </span>
+                    <div className="w-5 h-5 rounded-md bg-emerald-950 text-emerald-400 flex items-center justify-center">
+                      <ShoppingBag className="w-3 h-3" />
+                    </div>
+                  </div>
+
+                  {/* شريط بحث مصغّر داخل التطبيق */}
+                  <div className="rounded-xl bg-white/10 px-2.5 py-1.5 text-[9px] text-white/60 flex items-center gap-1.5 mb-2.5">
+                    <Search className="w-3 h-3 text-emerald-400 shrink-0" />
+                    <span className="truncate">{t('hero.phoneSearchPlaceholder')}</span>
+                  </div>
+
+                  {/* عنوان قائمة المحاصيل داخل الشاشة */}
+                  <div className="flex items-center justify-between text-[10px] text-white/80 font-bold mb-1.5">
+                    <span>{t('hero.phoneFeaturedTag')}</span>
+                    <span className="text-emerald-400 text-[9px]">• حي</span>
+                  </div>
+
+                  {/* شبكة مصغّرة من 4 محاصيل حقيقية قابلة للنقر لفتح التفاصيل فوراً */}
+                  <div className="grid grid-cols-2 gap-2 flex-1 overflow-hidden">
+                    {miniCrops.map((item) => {
+                      const itemName = isEnglish ? (item.name_en || item.name) : item.name;
+                      return (
+                        <div
+                          key={item.id}
+                          onClick={() => onSelectProduct(item)}
+                          className="rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 p-1.5 flex flex-col justify-between cursor-pointer transition-all hover:scale-[1.02] active:scale-95 group text-start"
+                        >
+                          <div className="w-full aspect-square rounded-lg overflow-hidden bg-black/40 mb-1">
+                            <img
+                              src={item.image_url}
+                              alt={itemName}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                            />
+                          </div>
+                          <div>
+                            <span className="block text-[9px] font-bold text-white truncate leading-tight">
+                              {itemName}
+                            </span>
+                            <span className="block text-[9px] font-extrabold text-emerald-400 mt-0.5">
+                              ${item.price.toFixed(2)}
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                </div>
+
+                {/* لمعة إضاءة زجاجية تتحرك فوق شاشة الهاتف مع حركة المؤشر */}
+                <div
+                  className="pointer-events-none absolute inset-0 rounded-[44px] transition-opacity duration-300"
+                  style={{
+                    opacity: phoneGlare.opacity,
+                    background: `radial-gradient(circle 240px at ${phoneGlare.x}% ${phoneGlare.y}%, rgba(255, 255, 255, 0.4), transparent 75%)`,
+                  }}
+                />
               </motion.div>
 
             </div>
+
           </div>
 
         </div>

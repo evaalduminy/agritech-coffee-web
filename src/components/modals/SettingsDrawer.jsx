@@ -68,7 +68,7 @@ export default function SettingsDrawer() {
   return (
     <AnimatePresence>
       {isSettingsOpen && (
-        <div className="fixed inset-0 z-[60] flex">
+        <div className="fixed inset-0 z-[110] flex">
           {/* الخلفية المعتمة مع تأثير التغبيش */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -76,7 +76,7 @@ export default function SettingsDrawer() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
             onClick={closeSettings}
-            className="fixed inset-0 bg-black/45 backdrop-blur-sm"
+            className="fixed inset-0 z-[110] bg-black/45 backdrop-blur-sm"
           />
 
           {/* اللوحة الجانبية المنزلقة */}
@@ -86,7 +86,7 @@ export default function SettingsDrawer() {
             exit={{ x: isEnglish ? '-100%' : '100%' }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
             aria-label={t('settings.title')}
-            className="relative rtl:mr-auto ltr:ml-auto h-full w-full sm:w-[460px] max-w-full bg-surface shadow-2xl flex flex-col border-r border-surface-container overflow-hidden z-10 text-start"
+            className="relative rtl:mr-auto ltr:ml-auto h-full w-full sm:w-[460px] max-w-full bg-surface shadow-2xl flex flex-col border-r border-surface-container overflow-hidden z-[111] text-start"
           >
             {/* 1. ترويسة اللوحة الجانبية */}
             <div className="p-space-lg border-b border-surface-container flex items-center justify-between bg-surface-container-low shrink-0">
@@ -211,6 +211,71 @@ export default function SettingsDrawer() {
                       <span>{t('settings.langEnglish')}</span>
                       {settings.language === 'en' && <Check className="w-3.5 h-3.5 rtl:mr-auto ltr:ml-auto" />}
                     </button>
+                  </div>
+                </div>
+
+                {/* خيارات الحركات التفاعلية الدقيقة */}
+                <div className="space-y-3 pt-3 border-t border-surface-container">
+                  <div className="flex items-center gap-2 text-on-surface font-label-md text-label-md font-semibold">
+                    <Sparkles className="w-4 h-4 text-primary" />
+                    <span>{t('settings.sectionMicroInteractions')}</span>
+                  </div>
+                  <p className="text-xs text-on-surface-variant">
+                    {t('settings.sectionMicroInteractionsDesc')}
+                  </p>
+
+                  <div className="space-y-2.5">
+                    {/* مفتاح تبديل تأثير الطيران للسلة */}
+                    <div className="flex items-center justify-between p-3 rounded-xl border border-surface-container bg-surface-container-low">
+                      <div className="flex flex-col pr-2 rtl:pr-0 rtl:pl-2">
+                        <span className="font-bold text-sm text-on-surface">{t('settings.enableFlyToCart')}</span>
+                        <span className="text-xs text-on-surface-variant mt-0.5">{t('settings.enableFlyToCartDesc')}</span>
+                      </div>
+                      <button
+                        type="button"
+                        role="switch"
+                        aria-checked={settings.enableFlyToCart}
+                        onClick={() => updateSetting('enableFlyToCart', !settings.enableFlyToCart)}
+                        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                          settings.enableFlyToCart ? 'bg-primary dark:bg-emerald-600' : 'bg-surface-container-high dark:bg-emerald-950/80'
+                        }`}
+                      >
+                        <span
+                          aria-hidden="true"
+                          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                            settings.enableFlyToCart
+                              ? 'rtl:-translate-x-5 ltr:translate-x-5'
+                              : 'translate-x-0'
+                          }`}
+                        />
+                      </button>
+                    </div>
+
+                    {/* مفتاح تبديل ميلان 3D للبطاقات */}
+                    <div className="flex items-center justify-between p-3 rounded-xl border border-surface-container bg-surface-container-low">
+                      <div className="flex flex-col pr-2 rtl:pr-0 rtl:pl-2">
+                        <span className="font-bold text-sm text-on-surface">{t('settings.enableCard3DTilt')}</span>
+                        <span className="text-xs text-on-surface-variant mt-0.5">{t('settings.enableCard3DTiltDesc')}</span>
+                      </div>
+                      <button
+                        type="button"
+                        role="switch"
+                        aria-checked={settings.enableCard3DTilt}
+                        onClick={() => updateSetting('enableCard3DTilt', !settings.enableCard3DTilt)}
+                        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                          settings.enableCard3DTilt ? 'bg-primary dark:bg-emerald-600' : 'bg-surface-container-high dark:bg-emerald-950/80'
+                        }`}
+                      >
+                        <span
+                          aria-hidden="true"
+                          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                            settings.enableCard3DTilt
+                              ? 'rtl:-translate-x-5 ltr:translate-x-5'
+                              : 'translate-x-0'
+                          }`}
+                        />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

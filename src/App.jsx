@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import GlobalInteractiveBackground from './components/common/GlobalInteractiveBackground';
+import FloatingActions from './components/common/FloatingActions';
 import Navbar from './components/layout/Navbar';
 import TabLoader from './components/layout/TabLoader';
 import Footer from './components/layout/Footer';
 import CartDrawer from './components/modals/CartDrawer';
+import FlyToCartOverlay from './components/common/FlyToCartOverlay';
 import SettingsDrawer from './components/modals/SettingsDrawer';
 import AuthModal from './components/modals/AuthModal';
 import FarmersModal from './components/modals/FarmersModal';
@@ -14,10 +17,18 @@ import { CartProvider } from './context/CartContext';
 import { SettingsProvider, useSettings } from './context/SettingsContext';
 import { mockProducts } from './data/mockData';
 import { openWhatsApp } from './services/whatsapp';
+import {
+  USE_MOCK_API,
+  productsApi,
+  ordersApi,
+  formatApiProduct,
+} from './services/api';
 
 // خريطة مطابقة معرفات تبويبات شريط التنقل بفئات التصفية
 const TAB_TO_CATEGORY_MAP = {
   home: 'all',
+  crops: 'all',
+  origins: 'all',
   'roasted-coffee': 'roasted',
   'green-coffee': 'green',
   'special-blends': 'blends',
@@ -27,16 +38,16 @@ const TAB_TO_CATEGORY_MAP = {
 // خريطة عكسية لمطابقة الفئة بالتبويب في الشريط العلوي
 const CATEGORY_TO_TAB_MAP = {
   all: 'home',
-  roasted: 'roasted-coffee',
-  green: 'green-coffee',
-  blends: 'special-blends',
-  haraz: 'home',
-  matari: 'home',
+  roasted: 'crops',
+  green: 'crops',
+  blends: 'crops',
+  haraz: 'crops',
+  matari: 'crops',
 };
 
 // المكوّن الداخلي للتطبيق بعد تغليفه بمزودات السياق
 function AppContent() {
-  const { openSettings } = useSettings();
+  const { openSettings, isEnglish } = useSettings();
 
   // حالة العرض الحالي: المتجر الرئيسي أو لوحة حساب المشتري
   const [currentView, setCurrentView] = useState('home');
@@ -53,6 +64,33 @@ function AppContent() {
   // حالة نافذة خدمة المزارعين والتعاونيات المنبثقة
   const [isFarmersModalOpen, setIsFarmersModalOpen] = useState(false);
 
+  // قائمة المنتجات المعروضة في المتجر (محاكاة أو من خادم Laravel)
+  const [products, setProducts] = useState(mockProducts);
+
+  // جلب المنتجات من خادم الـ API الحقيقي عند تفعيل الوضع الحي
+  useEffect(() => {
+    if (USE_MOCK_API) return;
+
+    let isMounted = true;
+    productsApi
+      .list({ per_page: 50 })
+      .then((res) => {
+        if (!isMounted) return;
+        const apiList = res?.data;
+        if (Array.isArray(apiList) && apiList.length > 0) {
+          const formatted = apiList.map(formatApiProduct).filter(Boolean);
+          setProducts(formatted);
+        }
+      })
+      .catch((err) => {
+        console.warn('تعذر جلب المنتجات من خادم Laravel، استخدام البيانات البديلة:', err?.message);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   // دالة فتح نافذة خدمة المزارعين
   const handleOpenFarmersModal = () => {
     setIsFarmersModalOpen(true);
@@ -63,9 +101,9 @@ function AppContent() {
     setIsFarmersModalOpen(false);
   };
 
-  // دالة تغيير التبويب من الشريط العلوي مع تفعيل تأثير التحميل المتدرج
+  // دالة تغيير التبويب من الشريط العلوي مع تفعيل تأثير التحميل والتمرير السلس
   const handleTabChange = (newTab) => {
-    // إذا كان التبويب هو 'تواصل معنا' نقوم بالتمرير السلس إلى الفوتر
+    // 1. التمرير إلى قسم تواصل معنا في الفوتر
     if (newTab === 'contact') {
       if (currentView !== 'home') {
         setIsLoading(true);
@@ -86,12 +124,70 @@ function AppContent() {
       return;
     }
 
+    // 2. التمرير إلى قسم المتجر والمحاصيل
+    if (newTab === 'crops') {
+      if (currentView !== 'home') {
+        setIsLoading(true);
+        setTimeout(() => {
+          setCurrentView('home');
+          setActiveTab('crops');
+          setIsLoading(false);
+          setTimeout(() => {
+            const cropsSection = document.getElementById('coffee-products');
+            if (cropsSection) cropsSection.scrollIntoView({ behavior: 'smooth' });
+          }, 150);
+        }, 350);
+      } else {
+        setActiveTab('crops');
+        const cropsSection = document.getElementById('coffee-products');
+        if (cropsSection) cropsSection.scrollIntoView({ behavior: 'smooth' });
+      }
+      return;
+    }
+
+    // 3. التمرير إلى قسم المصادر والمزارعون
+    if (newTab === 'origins') {
+      if (currentView !== 'home') {
+        setIsLoading(true);
+        setTimeout(() => {
+          setCurrentView('home');
+          setActiveTab('origins');
+          setIsLoading(false);
+          setTimeout(() => {
+            const originsSection = document.getElementById('platform-features');
+            if (originsSection) originsSection.scrollIntoView({ behavior: 'smooth' });
+          }, 150);
+        }, 350);
+      } else {
+        setActiveTab('origins');
+        const originsSection = document.getElementById('platform-features');
+        if (originsSection) originsSection.scrollIntoView({ behavior: 'smooth' });
+      }
+      return;
+    }
+
+    // 4. التمرير إلى أعلى الصفحة للرئيسية
+    if (newTab === 'home') {
+      if (currentView !== 'home') {
+        setIsLoading(true);
+        setTimeout(() => {
+          setCurrentView('home');
+          setActiveTab('home');
+          setIsLoading(false);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 350);
+      } else {
+        setActiveTab('home');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      return;
+    }
+
     if (newTab === activeTab && currentView === 'home') return;
 
-    // 1. إظهار TabLoader فوراً
+    // إظهار TabLoader للتبويبات العامة
     setIsLoading(true);
 
-    // 2. بعد 350ms والشاشة مغطاة بالكامل يتم تبديل الصفحة ونقل التمرير لأعلى فورا
     setTimeout(() => {
       setActiveTab(newTab);
       setCurrentView('home');
@@ -100,7 +196,6 @@ function AppContent() {
       window.scrollTo({ top: 0, behavior: 'instant' });
     }, 350);
 
-    // 3. بعد 850ms من البداية يتم إخفاء TabLoader بنعومة
     setTimeout(() => {
       setIsLoading(false);
     }, 850);
@@ -154,7 +249,7 @@ function AppContent() {
   };
 
   // دالة الطلب المباشر عبر واتساب لمحصول فردي
-  const handleWhatsAppOrder = (product) => {
+  const handleWhatsAppOrder = async (product) => {
     const singleOrder = {
       id: `ORD-${Date.now().toString().slice(-4)}`,
       type: product.is_reservable ? 'reservation' : 'order',
@@ -165,16 +260,50 @@ function AppContent() {
         {
           product_id: product.id,
           name: product.name,
-          quantity: 1,
+          quantity: product.quantity || 1,
           price: product.price,
         },
       ],
     };
+
+    // مزامنة الطلب مع خادم Laravel عند تفعيل الوضع الحي
+    if (!USE_MOCK_API) {
+      try {
+        const res = await ordersApi.create({
+          type: product.is_reservable ? 'reservation' : 'purchase',
+          items: [{ product_id: product.id, quantity: product.quantity || 1 }],
+        });
+
+        // اعتماد رقم الطلب الحقيقي الصادر من خادم Laravel
+        if (res?.data?.id) {
+          singleOrder.id = `ORD-${res.data.id}`;
+        } else if (res?.order_id) {
+          singleOrder.id = `ORD-${res.order_id}`;
+        }
+
+        // إشعار باقي الواجهات لتحديث سجل الطلبات
+        window.dispatchEvent(new CustomEvent('orders_updated'));
+      } catch (err) {
+        console.error('تعذر حفظ طلب الحجز في خادم Laravel:', err);
+        // منع فتح واتساب في حال فشل الطلب من الخادم
+        alert(
+          err?.message ||
+            (isEnglish
+              ? 'Failed to submit reservation. Please check quantity and try again.'
+              : 'تعذر إتمام طلب الحجز، يرجى التحقق من توفر الكمية المطلوبة والمحاولة مرة أخرى.')
+        );
+        return;
+      }
+    }
+
     openWhatsApp(singleOrder);
   };
 
   return (
-    <div className="min-h-screen bg-surface text-on-surface flex flex-col font-sans transition-colors duration-200">
+    <div className="min-h-screen bg-surface text-on-surface flex flex-col font-sans transition-colors duration-200 relative overflow-x-hidden">
+      {/* 0. الخلفية التفاعلية الشاملة لكامل المنصة */}
+      <GlobalInteractiveBackground />
+
       {/* 1. الشريط العلوي الثابت */}
       <Navbar
         activeTab={activeTab}
@@ -189,6 +318,9 @@ function AppContent() {
       {/* 3. نافذة السلة الجانبية المنزلقة */}
       <CartDrawer />
 
+      {/* طبقة تأثير طيران المنتج نحو السلة */}
+      <FlyToCartOverlay />
+
       {/* 4. لوحة إعدادات المنصة والمظهر الجانبية */}
       <SettingsDrawer />
 
@@ -201,8 +333,8 @@ function AppContent() {
         onClose={handleCloseFarmersModal}
       />
 
-      {/* 7. عرض الصفحة الرئيسية أو لوحة حساب المشتري مع انتقال حركي ناعم */}
-      <main className="flex-1 pt-20">
+      {/* 7. عرض الصفحة الرئيسية أو لوحة حساب المشتري مع انتقال حركي ناعم فوق الخلفية التفاعلية */}
+      <main className="flex-1 pt-24 sm:pt-28 relative z-10">
         <AnimatePresence mode="wait">
           {currentView === 'home' ? (
             <motion.div
@@ -213,10 +345,11 @@ function AppContent() {
               transition={{ duration: 0.4, ease: 'easeOut' }}
             >
               <HomePage
-                products={mockProducts}
+                products={products}
                 selectedCategory={selectedCategory}
                 onSelectCategory={handleSelectCategory}
                 onWhatsAppOrder={handleWhatsAppOrder}
+                onOpenFarmersModal={handleOpenFarmersModal}
               />
             </motion.div>
           ) : (
@@ -233,13 +366,18 @@ function AppContent() {
         </AnimatePresence>
       </main>
 
-      {/* 8. التذييل السفلي للمنصة */}
-      <Footer
-        onSelectTab={handleTabChange}
-        onNavigateToDashboard={handleNavigateToDashboard}
-        onOpenFarmersModal={handleOpenFarmersModal}
-        onOpenSettings={openSettings}
-      />
+      {/* 8. التذييل السفلي للمنصة فوق الخلفية التفاعلية */}
+      <div className="relative z-10">
+        <Footer
+          onSelectTab={handleTabChange}
+          onNavigateToDashboard={handleNavigateToDashboard}
+          onOpenFarmersModal={handleOpenFarmersModal}
+          onOpenSettings={openSettings}
+        />
+      </div>
+
+      {/* 9. الأزرار العائمة الذكية (دعم واتساب الفوري والعودة للأعلى) */}
+      <FloatingActions />
     </div>
   );
 }

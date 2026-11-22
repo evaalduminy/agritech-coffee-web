@@ -10,14 +10,17 @@ import {
   ArrowRight,
   User,
   MapPin,
+  AlertCircle,
+  Loader2,
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { useSettings } from '../../context/SettingsContext';
-import { mockProducts } from '../../data/mockData';
+import { mockProducts, mockOrders } from '../../data/mockData';
 import { openWhatsApp } from '../../services/whatsapp';
+import { USE_MOCK_API, ordersApi } from '../../services/api';
 
-// مكوّن السلة الجانبية المنبثقة مع دعم كامل للغتين والبحث في mockProducts كبديل
+// مكوّن السلة الجانبية المنبثقة مع فرض تسجيل الدخول عند تأكيد الطلب وحفظ المعاملة
 export default function CartDrawer() {
   const {
     cartItems,
@@ -25,18 +28,31 @@ export default function CartDrawer() {
     closeCart,
     updateQuantity,
     removeFromCart,
+    clearCart,
     totalPrice,
     totalCount,
   } = useCart();
 
-  const { requireAuth } = useAuth();
+  const { user, openAuthModal } = useAuth();
   const { t, isEnglish } = useSettings();
 
   // بيانات استلام الطلب السريعة لربطها برسالة واتساب
-  const [buyerName, setBuyerName] = useState('عبد الرحمن اليافعي');
+  const [customBuyerName, setCustomBuyerName] = useState('');
+  const buyerName = customBuyerName || user?.name || 'عبد الرحمن اليافعي';
   const [buyerAddress, setBuyerAddress] = useState('صنعاء، شارع حدة');
 
-  // إغلاق السلة الجانبية عند الضغط على زر Escape
+  // حالة جاري الإرسال وحالة الخطأ للطلب في الوضع الحي
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+
+  // مسح رسالة الخطأ عند إغلاق أو فتح السلة
+  useEffect(() => {
+    if (!isCartOpen) {
+      setSubmitError('');
+    }
+  }, [isCartOpen]);
+
+  // إغلاق السلة الجانبية عند الضغط على زر الهروب
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' && isCartOpen) {
@@ -47,37 +63,154 @@ export default function CartDrawer() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isCartOpen, closeCart]);
 
-  // دالة تأكيد الطلب وتوجيهه مباشرة عبر واتساب بعد التحقق الإلزامي من تسجيل الدخول
-  const handleCheckoutWhatsApp = () => {
-    if (cartItems.length === 0) return;
+  // دالة تأكيد الطلب مع الربط المباشر بـ Laravel في الوضع الحي
+  const handleCheckoutWhatsApp = async () => {
+    if (cartItems.length === 0 || isSubmitting) return;
 
-    requireAuth((currentUser) => {
-      const order = {
-        id: `ORD-${Date.now().toString().slice(-4)}`,
-        type: 'order',
-        status: 'pending',
-        total_price: totalPrice,
-        created_at: new Date().toISOString().split('T')[0],
-        items: cartItems.map((item) => {
-          const matched = mockProducts.find((p) => p.id === item.id);
-          const finalName = isEnglish
-            ? (item.name_en || matched?.name_en || item.name)
-            : (item.name || matched?.name);
+    // 1. إذا كان المستخدم غير مسجل، يتم إغلاق السلة وفتح نافذة المصادقة مع رسالة إرشادية وتفادي واتساب تماماً
+    if (!user) {
+      closeCart();
+      openAuthModal(t('auth.orderLoginPrompt'));
+      return;
+    }
 
-          return {
-            product_id: item.id,
-            name: finalName,
-            quantity: item.quantity,
-            price: item.price,
-          };
-        }),
-      };
+    setSubmitError('');
 
-      openWhatsApp(order, {
-        name: currentUser?.name || buyerName,
-        phone: currentUser?.emailOrPhone || '',
-        city: buyerAddress,
-      });
+    // 2. في الوضع الحي (!USE_MOCK_API): إرسال الطلب أولاً إلى خادم Laravel مع معالجة الأخطاء
+    if (!USE_MOCK_API) {
+      setIsSubmitting(true);
+      try {
+        const apiItems = cartItems.map((item) => ({
+          product_id: Number(item.product_id || item.id),
+          quantity: Number(item.quantity) || 1,
+        }));
+
+        const orderNotes = buyerAddress ? `العنوان: ${buyerAddress}` : '';
+
+        // استدعاء خدمة إنشاء الطلب وحجب أي أسعار أو معرفات مستخدم
+        const res = await ordersApi.create({
+          type: 'purchase',
+          items: apiItems,
+          notes: orderNotes,
+        });
+
+        const apiOrderData = res?.data || res;
+        const returnedOrderId = apiOrderData?.order_id || apiOrderData?.id;
+        const finalOrderId = returnedOrderId ? `ORD-${returnedOrderId}` : `ORD-2026-${Date.now().toString().slice(-4)}`;
+
+        const confirmedOrder = {
+          id: finalOrderId,
+          order_id: returnedOrderId,
+          type: apiOrderData?.type || 'order',
+          status: apiOrderData?.order_status || 'confirmed',
+          total_price: Number(apiOrderData?.total_price || totalPrice),
+          created_at: apiOrderData?.order_date ? apiOrderData.order_date.split('T')[0] : new Date().toISOString().split('T')[0],
+          items: cartItems.map((item) => {
+            const matched = mockProducts.find((p) => p.id === item.id);
+            const baseName = isEnglish
+              ? (item.name_en || matched?.name_en || item.name)
+              : (item.name || matched?.name);
+
+            const variantText = item.selectedVariant
+              ? ` (${isEnglish ? (item.selectedVariant.label_en || item.selectedVariant.label) : item.selectedVariant.label})`
+              : '';
+            const optionText = item.selectedOption
+              ? ` - ${isEnglish ? (item.selectedOption.label_en || item.selectedOption.label) : item.selectedOption.label}`
+              : '';
+            const subText = item.isSubscription
+              ? (isEnglish ? ' [Monthly Subscription]' : ' [اشتراك شهري]')
+              : '';
+
+            return {
+              product_id: item.id,
+              name: `${baseName}${variantText}${optionText}${subText}`,
+              quantity: item.quantity,
+              price: item.price,
+              selectedVariant: item.selectedVariant,
+              selectedOption: item.selectedOption,
+              isSubscription: item.isSubscription,
+            };
+          }),
+        };
+
+        // إشعار سياق لوحة المشتري بتحديث الطلبات الحية
+        window.dispatchEvent(new Event('orders_updated'));
+
+        // تفريغ السلة بالكامل وإغلاق النافذة فور نجاح الطلب
+        clearCart();
+        closeCart();
+
+        // فتح محادثة واتساب موثقة برقم الطلب الحقيقي العائد من استجابة Laravel
+        openWhatsApp(confirmedOrder, {
+          name: user.name || buyerName,
+          phone: user.phone || user.emailOrPhone || '',
+          city: buyerAddress,
+        });
+      } catch (err) {
+        const errorMsg = err?.message || (isEnglish ? 'Failed to process order. Please check quantity or try again.' : 'تعذر إتمام الطلب في الخادم. يرجى التحقق من توفر الكمية أو إعادة المحاولة.');
+        setSubmitError(errorMsg);
+      } finally {
+        setIsSubmitting(false);
+      }
+      return;
+    }
+
+    // 3. في الوضع التجريبي (USE_MOCK_API === true): توليد رقم الطلب محلياً وحفظه وتوجيهه لواتساب
+    const newOrderId = `ORD-2026-${Date.now().toString().slice(-4)}`;
+    const newOrder = {
+      id: newOrderId,
+      type: 'order',
+      status: 'confirmed',
+      total_price: totalPrice,
+      created_at: new Date().toISOString().split('T')[0],
+      items: cartItems.map((item) => {
+        const matched = mockProducts.find((p) => p.id === item.id);
+        const baseName = isEnglish
+          ? (item.name_en || matched?.name_en || item.name)
+          : (item.name || matched?.name);
+
+        const variantText = item.selectedVariant
+          ? ` (${isEnglish ? (item.selectedVariant.label_en || item.selectedVariant.label) : item.selectedVariant.label})`
+          : '';
+        const optionText = item.selectedOption
+          ? ` - ${isEnglish ? (item.selectedOption.label_en || item.selectedOption.label) : item.selectedOption.label}`
+          : '';
+        const subText = item.isSubscription
+          ? (isEnglish ? ' [Monthly Subscription]' : ' [اشتراك شهري]')
+          : '';
+
+        return {
+          product_id: item.id,
+          name: `${baseName}${variantText}${optionText}${subText}`,
+          quantity: item.quantity,
+          price: item.price,
+          selectedVariant: item.selectedVariant,
+          selectedOption: item.selectedOption,
+          isSubscription: item.isSubscription,
+        };
+      }),
+    };
+
+    // حفظ الطلب الجديد في التخزين المحلي ليظهر فوراً في لوحة حساب المشتري
+    try {
+      const storedOrders = localStorage.getItem('agritech_coffee_orders');
+      const orderList = storedOrders ? JSON.parse(storedOrders) : [...mockOrders];
+      const updatedList = [newOrder, ...orderList];
+      localStorage.setItem('agritech_coffee_orders', JSON.stringify(updatedList));
+      window.dispatchEvent(new Event('orders_updated'));
+    } catch (error) {
+      console.error('فشل في حفظ الطلب في سجل المشتري محلياً:', error);
+    }
+
+    // تفريغ السلة بالكامل وإغلاق النافذة
+    clearCart();
+    closeCart();
+
+    // فتح محادثة واتساب موثقة برقم الطلب واسم المشتري والتفاصيل
+    openWhatsApp(newOrder, {
+      name: user.name || buyerName,
+      phone: user.phone || user.emailOrPhone || '',
+      city: buyerAddress,
     });
   };
 
@@ -87,7 +220,7 @@ export default function CartDrawer() {
   return (
     <AnimatePresence>
       {isCartOpen && (
-        <div className="fixed inset-0 z-50 flex">
+        <div className="fixed inset-0 z-[110] flex">
           {/* الخلفية الضبابية المعتمة */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -95,7 +228,7 @@ export default function CartDrawer() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
             onClick={closeCart}
-            className="fixed inset-0 bg-black/45 backdrop-blur-sm"
+            className="fixed inset-0 z-[110] bg-black/45 backdrop-blur-sm"
           />
 
           {/* لوحة السلة المنزلقة */}
@@ -105,7 +238,7 @@ export default function CartDrawer() {
             exit={{ x: isEnglish ? '100%' : '-100%' }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
             aria-label={t('cart.title')}
-            className="relative rtl:mr-auto ltr:ml-auto h-full w-full sm:w-[480px] max-w-full bg-surface shadow-2xl flex flex-col border-r border-surface-container overflow-hidden z-10 text-start"
+            className="relative rtl:mr-auto ltr:ml-auto h-full w-full sm:w-[480px] max-w-full bg-surface shadow-2xl flex flex-col border-r border-surface-container overflow-hidden z-[111] text-start"
           >
             {/* 1. رأس السلة الجانبية */}
             <div className="p-5 border-b border-surface-container bg-surface-container-low flex items-center justify-between">
@@ -170,24 +303,19 @@ export default function CartDrawer() {
                 </div>
               ) : (
                 <>
-                  {/* قائمة بطاقات المنتجات المضافة مع البحث في mockProducts كبديل */}
+                  {/* قائمة بطاقات المنتجات المضافة مع عرض الخيارات الديناميكية المحددة */}
                   {cartItems.map((item) => {
                     const matched = mockProducts.find((p) => p.id === item.id);
+                    const itemKey = item.cartItemId || item.id;
                     const itemName = isEnglish
                       ? (item.name_en || matched?.name_en || item.name)
                       : (item.name || matched?.name);
-                    const itemWeight = isEnglish
-                      ? (item.weight_en || matched?.weight_en || item.weight)
-                      : (item.weight || matched?.weight);
-                    const itemRoast = isEnglish
-                      ? (item.roast_level_en || matched?.roast_level_en || item.roast_level)
-                      : (item.roast_level || matched?.roast_level);
                     const itemTotalUsd = (item.price * item.quantity).toFixed(2);
                     const itemTotalYer = Math.round(item.price * item.quantity * 250).toLocaleString();
 
                     return (
                       <div
-                        key={item.id}
+                        key={itemKey}
                         className="flex items-start gap-3.5 p-3.5 bg-surface-container-lowest border border-surface-container rounded-2xl shadow-xs hover:border-primary/30 transition-all text-start"
                       >
                         {/* صورة المنتج */}
@@ -197,7 +325,7 @@ export default function CartDrawer() {
                           className="w-20 h-20 rounded-xl object-cover flex-shrink-0 bg-surface-container-low border border-surface-container"
                         />
 
-                        {/* معلومات المحصول والكمية والتحكم */}
+                        {/* معلومات المحصول والخيارات والكمية والتحكم */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-start justify-between gap-1">
                             <h4 className="font-headline-sm text-[15px] font-bold text-on-surface leading-tight truncate">
@@ -206,7 +334,7 @@ export default function CartDrawer() {
                             {/* زر حذف المنتج من السلة */}
                             <button
                               type="button"
-                              onClick={() => removeFromCart(item.id)}
+                              onClick={() => removeFromCart(itemKey)}
                               aria-label={t('cart.removeItem')}
                               className="text-on-surface-variant hover:text-error p-1 rounded-lg hover:bg-error-container/60 transition-colors cursor-pointer"
                             >
@@ -214,16 +342,38 @@ export default function CartDrawer() {
                             </button>
                           </div>
 
-                          <p className="font-body-sm text-[12px] text-secondary font-medium mt-0.5">
-                            {itemWeight} - {itemRoast}
-                          </p>
+                          {/* الخيارات المختارة كالحجم والطحن ووسم الاشتراك أو السطر الفرعي */}
+                          <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
+                            {item.selectedVariant && (
+                              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-surface-container-high text-on-surface">
+                                {isEnglish ? (item.selectedVariant.label_en || item.selectedVariant.label) : item.selectedVariant.label}
+                              </span>
+                            )}
+                            {item.selectedOption && (
+                              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-surface-container-high text-on-surface">
+                                {isEnglish ? (item.selectedOption.label_en || item.selectedOption.label) : item.selectedOption.label}
+                              </span>
+                            )}
+                            {item.isSubscription && (
+                              <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-emerald-900/10 dark:bg-emerald-950/60 text-primary dark:text-emerald-300 border border-emerald-900/20 dark:border-emerald-800/40">
+                                {t('product.monthlySubBadge')}
+                              </span>
+                            )}
+                            {!item.selectedVariant && !item.selectedOption && (
+                              <span className="font-body-sm text-[12px] text-secondary font-medium truncate block">
+                                {isEnglish
+                                  ? (item.subtitle_en || matched?.subtitle_en || item.subtitle || '')
+                                  : (item.subtitle || matched?.subtitle || '')}
+                              </span>
+                            )}
+                          </div>
 
                           {/* عداد الكمية والسعر */}
                           <div className="flex items-center justify-between mt-3 pt-2 border-t border-surface-container">
                             <div className="flex items-center gap-2 bg-surface-container-low rounded-lg p-1">
                               <button
                                 type="button"
-                                onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                onClick={() => updateQuantity(itemKey, item.quantity - 1)}
                                 aria-label="إنقاص الكمية"
                                 className="w-6 h-6 rounded flex items-center justify-center bg-surface hover:bg-surface-container text-on-surface text-sm font-bold shadow-xs active:scale-95 transition-all cursor-pointer"
                               >
@@ -234,7 +384,7 @@ export default function CartDrawer() {
                               </span>
                               <button
                                 type="button"
-                                onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                onClick={() => updateQuantity(itemKey, item.quantity + 1)}
                                 aria-label="زيادة الكمية"
                                 className="w-6 h-6 rounded flex items-center justify-center bg-surface hover:bg-surface-container text-on-surface text-sm font-bold shadow-xs active:scale-95 transition-all cursor-pointer"
                               >
@@ -278,8 +428,8 @@ export default function CartDrawer() {
                       <input
                         id="buyer-name"
                         type="text"
-                        value={buyerName}
-                        onChange={(e) => setBuyerName(e.target.value)}
+                        value={customBuyerName !== '' ? customBuyerName : buyerName}
+                        onChange={(e) => setCustomBuyerName(e.target.value)}
                         placeholder={t('cart.buyerNamePlaceholder')}
                         className="w-full text-sm px-3.5 py-2.5 rounded-xl border border-outline-variant bg-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-body-md"
                       />
@@ -307,7 +457,7 @@ export default function CartDrawer() {
               )}
             </div>
 
-            {/* 3. أسفل السلة: الإجماليات وزر المتابعة عبر واتساب */}
+            {/* 3. أسفل السلة: الإجماليات وزر المتابعة عبر واتساب بعد التحقق من تسجيل الدخول */}
             {cartItems.length > 0 && (
               <div className="p-5 border-t border-surface-container bg-surface-container-low/70 space-y-3.5 text-start">
                 <div className="space-y-1.5 px-1">
@@ -344,14 +494,27 @@ export default function CartDrawer() {
                   </span>
                 </div>
 
-                {/* زر تأكيد الطلب والتوجيه لواتساب بعد التحقق من تسجيل الدخول */}
+                {/* رسالة الخطأ عند تعذر إتمام الطلب في الوضع الحي */}
+                {submitError && (
+                  <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50 text-red-800 dark:text-red-200 text-xs font-semibold flex items-start gap-2 text-start">
+                    <AlertCircle className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
+                    <span>{submitError}</span>
+                  </div>
+                )}
+
+                {/* زر تأكيد الطلب مع التحقق الصارم من تسجيل الدخول ومنع النقر المكرر */}
                 <button
                   type="button"
+                  disabled={isSubmitting}
                   onClick={handleCheckoutWhatsApp}
-                  className="w-full py-3.5 px-4 rounded-xl bg-primary hover:bg-[#204613] text-white hover:shadow-xl active:scale-[0.98] transform transition-all duration-200 flex items-center justify-center gap-2.5 font-label-lg text-label-lg font-bold shadow-lg cursor-pointer"
+                  className="w-full py-3.5 px-4 rounded-xl bg-primary hover:bg-[#204613] text-white hover:shadow-xl active:scale-[0.98] transform transition-all duration-200 flex items-center justify-center gap-2.5 font-label-lg text-label-lg font-bold shadow-lg cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  <MessageSquare className="w-5 h-5" />
-                  <span>{t('cart.confirmWhatsApp')}</span>
+                  {isSubmitting ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <MessageSquare className="w-5 h-5" />
+                  )}
+                  <span>{isSubmitting ? (isEnglish ? 'Submitting order...' : 'جاري تأكيد الطلب...') : t('cart.confirmWhatsApp')}</span>
                 </button>
 
                 <div className="text-center font-label-sm text-xs text-on-surface-variant flex items-center justify-center gap-1.5">

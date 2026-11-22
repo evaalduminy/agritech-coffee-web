@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import translations from '../data/translations';
+import { USE_MOCK_API, settingsApi } from '../services/api';
 
 // مفتاح حفظ الإعدادات في التخزين المحلي
 const STORAGE_KEY = 'agritech_settings';
@@ -12,6 +13,8 @@ const DEFAULT_SETTINGS = {
   heroBackground: 'ambient', // 'ambient' | 'particles' | 'minimal'
   buttonStyle: 'soft', // 'soft' | 'pill' | 'sharp'
   loaderStyle: 'logo', // 'logo' | 'bar' | 'none'
+  enableFlyToCart: true, // تأثير الطيران للسلة
+  enableCard3DTilt: true, // ميلان ثلاثي الأبعاد وتوهج للبطاقات
 };
 
 // إنشاء سياق الإعدادات
@@ -34,6 +37,34 @@ export function SettingsProvider({ children }) {
 
   // حالة ظهور نافذة الإعدادات الجانبية
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+  // استرجاع الإعدادات العامة من خادم Laravel عند تفعيل الوضع الحي
+  useEffect(() => {
+    if (USE_MOCK_API) return;
+
+    let isMounted = true;
+    settingsApi
+      .getPublic()
+      .then((res) => {
+        if (!isMounted) return;
+        const apiData = res?.data;
+        if (apiData && typeof apiData === 'object') {
+          setSettings((prev) => ({
+            ...prev,
+            platform_name: apiData.platform_name || prev.platform_name,
+            themeMode: apiData.theme === 'dark' ? 'dark' : (apiData.theme === 'light' ? 'light' : prev.themeMode),
+            primaryColor: apiData.primary_color || prev.primaryColor,
+          }));
+        }
+      })
+      .catch((err) => {
+        console.warn('تعذر استرجاع إعدادات المنصة من خادم Laravel:', err?.message);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // تطبيق التغييرات على عنصر الجذر document.documentElement وحفظها
   useEffect(() => {
@@ -111,11 +142,28 @@ export function SettingsProvider({ children }) {
     return current;
   };
 
+  // تحديث إعدادات المنصة وإرسالها لخادم Laravel عند توافر صلاحية المشرف
+  const updateAdminSettings = async (customPayload) => {
+    const payload = customPayload || {
+      theme: settings.themeMode,
+      platform_name: settings.platform_name || 'سوق البن الفاخر',
+    };
+
+    if (!USE_MOCK_API) {
+      try {
+        await settingsApi.updateAdmin(payload);
+      } catch (err) {
+        console.warn('تعذر حفظ الإعدادات في خادم Laravel:', err?.message);
+      }
+    }
+  };
+
   return (
     <SettingsContext.Provider
       value={{
         settings,
         updateSetting,
+        updateAdminSettings,
         resetSettings,
         isSettingsOpen,
         openSettings,

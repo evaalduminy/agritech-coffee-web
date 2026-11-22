@@ -11,7 +11,9 @@ export default function HeroAmbientBackground() {
   const isDark = settings?.themeMode === 'dark';
 
   // حالة التحقق من توافر مؤشر دقيق (شاشات سطح المكتب والماوس)
-  const [isDesktop, setIsDesktop] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(pointer: fine)').matches
+  );
 
   // قيم الحركة المباشرة لموضع إضاءة المؤشر
   const mouseX = useMotionValue(typeof window !== 'undefined' ? window.innerWidth / 2 : 400);
@@ -28,9 +30,14 @@ export default function HeroAmbientBackground() {
     if (settings?.heroBackground === 'minimal') return;
 
     const mediaQuery = window.matchMedia('(pointer: fine)');
-    setIsDesktop(mediaQuery.matches);
+    const handleMediaChange = (e) => setIsDesktop(e.matches);
+    mediaQuery.addEventListener('change', handleMediaChange);
 
-    if (!mediaQuery.matches) return;
+    if (!mediaQuery.matches) {
+      return () => {
+        mediaQuery.removeEventListener('change', handleMediaChange);
+      };
+    }
 
     // حساب موضع المؤشر بالنسبة لحدود الحاوية
     const handleMouseMove = (event) => {
@@ -44,6 +51,7 @@ export default function HeroAmbientBackground() {
 
     window.addEventListener('mousemove', handleMouseMove);
     return () => {
+      mediaQuery.removeEventListener('change', handleMediaChange);
       window.removeEventListener('mousemove', handleMouseMove);
     };
   }, [mouseX, mouseY, settings?.heroBackground]);

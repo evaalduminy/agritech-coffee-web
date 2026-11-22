@@ -72,6 +72,40 @@ export function formatOrderMessage(order, customerInfo = {}) {
   return lines.join('\n');
 }
 
+// دالة تنسيق رسالة الاستفسار السريع عن منتج معين بدون طلب شراء
+export function formatInquiryMessage(product, isEnglish = false) {
+  const name = isEnglish ? (product.name_en || product.name) : product.name;
+  const origin = isEnglish ? (product.origin_en || product.origin) : product.origin;
+  const price = Number(product.price).toFixed(2);
+
+  if (isEnglish) {
+    const lines = [
+      '*Specialty Coffee Lot Inquiry*',
+      'Yemeni Specialty Coffee Platform',
+      '---------------------------------------',
+      `Product: *${name}*`,
+      origin ? `Origin: ${origin}` : '',
+      `Reference Price: $${price}`,
+      '',
+      `Hello, I would like to inquire about this lot regarding availability, current harvest dispatch, and cupping profile.`,
+    ].filter(Boolean);
+    return lines.join('\n');
+  }
+
+  const lines = [
+    '*استفسار عن محصول بن فاخر*',
+    'منصة سوق البن الفاخر (AgriTech Platform)',
+    '---------------------------------------',
+    `المحصول: *${name}*`,
+    origin ? `المصدر: ${origin}` : '',
+    `السعر المرجعي: $${price}`,
+    '',
+    `مرحباً، أرغب بالاستفسار عن محصول (${name})، ومواعيد توفره والشحن المباشر من المزرعة.`,
+  ].filter(Boolean);
+
+  return lines.join('\n');
+}
+
 // دالة إنشاء رابط واتساب المباشر مع تشفير نص الرسالة
 export function generateWhatsAppUrl(order, customerInfo = {}, phoneNumber = DEFAULT_WHATSAPP_PHONE) {
   // تنظيف رقم الهاتف من أي رموز أو مسافات
@@ -80,15 +114,34 @@ export function generateWhatsAppUrl(order, customerInfo = {}, phoneNumber = DEFA
   return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(messageText)}`;
 }
 
-// دالة فتح محادثة واتساب في نافذة متصفح جديدة
+// دالة فتح محادثة واتساب لتأكيد الطلب
 export function openWhatsApp(order, customerInfo = {}, phoneNumber = DEFAULT_WHATSAPP_PHONE) {
   const url = generateWhatsAppUrl(order, customerInfo, phoneNumber);
+  return window.open(url, '_blank', 'noopener,noreferrer');
+}
+
+// دالة فتح محادثة واتساب للاستفسار السريع عن منتج
+export function openWhatsAppInquiry(product, isEnglish = false, phoneNumber = DEFAULT_WHATSAPP_PHONE) {
+  const cleanPhone = String(phoneNumber).replace(/[^0-9]/g, '');
+  const messageText = formatInquiryMessage(product, isEnglish);
+  const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(messageText)}`;
+  return window.open(url, '_blank', 'noopener,noreferrer');
+}
+
+// دالة فتح محادثة واتساب للدعم الفني وخدمة العملاء العامة
+export function openWhatsAppSupport(customMessage = '', phoneNumber = DEFAULT_WHATSAPP_PHONE) {
+  const cleanPhone = String(phoneNumber).replace(/[^0-9]/g, '');
+  const text = customMessage || 'مرحباً، أود الاستفسار عن منصة سوق البن وخدمات المحاصيل';
+  const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`;
   return window.open(url, '_blank', 'noopener,noreferrer');
 }
 
 export default {
   DEFAULT_WHATSAPP_PHONE,
   formatOrderMessage,
+  formatInquiryMessage,
   generateWhatsAppUrl,
   openWhatsApp,
+  openWhatsAppInquiry,
+  openWhatsAppSupport,
 };

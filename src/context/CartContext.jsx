@@ -21,6 +21,9 @@ export function CartProvider({ children }) {
   // حالة فتح وإغلاق نافذة السلة الجانبية
   const [isCartOpen, setIsCartOpen] = useState(false);
 
+  // قائمة العناصر الطائرة حالياً نحو أيقونة السلة (Fly-to-Cart)
+  const [flyingItems, setFlyingItems] = useState([]);
+
   // حفظ السلة في التخزين المحلي تلقائياً عند أي تعديل على العناصر
   useEffect(() => {
     try {
@@ -30,65 +33,87 @@ export function CartProvider({ children }) {
     }
   }, [cartItems]);
 
-  // دالة إضافة منتج إلى السلة مع حفظ كامل البيانات الأصلية والمترجمة
-  const addToCart = (product, quantity = 1) => {
+  // دالة إضافة منتج إلى السلة مع دعم الخيارات الديناميكية (الحجم، الطحن، والاشتراك)
+  const addToCart = (product, quantity = 1, options = {}) => {
     const qty = typeof quantity === 'number' && quantity > 0 ? quantity : 1;
+    const variant = options.selectedVariant || (product.variants && product.variants[0]) || null;
+    const customOption = options.selectedOption || null;
+    const isSub = Boolean(options.isSubscription);
+    const unitPrice = options.unitPrice ?? (variant ? Number(variant.price) : Number(product.price));
+
+    // معرّف فريد لعنصر السلة بناءً على خيارات التخصيص المختارة
+    const cartItemId = options.cartItemId || `${product.id}-${variant?.id || 'def'}-${customOption?.id || 'none'}-${isSub ? 'sub' : 'one'}`;
 
     setCartItems((prevItems) => {
-      const existingIndex = prevItems.findIndex((item) => item.id === product.id);
+      const existingIndex = prevItems.findIndex(
+        (item) => (item.cartItemId || item.id) === cartItemId
+      );
 
       if (existingIndex > -1) {
-        // تحديث كمية المنتج وتحديث أي حقول مترجمة مفقودة
+        // تحديث الكمية للعنصر المطابق للخيارات نفسها
         const updated = [...prevItems];
         updated[existingIndex] = {
           ...updated[existingIndex],
-          ...product,
           quantity: updated[existingIndex].quantity + qty,
         };
         return updated;
       }
 
-      // إضافة المنتج كعنصر جديد في السلة مع حفظ الحقول الإنجليزية بالكامل
+      // إضافة عنصر جديد في السلة مع حفظ كافة تفاصيل التخصيص
       return [
         ...prevItems,
         {
           ...product,
+          cartItemId,
+          price: unitPrice,
+          originalPrice: variant ? Number(variant.price) : Number(product.price),
+          selectedVariant: variant,
+          selectedOption: customOption,
+          isSubscription: isSub,
           name: product.name,
           name_en: product.name_en || product.name,
-          weight: product.weight,
-          weight_en: product.weight_en || product.weight,
-          roast_level: product.roast_level,
-          roast_level_en: product.roast_level_en || product.roast_level,
-          description: product.description,
-          description_en: product.description_en || product.description,
-          origin: product.origin,
-          origin_en: product.origin_en || product.origin,
-          badge: product.badge,
-          badge_en: product.badge_en || product.badge,
+          subtitle: product.subtitle || '',
+          subtitle_en: product.subtitle_en || '',
           quantity: qty,
         },
       ];
     });
 
-    // فتح نافذة السلة الجانبية لمعاينة الإضافة
-    setIsCartOpen(true);
+    // فتح نافذة السلة الجانبية لمعاينة الإضافة إذا لم يطلب كتمها صراحة
+    if (options.openDrawer !== false) {
+      setIsCartOpen(true);
+    }
   };
 
-  // دالة حذف منتج من السلة نهائياً
-  const removeFromCart = (productId) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== productId));
+  // دالة إطلاق حركة طيران صورة المحصول نحو السلة
+  const triggerFlyToCart = (item) => {
+    setFlyingItems((prev) => [...prev, item]);
+  };
+
+  // دالة حذف عنصر الطيران فور انتهاء مسار حركته
+  const removeFlyingItem = (id) => {
+    setFlyingItems((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  // دالة حذف منتج من السلة بواسطة معرّف العنصر
+  const removeFromCart = (cartItemId) => {
+    setCartItems((prevItems) =>
+      prevItems.filter((item) => (item.cartItemId || item.id) !== cartItemId)
+    );
   };
 
   // دالة تعديل كمية منتج معين في السلة
-  const updateQuantity = (productId, newQuantity) => {
+  const updateQuantity = (cartItemId, newQuantity) => {
     if (newQuantity <= 0) {
-      removeFromCart(productId);
+      removeFromCart(cartItemId);
       return;
     }
 
     setCartItems((prevItems) =>
       prevItems.map((item) =>
-        item.id === productId ? { ...item, quantity: newQuantity } : item
+        (item.cartItemId || item.id) === cartItemId
+          ? { ...item, quantity: newQuantity }
+          : item
       )
     );
   };
@@ -104,12 +129,12 @@ export function CartProvider({ children }) {
   // إغلاق السلة
   const closeCart = () => setIsCartOpen(false);
 
-  // احتساب الإجمالي الكلي للأسعار
+  // احتساب الإجمالي الكلي لأسعار المنتجات في السلة
   const totalPrice = useMemo(() => {
     return cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   }, [cartItems]);
 
-  // احتساب إجمالي عدد الحصص/المنتجات في السلة
+  // احتساب إجمالي عدد الحصص أو المنتجات في السلة
   const totalCount = useMemo(() => {
     return cartItems.reduce((sum, item) => sum + item.quantity, 0);
   }, [cartItems]);
@@ -126,6 +151,9 @@ export function CartProvider({ children }) {
     clearCart,
     totalPrice,
     totalCount,
+    flyingItems,
+    triggerFlyToCart,
+    removeFlyingItem,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

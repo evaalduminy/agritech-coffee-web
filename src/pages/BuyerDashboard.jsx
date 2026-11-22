@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Home,
@@ -25,6 +25,11 @@ import { useAuth } from '../context/AuthContext';
 import { useSettings } from '../context/SettingsContext';
 import { mockOrders, mockProducts } from '../data/mockData';
 import { openWhatsApp } from '../services/whatsapp';
+import {
+  USE_MOCK_API,
+  ordersApi,
+  formatApiOrder,
+} from '../services/api';
 
 // صفحة حساب المشتري التفاعلية (Buyer Dashboard) مع دعم كامل للغتين
 export default function BuyerDashboard({ onReturnToStore = () => {} }) {
@@ -102,8 +107,90 @@ export default function BuyerDashboard({ onReturnToStore = () => {} }) {
   // نموذج تعديل البيانات المؤقت
   const [tempDetails, setTempDetails] = useState({ ...deliveryDetails });
 
-  // قائمة المعاملات الكاملة
-  const [orders] = useState(mockOrders);
+  // قائمة المعاملات الكاملة (في الوضع الحي تبدأ فارغة وتُجلب فقط من الخادم دون دمج)
+  const [orders, setOrders] = useState(() => {
+    // في الوضع الحي: منع قراءة mockOrders أو localStorage نهائياً
+    if (!USE_MOCK_API) {
+      return [];
+    }
+    try {
+      const saved = localStorage.getItem('agritech_coffee_orders');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch {
+      // الاعتماد على البيانات التجريبية الافتراضية
+    }
+    return mockOrders;
+  });
+
+  // جلب سجل طلبات المشتري من خادم Laravel عند تفعيل الوضع الحي
+  useEffect(() => {
+    if (USE_MOCK_API) return;
+
+    if (!user) {
+      setOrders([]);
+      return;
+    }
+
+    let isMounted = true;
+    ordersApi
+      .listOwn({ per_page: 50 })
+      .then((res) => {
+        if (!isMounted) return;
+        const apiOrders = res?.data;
+        if (Array.isArray(apiOrders)) {
+          const formatted = apiOrders.map(formatApiOrder).filter(Boolean);
+          setOrders(formatted);
+        } else {
+          setOrders([]);
+        }
+      })
+      .catch((err) => {
+        console.warn('تعذر جلب سجل الطلبات من خادم Laravel:', err?.message);
+        if (isMounted) setOrders([]);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user]);
+
+  // الاستماع لتحديثات الطلبات الجديدة فور تسجيلها عبر السلة
+  useEffect(() => {
+    const handleOrdersUpdated = () => {
+      // في الوضع الحي: إعادة جلب الطلبات من خادم Laravel فقط دون قراءة أي تخزين محلي
+      if (!USE_MOCK_API) {
+        if (user) {
+          ordersApi
+            .listOwn({ per_page: 50 })
+            .then((res) => {
+              const apiOrders = res?.data;
+              if (Array.isArray(apiOrders)) {
+                setOrders(apiOrders.map(formatApiOrder).filter(Boolean));
+              }
+            })
+            .catch(() => {});
+        }
+        return;
+      }
+
+      // في الوضع التجريبي فقط: قراءة الطلبات من localStorage أو mockOrders
+      try {
+        const saved = localStorage.getItem('agritech_coffee_orders');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed)) setOrders(parsed);
+        }
+      } catch {
+        // تجاهل الأخطاء
+      }
+    };
+
+    window.addEventListener('orders_updated', handleOrdersUpdated);
+    return () => window.removeEventListener('orders_updated', handleOrdersUpdated);
+  }, [user]);
 
   // إجمالي الإحصائيات المحسوبة
   const totalOrdersCount = orders.length;
@@ -199,8 +286,10 @@ export default function BuyerDashboard({ onReturnToStore = () => {} }) {
             {/* معلومات المشتري والشعار */}
             <div className="flex items-center gap-space-md">
               <div className="relative flex-shrink-0">
-                <div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center text-on-primary shadow-md">
-                  {isRealName ? (
+                <div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center text-on-primary shadow-md overflow-hidden">
+                  {user?.avatar ? (
+                    <img src={user.avatar} alt={buyerName} className="w-full h-full object-cover" />
+                  ) : isRealName ? (
                     <span className="font-headline-md text-headline-md font-bold">
                       {firstLetter}
                     </span>

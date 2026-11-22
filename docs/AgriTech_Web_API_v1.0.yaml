@@ -1,0 +1,753 @@
+openapi: 3.1.0
+info:
+  title: AgriTech Web Platform API
+  version: 1.0.0
+  description: 'API contract for the AgriTech web platform (React frontend + Laravel
+    backend). Separate from the Flutter mobile API. Database reference: AgriTech_Complete_Database.sql
+    v1.3.1. Confirmed database updates: unique phone for phone login, persistent settings
+    table, notes column on reservation_orders, and Arabic/English product-name columns.'
+servers:
+- url: http://127.0.0.1:8000/api/v1
+  description: Local development
+- url: https://api.example.com/api/v1
+  description: Replace with the production server URL
+tags:
+- name: Authentication
+- name: Products
+- name: Orders
+- name: Settings
+security:
+- bearerAuth: []
+paths:
+  /register:
+    post:
+      tags:
+      - Authentication
+      summary: Register a buyer account
+      description: Public registration. Laravel assigns role=buyer; clients cannot
+        select their role.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Account created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /login:
+    post:
+      tags:
+      - Authentication
+      summary: Login using phone and password
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /logout:
+    post:
+      tags:
+      - Authentication
+      summary: Revoke the current Sanctum token
+      responses:
+        '200':
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /me:
+    get:
+      tags:
+      - Authentication
+      summary: Get the authenticated user
+      responses:
+        '200':
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /products:
+    get:
+      tags:
+      - Products
+      summary: List public products
+      description: Product images are read from product_images and categories from
+        product_categories.
+      security: []
+      parameters:
+      - in: query
+        name: category_id
+        schema:
+          type: integer
+          minimum: 1
+      - in: query
+        name: search
+        schema:
+          type: string
+          maxLength: 100
+      - in: query
+        name: page
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - in: query
+        name: per_page
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 50
+          default: 12
+      - in: query
+        name: sort
+        schema:
+          type: string
+          enum:
+          - newest
+          - price_asc
+          - price_desc
+          default: newest
+      responses:
+        '200':
+          description: Paginated product list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductListResponse'
+  /products/{product_id}:
+    get:
+      tags:
+      - Products
+      summary: Get product details
+      security: []
+      parameters:
+      - $ref: '#/components/parameters/ProductId'
+      responses:
+        '200':
+          description: Product details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /orders:
+    post:
+      tags:
+      - Orders
+      summary: Create a purchase or reservation order
+      description: Buyer only. Laravel derives buyer_id from the token and calculates
+        prices from the database. Client prices and totals are ignored.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequest'
+      responses:
+        '201':
+          description: Order created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    get:
+      tags:
+      - Orders
+      summary: List orders for the authenticated buyer
+      description: Buyer only. Returns orders belonging to the current buyer only.
+      parameters:
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - pending
+          - confirmed
+          - completed
+          - cancelled
+      - in: query
+        name: page
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - in: query
+        name: per_page
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 50
+          default: 10
+      responses:
+        '200':
+          description: Buyer's orders
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /orders/{order_id}:
+    get:
+      tags:
+      - Orders
+      summary: Get one order owned by the authenticated buyer
+      parameters:
+      - in: path
+        name: order_id
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+      responses:
+        '200':
+          description: Order details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /settings:
+    get:
+      tags:
+      - Settings
+      summary: Get public platform settings
+      security: []
+      responses:
+        '200':
+          description: Public settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettingsResponse'
+  /admin/settings:
+    put:
+      tags:
+      - Settings
+      summary: Update platform settings
+      description: Admin only. Requires a settings table or equivalent persistent
+        storage to be added; it is absent from the current SQL schema.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSettingsRequest'
+      responses:
+        '200':
+          description: Settings updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettingsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Sanctum token
+      description: 'Authorization: Bearer <token>'
+  parameters:
+    ProductId:
+      in: path
+      name: product_id
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+  schemas:
+    RegisterRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - username
+      - first_name
+      - last_name
+      - email
+      - phone
+      - password
+      - password_confirmation
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 50
+        first_name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        last_name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        email:
+          type: string
+          format: email
+          maxLength: 255
+        phone:
+          type: string
+          minLength: 7
+          maxLength: 20
+          description: Required for web registration and unique; enforce a UNIQUE
+            constraint/index in the database.
+        password:
+          type: string
+          minLength: 8
+          format: password
+        password_confirmation:
+          type: string
+          minLength: 8
+          format: password
+    LoginRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - phone
+      - password
+      properties:
+        phone:
+          type: string
+          minLength: 7
+          maxLength: 20
+        password:
+          type: string
+          format: password
+    User:
+      type: object
+      required:
+      - user_id
+      - username
+      - first_name
+      - last_name
+      - email
+      - role
+      properties:
+        user_id:
+          type: integer
+        username:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type:
+          - string
+          - 'null'
+        role:
+          type: string
+          enum:
+          - buyer
+          - farmer
+          - admin
+    AuthResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          type: object
+          required:
+          - token
+          - token_type
+          - user
+          properties:
+            token:
+              type: string
+            token_type:
+              type: string
+              const: Bearer
+            user:
+              $ref: '#/components/schemas/User'
+    Product:
+      type: object
+      required:
+      - product_id
+      - product_name_ar
+      - product_name_en
+      - price
+      - available_quantity
+      - images
+      properties:
+        product_id:
+          type: integer
+        description:
+          type:
+          - string
+          - 'null'
+        price:
+          type: number
+          minimum: 0
+        available_quantity:
+          type: integer
+          minimum: 0
+        processing_method:
+          type:
+          - string
+          - 'null'
+        agricultural_region:
+          type:
+          - string
+          - 'null'
+        farm_id:
+          type: integer
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductImage'
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductCategory'
+        product_name_ar:
+          type: string
+          minLength: 1
+        product_name_en:
+          type: string
+          minLength: 1
+    ProductImage:
+      type: object
+      required:
+      - image_id
+      - image_url
+      - is_primary
+      properties:
+        image_id:
+          type: integer
+        image_url:
+          type: string
+          format: uri-reference
+        is_primary:
+          type: boolean
+    ProductCategory:
+      type: object
+      required:
+      - variety_id
+      - variety_name
+      properties:
+        variety_id:
+          type: integer
+        variety_name:
+          type: string
+        variety_description:
+          type:
+          - string
+          - 'null'
+    ProductListResponse:
+      type: object
+      required:
+      - data
+      - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+    ProductResponse:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          $ref: '#/components/schemas/Product'
+    CreateOrderRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - type
+      - items
+      properties:
+        type:
+          type: string
+          enum:
+          - purchase
+          - reservation
+        notes:
+          type:
+          - string
+          - 'null'
+          maxLength: 1000
+        items:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            additionalProperties: false
+            required:
+            - product_id
+            - quantity
+            properties:
+              product_id:
+                type: integer
+                minimum: 1
+              quantity:
+                type: integer
+                minimum: 1
+    Order:
+      type: object
+      required:
+      - order_id
+      - total_price
+      - order_date
+      - order_status
+      - items
+      properties:
+        order_id:
+          type: integer
+        total_price:
+          type: number
+          minimum: 0
+        order_date:
+          type: string
+          format: date-time
+        order_status:
+          type: string
+          enum:
+          - pending
+          - confirmed
+          - completed
+          - cancelled
+        notes:
+          type:
+          - string
+          - 'null'
+          description: Requires adding a notes column to reservation_orders; currently
+            absent in SQL.
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+    OrderItem:
+      type: object
+      required:
+      - product_id
+      - product_name
+      - quantity
+      - unit_price
+      - subtotal
+      properties:
+        product_id:
+          type: integer
+        product_name:
+          type: string
+        quantity:
+          type: integer
+        unit_price:
+          type: number
+        subtotal:
+          type: number
+    OrderResponse:
+      type: object
+      required:
+      - message
+      - data
+      properties:
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/Order'
+    OrderListResponse:
+      type: object
+      required:
+      - data
+      - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+    PaginationMeta:
+      type: object
+      required:
+      - current_page
+      - per_page
+      - total
+      - last_page
+      properties:
+        current_page:
+          type: integer
+        per_page:
+          type: integer
+        total:
+          type: integer
+        last_page:
+          type: integer
+    Settings:
+      type: object
+      properties:
+        platform_name:
+          type: string
+        logo_url:
+          type:
+          - string
+          - 'null'
+          format: uri-reference
+        theme:
+          type: string
+          enum:
+          - light
+          - dark
+          - system
+        primary_color:
+          type: string
+          pattern: ^#[0-9A-Fa-f]{6}$
+        secondary_color:
+          type: string
+          pattern: ^#[0-9A-Fa-f]{6}$
+        background_color:
+          type: string
+          pattern: ^#[0-9A-Fa-f]{6}$
+        button_radius:
+          type: integer
+          minimum: 0
+          maximum: 40
+        updated_at:
+          type: string
+          format: date-time
+    SettingsResponse:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          $ref: '#/components/schemas/Settings'
+    UpdateSettingsRequest:
+      type: object
+      minProperties: 1
+      properties:
+        platform_name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        logo_url:
+          type:
+          - string
+          - 'null'
+          format: uri-reference
+        theme:
+          type: string
+          enum:
+          - light
+          - dark
+          - system
+        primary_color:
+          type: string
+          pattern: ^#[0-9A-Fa-f]{6}$
+        secondary_color:
+          type: string
+          pattern: ^#[0-9A-Fa-f]{6}$
+        background_color:
+          type: string
+          pattern: ^#[0-9A-Fa-f]{6}$
+        button_radius:
+          type: integer
+          minimum: 0
+          maximum: 40
+    MessageResponse:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+    ErrorResponse:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+  responses:
+    Unauthorized:
+      description: Missing, invalid or expired token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Authenticated user lacks permission
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Conflict:
+      description: Duplicate username, email or phone
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
