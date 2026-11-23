@@ -141,7 +141,7 @@ export default function ProductCard({
             }
           : undefined
       }
-      className="relative group cursor-pointer flex flex-col justify-between bg-white/80 dark:bg-[#122019]/80 backdrop-blur-md rounded-2xl overflow-hidden shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 ease-out border border-emerald-900/10 dark:border-emerald-400/15 hover:border-primary/30 text-start"
+      className="relative group cursor-pointer flex flex-col justify-between bg-white/80 dark:bg-[#122019]/80 backdrop-blur-md rounded-2xl overflow-hidden shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 ease-out border border-[#DCE5D8] dark:border-emerald-400/15 hover:border-[#31691D]/30 text-start"
     >
       {/* لمعة ضوئية ناعمة تتبع المؤشر في وضع 3D Tilt */}
       {isTiltActive && (
@@ -163,7 +163,7 @@ export default function ProductCard({
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
           />
           {displayBadge && (
-            <div className="absolute top-2.5 right-2.5 bg-primary text-on-primary px-2.5 py-0.5 rounded-lg text-xs shadow-sm font-semibold">
+            <div className="absolute top-2.5 right-2.5 bg-[#31691D] text-white px-2.5 py-0.5 rounded-lg text-xs shadow-sm font-semibold">
               {displayBadge}
             </div>
           )}
@@ -171,26 +171,26 @@ export default function ProductCard({
 
         {/* تفاصيل المحصول المنسقة والمحكمة: الاسم والسطر الفرعي والسعر والوصف */}
         <div className="p-3.5 sm:p-4 space-y-2">
-          <h3 className="text-base font-bold text-on-surface line-clamp-1 group-hover:text-primary transition-colors duration-200">
+          <h3 className="text-base font-bold text-[#1A2B15] dark:text-white line-clamp-1 group-hover:text-[#31691D] transition-colors duration-200">
             {displayName}
           </h3>
 
           {/* السطر الفرعي العام المتكيف مع أي محصول */}
-          <p className="text-xs text-secondary dark:text-gray-400 font-medium line-clamp-1">
+          <p className="text-xs text-[#556650] dark:text-gray-400 font-medium line-clamp-1">
             {displaySubtitle}
           </p>
 
           {/* عرض السعر بالدولار والريال بتناسق خطي رشيق */}
           <div className="flex items-baseline gap-1 pt-0.5">
-            <span className="text-base sm:text-lg text-primary dark:text-emerald-400 font-extrabold">
+            <span className="text-base sm:text-lg text-[#31691D] dark:text-[#7BC662] font-extrabold">
               ${Number(product.price).toFixed(2)}
             </span>
-            <span className="text-xs text-on-surface-variant dark:text-gray-400 font-normal">
+            <span className="text-xs text-[#556650] dark:text-gray-400 font-normal">
               ({approximateYer} {t('product.yerUnit')})
             </span>
           </div>
 
-          <p className="text-xs text-on-surface-variant dark:text-gray-300 line-clamp-2 leading-relaxed">
+          <p className="text-xs text-[#556650] dark:text-gray-300 line-clamp-2 leading-relaxed">
             {displayDesc}
           </p>
         </div>
@@ -202,26 +202,26 @@ export default function ProductCard({
         <button
           type="button"
           onClick={handleAddClick}
-          className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl bg-surface-container text-on-surface hover:bg-primary-container/15 hover:text-primary dark:text-emerald-300 dark:border dark:border-emerald-700/60 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/40 active:scale-95 transition-all text-center text-xs font-semibold cursor-pointer border border-transparent"
+          className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl bg-surface-container text-[#1A2B15] hover:bg-[#E9F2E4] hover:text-[#31691D] dark:text-emerald-300 dark:border dark:border-emerald-700/60 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/40 active:scale-95 transition-all text-center text-xs font-semibold cursor-pointer border border-transparent"
         >
           {isAdded ? (
             <>
-              <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-              <span className="text-emerald-600 dark:text-emerald-400">{t('product.added')}</span>
+              <Check className="w-3.5 h-3.5 text-[#31691D] dark:text-[#7BC662]" />
+              <span className="text-[#31691D] dark:text-[#7BC662]">{t('product.added')}</span>
             </>
           ) : (
             <>
-              <ShoppingBag className="w-3.5 h-3.5 text-primary dark:text-emerald-300" />
+              <ShoppingBag className="w-3.5 h-3.5 text-[#31691D] dark:text-[#7BC662]" />
               <span>{t('product.addToCart')}</span>
             </>
           )}
         </button>
 
-        {/* زر الاستفسار السريع عن المحصول عبر واتساب */}
+        {/* زر الاستفسار السريع عن المحصول عبر واتساب بالأخضر الزراعي المعتمد */}
         <button
           type="button"
           onClick={handleInquiryClick}
-          className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl bg-primary text-on-primary hover:bg-[#204613] hover:shadow-md dark:bg-emerald-700 dark:hover:bg-emerald-600 active:scale-95 transition-all text-center text-xs font-semibold cursor-pointer"
+          className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl bg-[#31691D] text-white hover:bg-[#255215] hover:shadow-md dark:bg-emerald-700 dark:hover:bg-emerald-600 active:scale-95 transition-all text-center text-xs font-semibold cursor-pointer"
         >
           <MessageSquare className="w-3.5 h-3.5" />
           <span>{t('product.inquire')}</span>

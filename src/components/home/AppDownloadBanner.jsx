@@ -43,17 +43,17 @@ export default function AppDownloadBanner() {
   return (
     <section className="w-full py-8 sm:py-12 bg-transparent">
       <div className="max-w-7xl mx-auto px-margin">
-        <div className="relative rounded-3xl p-6 sm:p-8 lg:p-10 overflow-hidden bg-gradient-to-br from-[#123118] via-[#102d1a] to-[#0a1c10] text-white shadow-xl border border-emerald-800/40">
+        <div className="relative rounded-3xl p-6 sm:p-8 lg:p-10 overflow-hidden bg-gradient-to-br from-[#142610] via-[#102d1a] to-[#0a1c10] text-white shadow-xl border border-[#DCE5D8] dark:border-emerald-800/40">
           
           {/* لمسات إضاءة هادئة في خلفية البانر */}
           <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-emerald-500/15 blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-amber-500/10 blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-[#FEF3C7]/10 blur-3xl pointer-events-none" />
 
           <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 lg:gap-8 text-start">
             
-            {/* الجهة اليمنى: أيقونة التطبيق البارزة مع العنوان والوصف */}
+            {/* الجهة اليمنى: أيقونة التطبيق البارزة مع العنوان والوصف باللون الدافئ */}
             <div className="flex items-start sm:items-center gap-4 sm:gap-5 flex-1">
-              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center justify-center shrink-0 shadow-lg">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#FEF3C7] text-[#D97706] border border-[#D97706]/30 flex items-center justify-center shrink-0 shadow-lg">
                 <Smartphone className="w-7 h-7 sm:w-8 sm:h-8" />
               </div>
               <div>

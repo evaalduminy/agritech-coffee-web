@@ -80,15 +80,14 @@ export default function HomePage({
   const handleModalReserve = (product, quantity = 1, options = {}) => {
     const unitPrice = options.unitPrice || options.selectedVariant?.price || product.price;
     const variantText = options.selectedVariant ? ` (${options.selectedVariant.label})` : '';
-    const optionText = options.selectedOption ? ` - ${options.selectedOption.label}` : '';
-    const subText = options.isSubscription ? ' [اشتراك شهري]' : '';
-    const customName = `${product.name}${variantText}${optionText}${subText}`;
+    const customName = `${product.name}${variantText}`;
 
     onWhatsAppOrder({
       ...product,
       name: customName,
       price: unitPrice,
       quantity,
+      notes: options.notes || null,
     });
     setSelectedProduct(null);
   };

@@ -47,29 +47,29 @@ export default function FloatingActions() {
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0, opacity: 0, y: 10 }}
             transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-            className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/85 dark:bg-[#122019]/85 backdrop-blur-md border border-emerald-900/10 dark:border-emerald-400/20 text-on-surface hover:text-white hover:bg-primary dark:hover:bg-emerald-600 shadow-lg flex items-center justify-center cursor-pointer transition-colors"
+            className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/85 dark:bg-[#122019]/85 backdrop-blur-md border border-[#DCE5D8] dark:border-emerald-400/20 text-on-surface hover:text-white hover:bg-[#31691D] dark:hover:bg-[#31691D] shadow-lg flex items-center justify-center cursor-pointer transition-colors"
           >
             <ArrowUp className="w-4 h-4 sm:w-5 sm:h-5" />
           </motion.button>
         )}
       </AnimatePresence>
 
-      {/* 2. زر دعم واتساب العائم بنبض خفيف وتلميح نصي */}
+      {/* 2. زر دعم واتساب العائم بالأخضر الزراعي المعتمد مع حالة التمرير */}
       <div className="relative group flex items-center">
         {/* حلقة النبض الخافتة في الخلفية */}
-        <span className="absolute inset-0 rounded-full bg-emerald-500 animate-ping opacity-25 pointer-events-none" />
+        <span className="absolute inset-0 rounded-full bg-[#31691D] animate-ping opacity-25 pointer-events-none" />
 
         <button
           type="button"
           onClick={handleWhatsAppClick}
           aria-label={t('floating.whatsappSupport')}
-          className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white shadow-xl shadow-emerald-900/25 flex items-center justify-center cursor-pointer transition-all hover:scale-105 active:scale-95"
+          className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#31691D] hover:bg-[#255215] text-white shadow-xl shadow-[#31691D]/25 flex items-center justify-center cursor-pointer transition-all hover:scale-105 active:scale-95"
         >
           <MessageCircle className="w-6 h-6 sm:w-7 sm:h-7" />
         </button>
 
         {/* تلميح التوجيه السريع يظهر عند مرور المؤشر على سطح المكتب */}
-        <div className="hidden sm:group-hover:flex absolute rtl:left-full ltr:right-full mx-3 px-3 py-1.5 rounded-xl bg-white/90 dark:bg-[#0d1812]/90 backdrop-blur-md border border-emerald-900/10 dark:border-emerald-400/20 text-xs text-on-surface dark:text-white font-semibold shadow-lg whitespace-nowrap pointer-events-none">
+        <div className="hidden sm:group-hover:flex absolute rtl:left-full ltr:right-full mx-3 px-3 py-1.5 rounded-xl bg-white/90 dark:bg-[#0d1812]/90 backdrop-blur-md border border-[#DCE5D8] dark:border-emerald-400/20 text-xs text-on-surface dark:text-white font-semibold shadow-lg whitespace-nowrap pointer-events-none">
           {t('floating.whatsappTooltip')}
         </div>
       </div>

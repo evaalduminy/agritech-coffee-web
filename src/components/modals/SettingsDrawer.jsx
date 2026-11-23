@@ -322,9 +322,9 @@ export default function SettingsDrawer() {
                       >
                         <div className="flex items-center gap-3">
                           <div className="flex items-center -space-x-1.5 rtl:space-x-reverse">
-                            <span className="w-5 h-5 rounded-full bg-[#185004] border-2 border-surface" />
-                            <span className="w-5 h-5 rounded-full bg-[#31691d] border-2 border-surface" />
-                            <span className="w-5 h-5 rounded-full bg-[#a7e78b] border-2 border-surface" />
+                            <span className="w-5 h-5 rounded-full bg-[#31691D] border-2 border-surface" />
+                            <span className="w-5 h-5 rounded-full bg-[#255215] border-2 border-surface" />
+                            <span className="w-5 h-5 rounded-full bg-[#E9F2E4] border-2 border-surface" />
                           </div>
                           <div className="flex flex-col">
                             <span className="font-bold text-sm text-on-surface">{t('settings.themeAgriTech')}</span>

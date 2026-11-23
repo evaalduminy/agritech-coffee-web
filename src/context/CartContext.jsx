@@ -33,16 +33,15 @@ export function CartProvider({ children }) {
     }
   }, [cartItems]);
 
-  // دالة إضافة منتج إلى السلة مع دعم الخيارات الديناميكية (الحجم، الطحن، والاشتراك)
+  // دالة إضافة منتج إلى السلة مع دعم الخيارات المتاحة والملاحظات
   const addToCart = (product, quantity = 1, options = {}) => {
     const qty = typeof quantity === 'number' && quantity > 0 ? quantity : 1;
     const variant = options.selectedVariant || (product.variants && product.variants[0]) || null;
-    const customOption = options.selectedOption || null;
-    const isSub = Boolean(options.isSubscription);
     const unitPrice = options.unitPrice ?? (variant ? Number(variant.price) : Number(product.price));
+    const notes = options.notes ? String(options.notes).trim().slice(0, 1000) : '';
 
-    // معرّف فريد لعنصر السلة بناءً على خيارات التخصيص المختارة
-    const cartItemId = options.cartItemId || `${product.id}-${variant?.id || 'def'}-${customOption?.id || 'none'}-${isSub ? 'sub' : 'one'}`;
+    // معرّف فريد لعنصر السلة بناءً على معرّف المحصول والحجم
+    const cartItemId = options.cartItemId || `${product.id}-${variant?.id || 'def'}`;
 
     setCartItems((prevItems) => {
       const existingIndex = prevItems.findIndex(
@@ -50,16 +49,17 @@ export function CartProvider({ children }) {
       );
 
       if (existingIndex > -1) {
-        // تحديث الكمية للعنصر المطابق للخيارات نفسها
+        // تحديث الكمية والملاحظات للعنصر المطابق
         const updated = [...prevItems];
         updated[existingIndex] = {
           ...updated[existingIndex],
           quantity: updated[existingIndex].quantity + qty,
+          notes: notes || updated[existingIndex].notes || '',
         };
         return updated;
       }
 
-      // إضافة عنصر جديد في السلة مع حفظ كافة تفاصيل التخصيص
+      // إضافة عنصر جديد في السلة
       return [
         ...prevItems,
         {
@@ -68,8 +68,7 @@ export function CartProvider({ children }) {
           price: unitPrice,
           originalPrice: variant ? Number(variant.price) : Number(product.price),
           selectedVariant: variant,
-          selectedOption: customOption,
-          isSubscription: isSub,
+          notes,
           name: product.name,
           name_en: product.name_en || product.name,
           subtitle: product.subtitle || '',

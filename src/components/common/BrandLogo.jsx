@@ -40,9 +40,9 @@ export default function BrandLogo({
 
   const content = (
     <div className={`flex items-center gap-2.5 sm:gap-3 select-none ${className}`}>
-      {/* حاوية أيقونة النبتة بتدرج زمردي ولمسة إضاءة زجاجية */}
+      {/* حاوية أيقونة الشعار باللون الأخضر الزراعي المعتمد مع حالة التمرير */}
       <div
-        className={`${config.container} bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-800 dark:from-emerald-500 dark:via-emerald-600 dark:to-[#0f2d1e] text-white flex items-center justify-center shadow-xs ring-1 ring-emerald-400/20 shrink-0 transition-transform duration-200 group-hover:scale-105`}
+        className={`${config.container} bg-[#31691D] hover:bg-[#255215] dark:bg-[#31691D] dark:hover:bg-[#255215] text-white flex items-center justify-center shadow-xs ring-1 ring-[#31691D]/20 shrink-0 transition-all duration-200 group-hover:scale-105`}
       >
         <Sprout className={config.icon} />
       </div>
@@ -53,10 +53,10 @@ export default function BrandLogo({
           dir="ltr"
           className={`font-black ${config.title} leading-tight tracking-tight inline-flex items-baseline`}
         >
-          <span className="font-extrabold text-emerald-950 dark:text-white transition-colors">
+          <span className="font-extrabold text-[#1A2B15] dark:text-white transition-colors">
             {SITE_CONFIG.brand.prefix}
           </span>
-          <span className="font-extrabold text-emerald-600 dark:text-emerald-400 transition-colors">
+          <span className="font-extrabold text-[#31691D] dark:text-[#7BC662] transition-colors">
             {SITE_CONFIG.brand.suffix}
           </span>
         </span>

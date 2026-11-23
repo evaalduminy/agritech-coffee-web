@@ -66,7 +66,7 @@ export default function HeroAmbientBackground() {
           style={{
             backgroundImage: isDark
               ? 'radial-gradient(rgba(82, 183, 136, 0.12) 1.2px, transparent 1.2px)'
-              : 'radial-gradient(rgba(24, 80, 4, 0.08) 1.2px, transparent 1.2px)',
+              : 'radial-gradient(rgba(49, 105, 29, 0.08) 1.2px, transparent 1.2px)',
             backgroundSize: '24px 24px',
             WebkitMaskImage: 'radial-gradient(ellipse 70% 60% at 50% 50%, #000 35%, transparent 85%)',
             maskImage: 'radial-gradient(ellipse 70% 60% at 50% 50%, #000 35%, transparent 85%)',
@@ -139,7 +139,7 @@ export default function HeroAmbientBackground() {
         style={{
           backgroundImage: isDark
             ? 'radial-gradient(rgba(82, 183, 136, 0.12) 1.2px, transparent 1.2px)'
-            : 'radial-gradient(rgba(24, 80, 4, 0.12) 1.2px, transparent 1.2px)',
+            : 'radial-gradient(rgba(49, 105, 29, 0.12) 1.2px, transparent 1.2px)',
           backgroundSize: '24px 24px',
           WebkitMaskImage: 'radial-gradient(ellipse 70% 60% at 50% 50%, #000 35%, transparent 85%)',
           maskImage: 'radial-gradient(ellipse 70% 60% at 50% 50%, #000 35%, transparent 85%)',

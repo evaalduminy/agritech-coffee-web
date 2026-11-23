@@ -277,12 +277,14 @@ function AppContent() {
 
   // دالة الطلب المباشر عبر واتساب لمحصول فردي
   const handleWhatsAppOrder = async (product) => {
+    const orderNotes = product.notes ? String(product.notes).slice(0, 1000) : null;
     const singleOrder = {
       id: `ORD-${Date.now().toString().slice(-4)}`,
       type: product.is_reservable ? 'reservation' : 'order',
       status: 'pending',
-      total_price: product.price,
+      total_price: (Number(product.price) || 0) * (product.quantity || 1),
       created_at: new Date().toISOString().split('T')[0],
+      notes: orderNotes,
       items: [
         {
           product_id: product.id,
@@ -299,6 +301,7 @@ function AppContent() {
         const res = await ordersApi.create({
           type: product.is_reservable ? 'reservation' : 'purchase',
           items: [{ product_id: product.id, quantity: product.quantity || 1 }],
+          notes: orderNotes,
         });
 
         // اعتماد رقم الطلب الحقيقي الصادر من خادم Laravel
@@ -327,7 +330,7 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-surface text-on-surface flex flex-col font-sans transition-colors duration-200 relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#F4F7F2] dark:bg-[#111411] text-[#1A2B15] dark:text-[#e2e5e0] flex flex-col font-sans transition-colors duration-200 relative overflow-x-hidden">
       {/* 0. الخلفية التفاعلية الشاملة لكامل المنصة */}
       <GlobalInteractiveBackground />
 

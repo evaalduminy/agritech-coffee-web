@@ -12,6 +12,7 @@ import {
   MapPin,
   AlertCircle,
   Loader2,
+  FileText,
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
@@ -40,6 +41,7 @@ export default function CartDrawer({ onBrowseProducts }) {
   const [customBuyerName, setCustomBuyerName] = useState('');
   const buyerName = customBuyerName || user?.name || 'عبد الرحمن اليافعي';
   const [buyerAddress, setBuyerAddress] = useState('صنعاء، شارع حدة');
+  const [orderNotes, setOrderNotes] = useState('');
 
   // حالة جاري الإرسال وحالة الخطأ للطلب في الوضع الحي
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -100,13 +102,21 @@ export default function CartDrawer({ onBrowseProducts }) {
           quantity: Number(item.quantity) || 1,
         }));
 
-        const orderNotes = buyerAddress ? `العنوان: ${buyerAddress}` : '';
+        // تجهيز الملاحظات الاختيارية بما لا يتجاوز 1000 حرف
+        const noteParts = [];
+        if (buyerAddress) noteParts.push(`العنوان: ${buyerAddress}`);
+        if (orderNotes.trim()) noteParts.push(`ملاحظات: ${orderNotes.trim()}`);
+        const itemNotes = cartItems.map((i) => i.notes).filter(Boolean);
+        if (itemNotes.length > 0 && !orderNotes.trim()) {
+          noteParts.push(`ملاحظات المحاصيل: ${itemNotes.join(' | ')}`);
+        }
+        const finalNotes = noteParts.length > 0 ? noteParts.join(' - ').slice(0, 1000) : null;
 
         // استدعاء خدمة إنشاء الطلب وحجب أي أسعار أو معرفات مستخدم
         const res = await ordersApi.create({
           type: 'purchase',
           items: apiItems,
-          notes: orderNotes,
+          notes: finalNotes,
         });
 
         const apiOrderData = res?.data || res;
@@ -129,21 +139,14 @@ export default function CartDrawer({ onBrowseProducts }) {
             const variantText = item.selectedVariant
               ? ` (${isEnglish ? (item.selectedVariant.label_en || item.selectedVariant.label) : item.selectedVariant.label})`
               : '';
-            const optionText = item.selectedOption
-              ? ` - ${isEnglish ? (item.selectedOption.label_en || item.selectedOption.label) : item.selectedOption.label}`
-              : '';
-            const subText = item.isSubscription
-              ? (isEnglish ? ' [Monthly Subscription]' : ' [اشتراك شهري]')
-              : '';
 
             return {
               product_id: item.id,
-              name: `${baseName}${variantText}${optionText}${subText}`,
+              name: `${baseName}${variantText}`,
               quantity: item.quantity,
               price: item.price,
+              notes: item.notes || null,
               selectedVariant: item.selectedVariant,
-              selectedOption: item.selectedOption,
-              isSubscription: item.isSubscription,
             };
           }),
         };
@@ -187,21 +190,14 @@ export default function CartDrawer({ onBrowseProducts }) {
         const variantText = item.selectedVariant
           ? ` (${isEnglish ? (item.selectedVariant.label_en || item.selectedVariant.label) : item.selectedVariant.label})`
           : '';
-        const optionText = item.selectedOption
-          ? ` - ${isEnglish ? (item.selectedOption.label_en || item.selectedOption.label) : item.selectedOption.label}`
-          : '';
-        const subText = item.isSubscription
-          ? (isEnglish ? ' [Monthly Subscription]' : ' [اشتراك شهري]')
-          : '';
 
         return {
           product_id: item.id,
-          name: `${baseName}${variantText}${optionText}${subText}`,
+          name: `${baseName}${variantText}`,
           quantity: item.quantity,
           price: item.price,
+          notes: item.notes || null,
           selectedVariant: item.selectedVariant,
-          selectedOption: item.selectedOption,
-          isSubscription: item.isSubscription,
         };
       }),
     };
@@ -354,24 +350,19 @@ export default function CartDrawer({ onBrowseProducts }) {
                             </button>
                           </div>
 
-                          {/* الخيارات المختارة كالحجم والطحن ووسم الاشتراك أو السطر الفرعي */}
+                          {/* تفاصيل الحجم إن وجدت أو الملاحظات أو السطر الفرعي */}
                           <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
                             {item.selectedVariant && (
                               <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-surface-container-high text-on-surface">
                                 {isEnglish ? (item.selectedVariant.label_en || item.selectedVariant.label) : item.selectedVariant.label}
                               </span>
                             )}
-                            {item.selectedOption && (
-                              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-surface-container-high text-on-surface">
-                                {isEnglish ? (item.selectedOption.label_en || item.selectedOption.label) : item.selectedOption.label}
+                            {item.notes && (
+                              <span className="text-[11px] text-on-surface-variant truncate max-w-[200px] block">
+                                {item.notes}
                               </span>
                             )}
-                            {item.isSubscription && (
-                              <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-emerald-900/10 dark:bg-emerald-950/60 text-primary dark:text-emerald-300 border border-emerald-900/20 dark:border-emerald-800/40">
-                                {t('product.monthlySubBadge')}
-                              </span>
-                            )}
-                            {!item.selectedVariant && !item.selectedOption && (
+                            {!item.selectedVariant && !item.notes && (
                               <span className="font-body-sm text-[12px] text-secondary font-medium truncate block">
                                 {isEnglish
                                   ? (item.subtitle_en || matched?.subtitle_en || item.subtitle || '')
@@ -462,6 +453,34 @@ export default function CartDrawer({ onBrowseProducts }) {
                         onChange={(e) => setBuyerAddress(e.target.value)}
                         placeholder={t('cart.buyerAddressPlaceholder')}
                         className="w-full text-sm px-3.5 py-2.5 rounded-xl border border-outline-variant bg-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-body-md"
+                      />
+                    </div>
+
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <label
+                          htmlFor="order-notes"
+                          className="block font-label-md text-xs text-on-surface font-semibold flex items-center gap-1"
+                        >
+                          <FileText className="w-3.5 h-3.5 text-primary" />
+                          <span>{isEnglish ? 'Special Notes (Optional)' : 'ملاحظات إضافية على الطلب (اختياري)'}</span>
+                        </label>
+                        <span className="text-[10px] text-on-surface-variant font-mono">
+                          {orderNotes.length}/1000
+                        </span>
+                      </div>
+                      <textarea
+                        id="order-notes"
+                        rows={2}
+                        maxLength={1000}
+                        value={orderNotes}
+                        onChange={(e) => setOrderNotes(e.target.value.slice(0, 1000))}
+                        placeholder={
+                          isEnglish
+                            ? 'Special instructions or delivery notes...'
+                            : 'أي تعليمات خاصة بالتسليم أو الملاحظات...'
+                        }
+                        className="w-full text-sm px-3.5 py-2 rounded-xl border border-outline-variant bg-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-body-md resize-none"
                       />
                     </div>
                   </div>

@@ -11,9 +11,14 @@
     margin: 0;
     padding: 0;
     font-family: 'Cairo', sans-serif;
-    background-color: #f8faf5;
-    color: #191c1a;
+    background-color: #F4F7F2;
+    color: #1A2B15;
     transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  /* توحيد ألوان العناوين والنصوص الثانوية والحدود */
+  h1, h2, h3, h4, h5, h6 {
+    color: #1A2B15;
   }
 }
 

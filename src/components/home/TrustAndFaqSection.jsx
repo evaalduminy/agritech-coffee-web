@@ -74,14 +74,14 @@ export default function TrustAndFaqSection() {
         <div className="space-y-10 sm:space-y-12">
           {/* الترويسة المركزية لقسم التقييمات */}
           <div className="text-center max-w-2xl mx-auto space-y-3">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 dark:bg-emerald-400/10 text-emerald-800 dark:text-emerald-300 border border-emerald-500/20 dark:border-emerald-400/20 text-xs font-semibold">
-              <Sparkles className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E9F2E4] dark:bg-[#31691D]/20 text-[#31691D] dark:text-[#7BC662] border border-[#31691D]/20 text-xs font-semibold">
+              <Sparkles className="w-3.5 h-3.5 text-[#31691D] dark:text-[#7BC662]" />
               <span>{t('trustAndFaq.reviewsBadge')}</span>
             </div>
-            <h2 className="font-headline-md text-2xl sm:text-3xl lg:text-4xl text-on-surface font-extrabold tracking-tight">
+            <h2 className="font-headline-md text-2xl sm:text-3xl lg:text-4xl text-[#1A2B15] dark:text-white font-extrabold tracking-tight">
               {t('trustAndFaq.reviewsTitle')}
             </h2>
-            <p className="font-body-md text-xs sm:text-sm text-on-surface-variant dark:text-gray-400 leading-relaxed">
+            <p className="font-body-md text-xs sm:text-sm text-[#556650] dark:text-gray-400 leading-relaxed">
               {t('trustAndFaq.reviewsDesc')}
             </p>
           </div>
@@ -95,7 +95,7 @@ export default function TrustAndFaqSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4 }}
-                className="bg-white/75 dark:bg-[#122019]/75 backdrop-blur-md rounded-2xl p-6 sm:p-7 border border-emerald-900/10 dark:border-emerald-400/15 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between text-start relative group"
+                className="bg-white/75 dark:bg-[#122019]/75 backdrop-blur-md rounded-2xl p-6 sm:p-7 border border-[#DCE5D8] dark:border-emerald-400/15 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between text-start relative group"
               >
                 {/* علامة اقتباس خافتة في الزاوية العلوية */}
                 <div className="absolute top-5 end-5 text-primary/10 dark:text-emerald-400/10 group-hover:text-primary/20 transition-colors pointer-events-none">
@@ -148,28 +148,28 @@ export default function TrustAndFaqSection() {
         {/* 2. قسم الأسئلة الشائعة (FAQ Accordion) */}
         {/* ======================================================== */}
         <div className="space-y-8 sm:space-y-10">
-          {/* الترويسة المركزية للأسئلة الشائعة */}
+          {/* الترويسة المركزية للأسئلة الشائعة بالخلفية الفاتحة المعتمدة */}
           <div className="text-center max-w-2xl mx-auto space-y-3">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 dark:bg-emerald-500/15 text-primary dark:text-emerald-300 border border-primary/20 dark:border-emerald-400/20 text-xs font-semibold">
-              <HelpCircle className="w-3.5 h-3.5 text-primary dark:text-emerald-300" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E9F2E4] dark:bg-[#31691D]/20 text-[#31691D] dark:text-[#7BC662] border border-[#31691D]/20 dark:border-[#7BC662]/30 text-xs font-semibold">
+              <HelpCircle className="w-3.5 h-3.5 text-[#31691D] dark:text-[#7BC662]" />
               <span>{t('trustAndFaq.faqBadge')}</span>
             </div>
-            <h2 className="font-headline-md text-2xl sm:text-3xl text-on-surface font-extrabold tracking-tight">
+            <h2 className="font-headline-md text-2xl sm:text-3xl text-[#1A2B15] dark:text-white font-extrabold tracking-tight">
               {t('trustAndFaq.faqTitle')}
             </h2>
-            <p className="font-body-md text-xs sm:text-sm text-on-surface-variant dark:text-gray-400 leading-relaxed">
+            <p className="font-body-md text-xs sm:text-sm text-[#556650] dark:text-gray-400 leading-relaxed">
               {t('trustAndFaq.faqDesc')}
             </p>
           </div>
 
-          {/* قائمة الأكورديون المتجاوبة */}
+          {/* قائمة الأكورديون المتجاوبة مع الحدود الموحدة */}
           <div className="max-w-3xl mx-auto space-y-3.5">
             {faqs.map((faq, index) => {
               const isOpen = openFaqIndex === index;
               return (
                 <div
                   key={faq.id}
-                  className="bg-white/75 dark:bg-[#122019]/75 backdrop-blur-md rounded-2xl border border-emerald-900/10 dark:border-emerald-400/15 overflow-hidden transition-colors shadow-xs"
+                  className="bg-white/75 dark:bg-[#122019]/75 backdrop-blur-md rounded-2xl border border-[#DCE5D8] dark:border-emerald-400/15 overflow-hidden transition-colors shadow-xs"
                 >
                   {/* زر فتح وإغلاق السؤال */}
                   <button
@@ -178,13 +178,13 @@ export default function TrustAndFaqSection() {
                     aria-expanded={isOpen}
                     className="w-full p-4 sm:p-5 flex items-center justify-between gap-4 text-start cursor-pointer hover:bg-emerald-500/5 transition-colors select-none"
                   >
-                    <span className="font-bold text-sm sm:text-base text-on-surface">
+                    <span className="font-bold text-sm sm:text-base text-[#1A2B15] dark:text-white">
                       {faq.q}
                     </span>
                     <motion.span
                       animate={{ rotate: isOpen ? 180 : 0 }}
                       transition={{ duration: 0.25 }}
-                      className="w-8 h-8 rounded-xl bg-surface-container-low dark:bg-[#162820] flex items-center justify-center text-primary dark:text-emerald-300 shrink-0"
+                      className="w-8 h-8 rounded-xl bg-surface-container-low dark:bg-[#162820] flex items-center justify-center text-[#31691D] dark:text-[#7BC662] shrink-0"
                     >
                       <ChevronDown className="w-4 h-4" />
                     </motion.span>
@@ -199,7 +199,7 @@ export default function TrustAndFaqSection() {
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.28, ease: 'easeInOut' }}
                       >
-                        <div className="px-4 sm:px-5 pb-5 pt-1 text-xs sm:text-sm text-on-surface-variant dark:text-gray-300 leading-relaxed border-t border-emerald-900/5 dark:border-emerald-400/10">
+                        <div className="px-4 sm:px-5 pb-5 pt-1 text-xs sm:text-sm text-[#556650] dark:text-gray-300 leading-relaxed border-t border-[#DCE5D8] dark:border-emerald-400/10">
                           {faq.a}
                         </div>
                       </motion.div>

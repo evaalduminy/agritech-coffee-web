@@ -10,8 +10,7 @@ import {
   Mountain,
   Coffee,
   Sparkles,
-  Check,
-  CalendarSync,
+  FileText,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useSettings } from '../../context/SettingsContext';
@@ -42,16 +41,14 @@ export default function ProductModal({
   const [prevProductId, setPrevProductId] = useState(activeProduct?.id);
   const [quantity, setQuantity] = useState(1);
   const [selectedVariant, setSelectedVariant] = useState(activeProduct?.variants?.[0] || null);
-  const [selectedOption, setSelectedOption] = useState(activeProduct?.custom_options?.choices?.[0] || null);
-  const [isSubscription, setIsSubscription] = useState(false);
+  const [notes, setNotes] = useState('');
 
   // تحديث الخيارات تلقائياً عند تغيير المحصول لتفادي إعادة الرسم المتتالية
   if (activeProduct && activeProduct.id !== prevProductId) {
     setPrevProductId(activeProduct.id);
     setQuantity(1);
     setSelectedVariant(activeProduct.variants?.[0] || null);
-    setSelectedOption(activeProduct.custom_options?.choices?.[0] || null);
-    setIsSubscription(false);
+    setNotes('');
   }
 
   // قفل تمرير الصفحة الخلفية عند فتح النافذة المنبثقة
@@ -90,10 +87,9 @@ export default function ProductModal({
     ? (activeProduct.freshness_tag_en || activeProduct.freshness_tag || displayBadge)
     : (activeProduct.freshness_tag || displayBadge);
 
-  // احتساب السعر الفعلي بناء على الحجم المختار ونسبة خصم الاشتراك إن وجدت
+  // احتساب السعر الفعلي بناء على الحجم المختار
   const basePrice = selectedVariant ? Number(selectedVariant.price) : Number(activeProduct.price);
-  const discountPercent = (isSubscription && activeProduct.subscription_discount) ? Number(activeProduct.subscription_discount) : 0;
-  const effectiveUnitPrice = discountPercent > 0 ? basePrice * (1 - discountPercent / 100) : basePrice;
+  const effectiveUnitPrice = basePrice;
 
   // احتساب الإجمالي النهائي بالدولار والريال اليمني
   const totalPriceUsd = (effectiveUnitPrice * quantity).toFixed(2);
@@ -129,8 +125,7 @@ export default function ProductModal({
   const handleAddToCartClick = () => {
     onAddToCart(activeProduct, quantity, {
       selectedVariant,
-      selectedOption,
-      isSubscription,
+      notes: notes.trim().slice(0, 1000),
       unitPrice: effectiveUnitPrice,
     });
   };
@@ -146,8 +141,7 @@ export default function ProductModal({
     requireAuth(() => {
       onReserve(activeProduct, quantity, {
         selectedVariant,
-        selectedOption,
-        isSubscription,
+        notes: notes.trim().slice(0, 1000),
         unitPrice: effectiveUnitPrice,
       });
     }, t('auth.orderLoginPrompt'));
@@ -264,11 +258,6 @@ export default function ProductModal({
                     <span className="font-body-md text-body-md text-secondary dark:text-gray-400 font-semibold">
                       ({totalPriceYer} {t('product.yerUnit')})
                     </span>
-                    {discountPercent > 0 && (
-                      <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/40 px-2 py-0.5 rounded-md">
-                        {t('product.saveDiscount')} {discountPercent}%
-                      </span>
-                    )}
                     <span className="text-[11px] text-on-surface-variant dark:text-gray-400 font-medium mr-auto rtl:mr-auto ltr:ml-auto bg-surface-container-low dark:bg-emerald-950/40 px-2 py-0.5 rounded-md">
                       {t('product.freshShipping')}
                     </span>
@@ -304,81 +293,7 @@ export default function ProductModal({
                     </div>
                   )}
 
-                  {/* 2. الخيارات المخصصة مثل درجة الطحن (Custom Options) إن وُجدت */}
-                  {activeProduct.custom_options && Array.isArray(activeProduct.custom_options.choices) && (
-                    <div className="my-3.5">
-                      <span className="text-[11px] font-bold text-on-surface dark:text-gray-300 block mb-1.5">
-                        {isEnglish
-                          ? (activeProduct.custom_options.title_en || activeProduct.custom_options.title)
-                          : activeProduct.custom_options.title}
-                      </span>
-                      <div className="grid grid-cols-2 gap-2">
-                        {activeProduct.custom_options.choices.map((choice) => {
-                          const isSelected = selectedOption?.id === choice.id;
-                          const choiceLabel = isEnglish ? (choice.label_en || choice.label) : choice.label;
-                          return (
-                            <button
-                              key={choice.id}
-                              type="button"
-                              onClick={() => setSelectedOption(choice)}
-                              className={`px-3 py-2 rounded-xl text-xs font-medium border text-start transition-all cursor-pointer flex items-center justify-between ${
-                                isSelected
-                                  ? 'bg-primary-container/15 dark:bg-emerald-950/60 text-primary dark:text-emerald-300 border-primary dark:border-emerald-600 font-bold'
-                                  : 'bg-surface-container-low dark:bg-emerald-950/20 text-on-surface dark:text-gray-300 border-surface-container dark:border-emerald-900/40 hover:border-primary/30'
-                              }`}
-                            >
-                              <span>{choiceLabel}</span>
-                              {isSelected && <Check className="w-3.5 h-3.5 text-primary dark:text-emerald-300 shrink-0" />}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* 3. خيار الاشتراك الدوري الشهري مع التخفيض إن كان متاحاً */}
-                  {Boolean(activeProduct.subscription_discount && activeProduct.subscription_discount > 0) && (
-                    <div
-                      onClick={() => setIsSubscription((prev) => !prev)}
-                      className={`p-3 rounded-xl border transition-all cursor-pointer flex items-center justify-between my-3 ${
-                        isSubscription
-                          ? 'bg-primary-container/15 dark:bg-emerald-950/60 border-primary dark:border-emerald-600 shadow-xs'
-                          : 'bg-surface-container-low/60 dark:bg-emerald-950/20 border-surface-container dark:border-emerald-900/40 hover:border-primary/30'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                          isSubscription
-                            ? 'bg-primary dark:bg-emerald-700 text-on-primary'
-                            : 'bg-surface-container dark:bg-emerald-900/40 text-on-surface-variant dark:text-gray-400'
-                        }`}>
-                          <CalendarSync className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs font-bold text-on-surface dark:text-white">
-                              {t('product.subscriptionTitle')}
-                            </span>
-                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary dark:bg-emerald-700 text-on-primary">
-                              {t('product.saveDiscount')} {activeProduct.subscription_discount}%
-                            </span>
-                          </div>
-                          <span className="text-[11px] text-on-surface-variant dark:text-gray-400 block mt-0.5">
-                            {t('product.subscriptionDesc')}
-                          </span>
-                        </div>
-                      </div>
-                      <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors ${
-                        isSubscription
-                          ? 'bg-primary dark:bg-emerald-700 border-primary dark:border-emerald-600 text-on-primary'
-                          : 'border-outline-variant bg-white dark:bg-black/30'
-                      }`}>
-                        {isSubscription && <Check className="w-3.5 h-3.5" />}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* 4. المواصفات الفنية الديناميكية (Specs) مع استبعاد تقييم الجودة */}
+                  {/* 2. المواصفات الفنية الديناميكية (Specs) مع استبعاد تقييم الجودة */}
                   {filteredSpecs.length > 0 && (
                     <div className="grid grid-cols-2 gap-2 my-3">
                       {filteredSpecs.map((spec, idx) => {
@@ -435,6 +350,39 @@ export default function ProductModal({
                     <p className="font-body-sm text-[13px] text-on-surface-variant dark:text-gray-300 leading-relaxed bg-surface-container-lowest dark:bg-[#0E1A14] p-3 rounded-xl border border-surface-container/70 dark:border-emerald-900/30">
                       {displayDesc}
                     </p>
+                  </div>
+
+                  {/* حقل الملاحظات الاختيارية بحد أقصى 1000 حرف */}
+                  <div className="my-3 text-start">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label
+                        htmlFor="product-modal-notes"
+                        className="text-[11px] font-bold text-on-surface dark:text-gray-300 flex items-center gap-1.5"
+                      >
+                        <FileText className="w-3.5 h-3.5 text-primary dark:text-emerald-400" />
+                        <span>
+                          {isEnglish
+                            ? 'Special Notes or Delivery Instructions (Optional)'
+                            : 'ملاحظات خاصة أو تعليمات التوريد (اختياري)'}
+                        </span>
+                      </label>
+                      <span className="text-[10px] text-on-surface-variant dark:text-gray-400 font-mono">
+                        {notes.length}/1000
+                      </span>
+                    </div>
+                    <textarea
+                      id="product-modal-notes"
+                      rows={2}
+                      maxLength={1000}
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value.slice(0, 1000))}
+                      placeholder={
+                        isEnglish
+                          ? 'Any specific requirements or instructions regarding this crop...'
+                          : 'أي متطلبات خاصة أو تعليمات بخصوص هذا المحصول...'
+                      }
+                      className="w-full text-xs p-3 rounded-xl border border-surface-container dark:border-emerald-900/50 bg-surface-container-low/50 dark:bg-emerald-950/20 text-on-surface dark:text-gray-200 placeholder-on-surface-variant/50 focus:outline-none focus:border-primary dark:focus:border-emerald-500 focus:ring-1 focus:ring-primary transition-all resize-none font-body-sm"
+                    />
                   </div>
 
                   {/* عداد الكمية الرقمي */}

@@ -135,7 +135,7 @@ export default function Hero({
       />
 
       {/* 3 كرات زجاجية لامعة ثلاثية الأبعاد تطفو في الخلفية مع حركة Parallax */}
-      {/* الكرة 1: كرة زمردية علوية */}
+      {/* الكرة 1: كرة بتدرج أخضر زراعي ناعم */}
       <motion.div
         style={{ x: sphere1X, y: sphere1Y }}
         animate={{ y: [0, -14, 0], x: [0, 8, 0] }}
@@ -146,9 +146,9 @@ export default function Hero({
           className="w-full h-full rounded-full"
           style={{
             background:
-              'radial-gradient(circle at 35% 28%, rgba(52, 211, 153, 0.7), rgba(16, 185, 129, 0.3) 48%, rgba(5, 46, 23, 0.55) 85%)',
+              'radial-gradient(circle at 35% 28%, #A8C99B, rgba(168, 201, 155, 0.6) 45%, #4F8A3A 85%)',
             boxShadow:
-              '0 25px 50px -12px rgba(6, 78, 59, 0.45), inset -6px -6px 14px rgba(0, 0, 0, 0.45), inset 6px 6px 14px rgba(255, 255, 255, 0.4)',
+              '0 25px 50px -12px rgba(49, 105, 29, 0.45), inset -6px -6px 14px rgba(0, 0, 0, 0.4), inset 6px 6px 14px rgba(255, 255, 255, 0.5)',
           }}
         />
       </motion.div>
@@ -171,7 +171,7 @@ export default function Hero({
         />
       </motion.div>
 
-      {/* الكرة 3: كرة زمردية عميقة في الأسفل */}
+      {/* الكرة 3: كرة بتدرج أخضر زراعي عميق متناسق */}
       <motion.div
         style={{ x: sphere3X, y: sphere3Y }}
         animate={{ y: [0, -10, 0], x: [0, -10, 0] }}
@@ -182,9 +182,9 @@ export default function Hero({
           className="w-full h-full rounded-full"
           style={{
             background:
-              'radial-gradient(circle at 32% 28%, rgba(16, 185, 129, 0.5), rgba(5, 46, 22, 0.38) 60%, rgba(2, 24, 11, 0.65) 90%)',
+              'radial-gradient(circle at 32% 28%, #A8C99B 15%, #4F8A3A 75%, #31691D 95%)',
             boxShadow:
-              '0 30px 60px -15px rgba(4, 47, 31, 0.55), inset -8px -8px 16px rgba(0, 0, 0, 0.5), inset 8px 8px 16px rgba(255, 255, 255, 0.3)',
+              '0 30px 60px -15px rgba(49, 105, 29, 0.5), inset -8px -8px 16px rgba(0, 0, 0, 0.45), inset 8px 8px 16px rgba(255, 255, 255, 0.4)',
           }}
         />
       </motion.div>
@@ -197,32 +197,32 @@ export default function Hero({
           {/* ============================================================== */}
           <div className="lg:col-span-7 flex flex-col items-start text-start">
             
-            {/* شارة AgriMarket الزجاجية الراقية مع أيقونة Sprout ونقطة المؤشر الزمردية */}
-            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/70 dark:bg-emerald-950/70 backdrop-blur-md border border-emerald-500/20 dark:border-emerald-400/25 shadow-xs text-xs font-semibold mb-3">
-              <div className="w-5 h-5 rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-white shadow-xs ring-1 ring-emerald-400/20">
+            {/* شارة AgriMarket الزجاجية الراقية مع أيقونة Sprout ونقطة المؤشر */}
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/70 dark:bg-emerald-950/70 backdrop-blur-md border border-[#DCE5D8] dark:border-emerald-400/25 shadow-xs text-xs font-semibold mb-3">
+              <div className="w-5 h-5 rounded-lg bg-[#31691D] hover:bg-[#255215] flex items-center justify-center text-white shadow-xs ring-1 ring-[#31691D]/20 transition-colors">
                 <Sprout className="w-3.5 h-3.5" />
               </div>
               <span dir="ltr" className="inline-flex items-baseline font-bold tracking-tight">
-                <span className="font-extrabold text-emerald-950 dark:text-white">Agri</span>
-                <span className="font-extrabold text-emerald-600 dark:text-emerald-400">Market</span>
+                <span className="font-extrabold text-[#1A2B15] dark:text-white">Agri</span>
+                <span className="font-extrabold text-[#31691D] dark:text-[#7BC662]">Market</span>
               </span>
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-secondary dark:text-emerald-300/80 text-[11px] font-medium border-r rtl:border-r-0 rtl:border-l border-emerald-900/10 dark:border-emerald-400/20 px-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#31691D] animate-pulse" />
+              <span className="text-secondary dark:text-emerald-300/80 text-[11px] font-medium border-r rtl:border-r-0 rtl:border-l border-[#DCE5D8] dark:border-emerald-400/20 px-1.5">
                 {isEnglish ? 'Smart Agricultural Marketplace' : 'منصة التسويق الزراعي'}
               </span>
             </div>
 
-            {/* الشارة التوثيقية العلوية الزجاجية */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/40 dark:bg-emerald-950/60 backdrop-blur-md border border-emerald-900/10 dark:border-emerald-700/40 text-primary dark:text-emerald-300 shadow-xs text-xs font-semibold">
-              <BadgeCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            {/* الشارة التوثيقية العلوية الزجاجية بالخلفية الفاتحة المعتمدة */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E9F2E4] dark:bg-[#142610] backdrop-blur-md border border-[#31691D]/20 dark:border-[#7BC662]/30 text-[#31691D] dark:text-[#7BC662] shadow-xs text-xs font-semibold">
+              <BadgeCheck className="w-4 h-4 text-[#31691D] dark:text-[#7BC662]" />
               <span>{t('hero.badge')}</span>
             </div>
 
             {/* العنوان الرئيسي الجريء مع لمسة تدرج خفيفة على اسم المنصة */}
-            <h1 className="font-headline-lg text-3xl sm:text-4xl lg:text-[44px] lg:leading-[54px] font-black text-on-surface dark:text-white tracking-tight mt-4 mb-3">
-              <span className="block text-sm sm:text-base font-bold text-emerald-700 dark:text-emerald-400 mb-1.5 tracking-normal">
+            <h1 className="font-headline-lg text-3xl sm:text-4xl lg:text-[44px] lg:leading-[54px] font-black text-[#1A2B15] dark:text-white tracking-tight mt-4 mb-3">
+              <span className="block text-sm sm:text-base font-bold text-[#31691D] dark:text-[#7BC662] mb-1.5 tracking-normal">
                 {isEnglish ? 'Welcome to ' : 'مرحباً بكم في '}
-                <span dir="ltr" className="inline-flex items-baseline font-extrabold bg-gradient-to-r from-emerald-700 via-emerald-600 to-emerald-500 dark:from-emerald-400 dark:via-emerald-300 dark:to-emerald-200 bg-clip-text text-transparent">
+                <span dir="ltr" className="inline-flex items-baseline font-extrabold bg-gradient-to-r from-[#31691D] via-[#4F8A3A] to-[#7BC662] dark:from-[#7BC662] dark:via-emerald-300 dark:to-emerald-200 bg-clip-text text-transparent">
                   AgriMarket
                 </span>
                 <span className="text-on-surface-variant/60 dark:text-emerald-300/40 font-normal mx-1.5">|</span>
@@ -233,9 +233,9 @@ export default function Hero({
               {t('hero.title')}
             </h1>
 
-            {/* شارة التمييز البارزة باللون الكهرماني الدافئ لكسر رتابة الأخضر */}
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 dark:bg-amber-400/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 text-xs font-bold shadow-xs mb-4">
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+            {/* شارة التمييز البارزة باللون الدافئ الموحد */}
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FEF3C7] text-[#D97706] border border-[#D97706]/30 text-xs font-bold shadow-xs mb-4">
+              <Sparkles className="w-3.5 h-3.5 text-[#D97706]" />
               <span>{t('hero.accentBadge')}</span>
             </div>
 
@@ -244,7 +244,7 @@ export default function Hero({
               {t('hero.description')}
             </p>
 
-            {/* الزر الرئيسي البارز مع التفاعل المغناطيسي */}
+            {/* الزر الرئيسي البارز مع التفاعل المغناطيسي والدائرة الخضراء المعتمدة */}
             <motion.button
               type="button"
               onClick={handleScrollToProducts}
@@ -254,17 +254,17 @@ export default function Hero({
               transition={{ type: 'spring', stiffness: 220, damping: 14, mass: 0.15 }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
-              className="inline-flex items-center justify-between gap-5 px-6 py-3.5 rounded-2xl bg-white text-emerald-950 hover:bg-emerald-50 active:scale-95 transition-all shadow-xl shadow-emerald-950/15 border border-emerald-900/10 dark:border-white/80 cursor-pointer group mb-3.5"
+              className="inline-flex items-center justify-between gap-5 px-6 py-3.5 rounded-2xl bg-white text-[#1A2B15] hover:bg-[#F4F7F2] active:scale-95 transition-all shadow-xl shadow-emerald-950/15 border border-[#DCE5D8] dark:border-white/80 cursor-pointer group mb-3.5"
             >
               <div className="flex flex-col text-start">
-                <span className="font-bold text-base sm:text-lg text-emerald-950 leading-tight">
+                <span className="font-bold text-base sm:text-lg text-[#1A2B15] leading-tight">
                   {t('hero.browseStore')}
                 </span>
-                <span className="text-[11px] text-emerald-900/70 font-semibold mt-0.5">
+                <span className="text-[11px] text-[#556650] font-semibold mt-0.5">
                   {t('hero.browseSubtext')}
                 </span>
               </div>
-              <div className="w-9 h-9 rounded-xl bg-emerald-950 text-white flex items-center justify-center shrink-0 group-hover:translate-y-0.5 transition-transform shadow-sm">
+              <div className="w-9 h-9 rounded-xl bg-[#31691D] group-hover:bg-[#255215] text-white flex items-center justify-center shrink-0 group-hover:translate-y-0.5 transition-colors shadow-sm">
                 <ArrowDown className="w-4 h-4" />
               </div>
             </motion.button>
@@ -274,18 +274,18 @@ export default function Hero({
               <button
                 type="button"
                 onClick={handleScrollToProducts}
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white/40 dark:bg-emerald-950/60 hover:bg-white/60 dark:hover:bg-emerald-900/60 backdrop-blur-md border border-emerald-900/10 dark:border-emerald-700/40 text-on-surface dark:text-white transition-all text-xs sm:text-sm font-semibold cursor-pointer shadow-xs active:scale-95"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white/40 dark:bg-emerald-950/60 hover:bg-white/60 dark:hover:bg-emerald-900/60 backdrop-blur-md border border-[#DCE5D8] dark:border-emerald-700/40 text-on-surface dark:text-white transition-all text-xs sm:text-sm font-semibold cursor-pointer shadow-xs active:scale-95"
               >
-                <Compass className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                <Compass className="w-4 h-4 text-[#31691D] dark:text-[#7BC662]" />
                 <span>{t('hero.exploreOrigins')}</span>
               </button>
 
               <button
                 type="button"
                 onClick={handleOpenFarmers}
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-amber-500/15 dark:bg-amber-400/15 hover:bg-amber-500/25 dark:hover:bg-amber-400/25 border border-amber-500/30 text-amber-800 dark:text-amber-200 transition-all text-xs sm:text-sm font-bold cursor-pointer shadow-xs active:scale-95"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[#FEF3C7] hover:bg-[#fde68a] border border-[#D97706]/30 text-[#D97706] transition-all text-xs sm:text-sm font-bold cursor-pointer shadow-xs active:scale-95"
               >
-                <PhoneCall className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                <PhoneCall className="w-4 h-4 text-[#D97706]" />
                 <span>{t('hero.farmersAppBtn')}</span>
               </button>
             </div>
@@ -293,17 +293,17 @@ export default function Hero({
             {/* سطر الثقة الناعم بثلاث علامات صح في الأسفل */}
             <div className="flex flex-wrap items-center gap-3 pt-6 text-xs text-on-surface-variant dark:text-emerald-200/80 font-medium">
               <div className="flex items-center gap-1.5">
-                <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 stroke-[2.5]" />
+                <Check className="w-4 h-4 text-[#31691D] dark:text-[#7BC662] stroke-[2.5]" />
                 <span>{t('hero.trustVerified')}</span>
               </div>
-              <span className="text-emerald-500/40">•</span>
+              <span className="text-[#31691D]/40">•</span>
               <div className="flex items-center gap-1.5">
-                <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 stroke-[2.5]" />
+                <Check className="w-4 h-4 text-[#31691D] dark:text-[#7BC662] stroke-[2.5]" />
                 <span>{t('hero.trustAuthentic')}</span>
               </div>
-              <span className="text-emerald-500/40">•</span>
+              <span className="text-[#31691D]/40">•</span>
               <div className="flex items-center gap-1.5">
-                <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 stroke-[2.5]" />
+                <Check className="w-4 h-4 text-[#31691D] dark:text-[#7BC662] stroke-[2.5]" />
                 <span>{t('hero.trustShipping')}</span>
               </div>
             </div>
@@ -324,12 +324,12 @@ export default function Hero({
                 transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
                 className="absolute -top-3 rtl:-left-4 ltr:-right-4 z-20 pointer-events-none"
               >
-                <div className="px-3 py-2 rounded-2xl bg-white/80 dark:bg-[#122019]/90 backdrop-blur-md border border-emerald-900/10 dark:border-emerald-500/30 text-on-surface dark:text-white shadow-xl flex items-center gap-2 text-start">
-                  <div className="w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                <div className="px-3 py-2 rounded-2xl bg-white/80 dark:bg-[#122019]/90 backdrop-blur-md border border-[#DCE5D8] dark:border-emerald-500/30 text-on-surface dark:text-white shadow-xl flex items-center gap-2 text-start">
+                  <div className="w-7 h-7 rounded-lg bg-[#31691D] hover:bg-[#255215] text-white flex items-center justify-center shrink-0 transition-colors">
                     <Mountain className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="block font-black text-xs sm:text-sm text-emerald-700 dark:text-emerald-400 leading-none">
+                    <span className="block font-black text-xs sm:text-sm text-[#31691D] dark:text-[#7BC662] leading-none">
                       +42
                     </span>
                     <span className="block text-[10px] text-on-surface-variant dark:text-gray-300 font-medium mt-0.5 whitespace-nowrap">
@@ -345,12 +345,12 @@ export default function Hero({
                 transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
                 className="absolute top-1/2 rtl:-left-8 ltr:-right-8 z-20 pointer-events-none"
               >
-                <div className="px-3 py-2 rounded-2xl bg-white/80 dark:bg-[#122019]/90 backdrop-blur-md border border-emerald-900/10 dark:border-emerald-500/30 text-on-surface dark:text-white shadow-xl flex items-center gap-2 text-start">
-                  <div className="w-7 h-7 rounded-lg bg-emerald-700 text-white flex items-center justify-center shrink-0">
+                <div className="px-3 py-2 rounded-2xl bg-white/80 dark:bg-[#122019]/90 backdrop-blur-md border border-[#DCE5D8] dark:border-emerald-500/30 text-on-surface dark:text-white shadow-xl flex items-center gap-2 text-start">
+                  <div className="w-7 h-7 rounded-lg bg-[#31691D] hover:bg-[#255215] text-white flex items-center justify-center shrink-0 transition-colors">
                     <ShieldCheck className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="block font-black text-xs sm:text-sm text-emerald-700 dark:text-emerald-400 leading-none">
+                    <span className="block font-black text-xs sm:text-sm text-[#31691D] dark:text-[#7BC662] leading-none">
                       100%
                     </span>
                     <span className="block text-[10px] text-on-surface-variant dark:text-gray-300 font-medium mt-0.5 whitespace-nowrap">
@@ -360,68 +360,68 @@ export default function Hero({
                 </div>
               </motion.div>
 
-              {/* 3. البطاقة الإحصائية العائمة السفلية (85+ تقييم SCAA مختص) */}
+              {/* 3. البطاقة الإحصائية العائمة السفلية (85+ تقييم SCAA مختص) باللون الدافئ الموحد */}
               <motion.div
                 animate={{ y: [0, 8, 0] }}
                 transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
                 className="absolute -bottom-4 rtl:-right-6 ltr:-left-6 z-20 pointer-events-none"
               >
-                <div className="px-3 py-2 rounded-2xl bg-white/80 dark:bg-[#122019]/90 backdrop-blur-md border border-amber-500/30 text-on-surface dark:text-white shadow-xl flex items-center gap-2 text-start">
-                  <div className="w-7 h-7 rounded-lg bg-amber-500 text-white flex items-center justify-center shrink-0">
-                    <Award className="w-4 h-4" />
+                <div className="px-3 py-2 rounded-2xl bg-[#FEF3C7] backdrop-blur-md border border-[#D97706]/30 text-[#D97706] shadow-xl flex items-center gap-2 text-start">
+                  <div className="w-7 h-7 rounded-lg bg-[#FEF3C7] text-[#D97706] flex items-center justify-center shrink-0">
+                    <Award className="w-4 h-4 text-[#D97706]" />
                   </div>
                   <div>
-                    <span className="block font-black text-xs sm:text-sm text-amber-600 dark:text-amber-400 leading-none">
+                    <span className="block font-black text-xs sm:text-sm text-[#D97706] leading-none">
                       85+
                     </span>
-                    <span className="block text-[10px] text-on-surface-variant dark:text-gray-300 font-medium mt-0.5 whitespace-nowrap">
+                    <span className="block text-[10px] text-[#D97706]/90 font-medium mt-0.5 whitespace-nowrap">
                       {t('hero.statsScoringLabel')}
                     </span>
                   </div>
                 </div>
               </motion.div>
 
-              {/* مجسم الهاتف ثلاثي الأبعاد المائل مع تفاعل حركة الماوس */}
+              {/* مجسم الهاتف ثلاثي الأبعاد المائل باللون الزراعي الداكن #142610 */}
               <motion.div
                 style={{
                   rotateX: phoneRotateX,
                   rotateY: phoneRotateY,
                   transformStyle: 'preserve-3d',
                 }}
-                className="w-[270px] sm:w-[290px] aspect-[9/18.5] rounded-[44px] border-[7px] border-emerald-950/80 dark:border-emerald-700/80 bg-[#0d1c15] p-2.5 shadow-2xl shadow-emerald-950/80 relative overflow-hidden select-none"
+                className="w-[270px] sm:w-[290px] aspect-[9/18.5] rounded-[44px] border-[7px] border-[#142610] dark:border-emerald-700/80 bg-[#142610] p-2.5 shadow-2xl shadow-[#142610]/80 relative overflow-hidden select-none"
               >
                 {/* شريط الكاميرا والحساسات العلوي (Dynamic Island) */}
                 <div className="w-24 h-4 rounded-full bg-black mx-auto mb-2 flex items-center justify-center gap-1.5 shadow-inner z-20 relative">
-                  <span className="w-2 h-2 rounded-full bg-emerald-900/40" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/60" />
+                  <span className="w-2 h-2 rounded-full bg-[#142610]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#7BC662]" />
                 </div>
 
-                {/* شاشة الهاتف الحقيقية المصغّرة لمتجر سوق البن */}
-                <div className="bg-[#0B1712] text-white rounded-[34px] p-3 flex flex-col h-[calc(100%-24px)] overflow-hidden">
+                {/* شاشة الهاتف الحقيقية المصغّرة لمتجر سوق البن بالخلفية الزراعية الداكنة #142610 */}
+                <div className="bg-[#142610] text-white rounded-[34px] p-3 flex flex-col h-[calc(100%-24px)] overflow-hidden">
                   
                   {/* ترويسة التطبيق المصغرة */}
                   <div className="flex items-center justify-between pb-2 border-b border-white/10 mb-2">
-                    <span className="text-[11px] font-bold text-emerald-300 truncate">
+                    <span className="text-[11px] font-bold text-[#7BC662] truncate">
                       {t('hero.phoneAppTitle')}
                     </span>
-                    <div className="w-5 h-5 rounded-md bg-emerald-950 text-emerald-400 flex items-center justify-center">
-                      <ShoppingBag className="w-3 h-3" />
+                    <div className="w-5 h-5 rounded-md bg-[#31691D] text-[#7BC662] flex items-center justify-center">
+                      <ShoppingBag className="w-3 h-3 text-[#7BC662]" />
                     </div>
                   </div>
 
                   {/* شريط بحث مصغّر داخل التطبيق */}
                   <div className="rounded-xl bg-white/10 px-2.5 py-1.5 text-[9px] text-white/60 flex items-center gap-1.5 mb-2.5">
-                    <Search className="w-3 h-3 text-emerald-400 shrink-0" />
+                    <Search className="w-3 h-3 text-[#7BC662] shrink-0" />
                     <span className="truncate">{t('hero.phoneSearchPlaceholder')}</span>
                   </div>
 
                   {/* عنوان قائمة المحاصيل داخل الشاشة */}
                   <div className="flex items-center justify-between text-[10px] text-white/80 font-bold mb-1.5">
                     <span>{t('hero.phoneFeaturedTag')}</span>
-                    <span className="text-emerald-400 text-[9px]">• حي</span>
+                    <span className="text-[#7BC662] text-[9px]">• حي</span>
                   </div>
 
-                  {/* شبكة مصغّرة من 4 محاصيل حقيقية قابلة للنقر لفتح التفاصيل فوراً */}
+                  {/* شبكة مصغّرة من 4 محاصيل حقيقية قابلة للنقر لفتح التفاصيل مع أسعار ونصوص مميزة #7BC662 */}
                   <div className="grid grid-cols-2 gap-2 flex-1 overflow-hidden">
                     {miniCrops.map((item) => {
                       const itemName = isEnglish ? (item.name_en || item.name) : item.name;
@@ -442,7 +442,7 @@ export default function Hero({
                             <span className="block text-[9px] font-bold text-white truncate leading-tight">
                               {itemName}
                             </span>
-                            <span className="block text-[9px] font-extrabold text-emerald-400 mt-0.5">
+                            <span className="block text-[9px] font-extrabold text-[#7BC662] mt-0.5">
                               ${item.price.toFixed(2)}
                             </span>
                           </div>

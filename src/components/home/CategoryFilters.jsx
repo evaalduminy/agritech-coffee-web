@@ -25,9 +25,9 @@ export default function CategoryFilters({
       {/* 1. الترويسة التحريرية لقسم المحاصيل مع الشارة والعنوان والوصف والعداد المباشر */}
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
         <div className="space-y-2">
-          {/* شارة تشكيلة الموسم العلوية */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 dark:bg-emerald-400/10 text-emerald-800 dark:text-emerald-300 border border-emerald-500/20 dark:border-emerald-400/20 text-xs font-semibold">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+          {/* شارة تشكيلة الموسم العلوية بالخلفية الفاتحة المعتمدة */}
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E9F2E4] dark:bg-[#31691D]/20 text-[#31691D] dark:text-[#7BC662] border border-[#31691D]/20 text-xs font-semibold">
+            <Sparkles className="w-3.5 h-3.5 text-[#31691D] dark:text-[#7BC662]" />
             <span>{t('filters.seasonalBadge')}</span>
           </div>
 
@@ -37,7 +37,7 @@ export default function CategoryFilters({
               {t('filters.sectionTitle')}
             </h2>
             {productsCount > 0 && (
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 dark:bg-emerald-500/20 text-primary dark:text-emerald-300 border border-primary/20 dark:border-emerald-400/30">
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#E9F2E4] dark:bg-[#31691D]/20 text-[#31691D] dark:text-[#7BC662] border border-[#31691D]/20">
                 {productsCount} {t('filters.itemsCount')}
               </span>
             )}
@@ -51,7 +51,7 @@ export default function CategoryFilters({
 
         {/* 2. شريط التصفية الزجاجي المجزأ (Segmented Glass Dock) */}
         <div className="w-full lg:w-auto overflow-x-auto scrollbar-none py-1">
-          <div className="bg-white/70 dark:bg-[#122019]/70 backdrop-blur-md p-1.5 rounded-2xl border border-emerald-900/10 dark:border-emerald-400/15 shadow-sm inline-flex items-center gap-1.5 min-w-max">
+          <div className="bg-white/70 dark:bg-[#122019]/70 backdrop-blur-md p-1.5 rounded-2xl border border-[#DCE5D8] dark:border-emerald-400/15 shadow-sm inline-flex items-center gap-1.5 min-w-max">
             {categories.map((category) => {
               const isSelected = selectedCategory === category.id;
               const categoryLabel = isEnglish
@@ -65,15 +65,15 @@ export default function CategoryFilters({
                   onClick={() => onSelectCategory(category.id)}
                   className={`relative px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-colors cursor-pointer select-none ${
                     isSelected
-                      ? 'text-primary dark:text-white font-bold'
+                      ? 'text-[#31691D] dark:text-white font-bold'
                       : 'text-on-surface-variant dark:text-gray-300 hover:text-on-surface dark:hover:text-white'
                   }`}
                 >
-                  {/* خلفية التبويب النشط المنزلقة بنعومة */}
+                  {/* خلفية التبويب النشط المنزلقة بنعومة باللون المعتمد */}
                   {isSelected && (
                     <motion.span
                       layoutId="activeCategoryTab"
-                      className="absolute inset-0 bg-primary/10 dark:bg-emerald-500/20 rounded-xl border border-primary/20 dark:border-emerald-400/30 shadow-xs"
+                      className="absolute inset-0 bg-[#E9F2E4] dark:bg-[#31691D]/30 rounded-xl border border-[#31691D]/20 dark:border-[#7BC662]/30 shadow-xs"
                       transition={{ type: 'spring', stiffness: 450, damping: 32 }}
                     />
                   )}
@@ -97,7 +97,7 @@ export default function CategoryFilters({
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={t('filters.searchPlaceholder')}
-            className="w-full ps-10 pe-9 py-2.5 rounded-xl bg-white/75 dark:bg-[#122019]/75 backdrop-blur-md border border-emerald-900/10 dark:border-emerald-400/15 focus:outline-none focus:border-primary/50 dark:focus:border-emerald-400/50 text-xs sm:text-sm text-on-surface placeholder:text-on-surface-variant/60 dark:placeholder:text-gray-500 transition-colors shadow-xs"
+            className="w-full ps-10 pe-9 py-2.5 rounded-xl bg-white/75 dark:bg-[#122019]/75 backdrop-blur-md border border-[#DCE5D8] dark:border-emerald-400/15 focus:outline-none focus:border-[#31691D]/50 dark:focus:border-emerald-400/50 text-xs sm:text-sm text-on-surface placeholder:text-on-surface-variant/60 dark:placeholder:text-gray-500 transition-colors shadow-xs"
           />
           {searchQuery && (
             <button
@@ -113,8 +113,8 @@ export default function CategoryFilters({
 
         {/* قائمة ترتيب المنتجات وزر إعادة الضبط السريع */}
         <div className="flex items-center gap-2 self-end sm:self-auto shrink-0">
-          <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/75 dark:bg-[#122019]/75 backdrop-blur-md border border-emerald-900/10 dark:border-emerald-400/15 shadow-xs">
-            <ArrowUpDown className="w-3.5 h-3.5 text-primary dark:text-emerald-300" />
+          <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/75 dark:bg-[#122019]/75 backdrop-blur-md border border-[#DCE5D8] dark:border-emerald-400/15 shadow-xs">
+            <ArrowUpDown className="w-3.5 h-3.5 text-[#31691D] dark:text-[#7BC662]" />
             <label htmlFor="products-sort-select" className="text-xs text-on-surface-variant dark:text-gray-400 font-medium hidden md:inline">
               {t('filters.sortByLabel')}
             </label>
