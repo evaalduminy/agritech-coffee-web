@@ -5,6 +5,7 @@ import {
   Sliders,
   MapPin,
   Phone,
+  Mail,
   Clock,
   MessageSquare,
   ArrowUp,
@@ -160,30 +161,32 @@ export default function Footer({
             </div>
 
             {/* شريط شبكات التواصل الاجتماعي أسفل معلومات المنصة */}
-            <div className="pt-3 flex flex-col gap-2.5">
-              <span className="font-label-sm text-xs font-bold text-on-surface dark:text-gray-200">
-                {t('footer.followUs')}
-              </span>
-              <div className="flex flex-wrap items-center gap-2">
-                {SITE_CONFIG.socialLinks.map((item) => {
-                  const Icon = SOCIAL_ICONS[item.platform] || SOCIAL_ICONS[item.id] || MessageSquare;
-                  const hoverBg = SOCIAL_HOVER_STYLES[item.platform] || SOCIAL_HOVER_STYLES[item.id] || '';
-                  return (
-                    <a
-                      key={item.id}
-                      href={item.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={item.label}
-                      title={item.label}
-                      className={`w-10 h-10 rounded-xl bg-emerald-950/5 dark:bg-white/5 border border-emerald-900/10 dark:border-emerald-400/15 text-on-surface-variant dark:text-gray-300 flex items-center justify-center transition-all duration-200 hover:-translate-y-1 shadow-xs ${hoverBg}`}
-                    >
-                      <Icon className="w-4 h-4" />
-                    </a>
-                  );
-                })}
+            {SITE_CONFIG.socialLinks && SITE_CONFIG.socialLinks.length > 0 && (
+              <div className="pt-3 flex flex-col gap-2.5">
+                <span className="font-label-sm text-xs font-bold text-on-surface dark:text-gray-200">
+                  {t('footer.followUs')}
+                </span>
+                <div className="flex flex-wrap items-center gap-2">
+                  {SITE_CONFIG.socialLinks.map((item) => {
+                    const Icon = SOCIAL_ICONS[item.platform] || SOCIAL_ICONS[item.id] || MessageSquare;
+                    const hoverBg = SOCIAL_HOVER_STYLES[item.platform] || SOCIAL_HOVER_STYLES[item.id] || '';
+                    return (
+                      <a
+                        key={item.id}
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={item.label}
+                        title={item.label}
+                        className={`w-10 h-10 rounded-xl bg-emerald-950/5 dark:bg-white/5 border border-emerald-900/10 dark:border-emerald-400/15 text-on-surface-variant dark:text-gray-300 flex items-center justify-center transition-all duration-200 hover:-translate-y-1 shadow-xs ${hoverBg}`}
+                      >
+                        <Icon className="w-4 h-4" />
+                      </a>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* العمود الثاني: الروابط السريعة وتصنيفات المحاصيل */}
@@ -272,12 +275,34 @@ export default function Footer({
             <div className="flex flex-col gap-2.5 text-on-surface-variant font-body-sm text-body-sm">
               <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-primary shrink-0" />
-                <span>{t('footer.location')}</span>
+                <span>{SITE_CONFIG.contact.location[isEnglish ? 'en' : 'ar']}</span>
+              </div>
+
+              <div className="flex items-start gap-2">
+                <Phone className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                <div className="flex flex-col gap-1">
+                  {(SITE_CONFIG.contact.phones || [SITE_CONFIG.contact.phone]).map((phoneNumber, idx) => (
+                    <a
+                      key={idx}
+                      href={`tel:${phoneNumber.replace(/\s+/g, '')}`}
+                      dir="ltr"
+                      className="font-bold text-on-surface hover:text-primary transition-colors text-start inline-block"
+                    >
+                      {phoneNumber}
+                    </a>
+                  ))}
+                </div>
               </div>
 
               <div className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-primary shrink-0" />
-                <span dir="ltr" className="font-bold text-on-surface">{SITE_CONFIG.contact.phone}</span>
+                <Mail className="w-4 h-4 text-primary shrink-0" />
+                <a
+                  href={`mailto:${SITE_CONFIG.contact.email}`}
+                  dir="ltr"
+                  className="font-medium text-on-surface hover:text-primary transition-colors text-start"
+                >
+                  {SITE_CONFIG.contact.email}
+                </a>
               </div>
 
               <div className="flex items-center gap-2">

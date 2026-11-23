@@ -14,12 +14,17 @@ export const SITE_CONFIG = {
 
   // 2. بيانات التواصل الميداني والرقمي
   contact: {
-    phone: '+967 770 000 000',
-    whatsappNumber: '967770000000',
-    email: 'support@agrimarket.ye',
+    phone: '+967 781 516 579',
+    whatsappNumber: '967781516579',
+    phones: [
+      '+967 781 516 579',
+      '+967 770 656 889',
+      '+967 780 312 527',
+    ],
+    email: 'evaalduminy@gmail.com',
     location: {
-      ar: 'صنعاء - اليمن • مزارع حراز ويافع وبني مطر',
-      en: 'Sanaa, Yemen • Mountain Terraces of Haraz, Yafa & Bani Matar',
+      ar: 'اليمن - إب',
+      en: 'Ibb, Yemen',
     },
     workingHours: {
       ar: 'ساعات العمل: يومياً 08:00 ص - 10:00 م',
@@ -27,45 +32,8 @@ export const SITE_CONFIG = {
     },
   },
 
-  // 3. روابط شبكات التواصل الاجتماعي
-  socialLinks: [
-    {
-      id: 'whatsapp',
-      label: 'واتساب | WhatsApp',
-      href: 'https://wa.me/967770000000',
-      platform: 'whatsapp',
-    },
-    {
-      id: 'facebook',
-      label: 'فيسبوك | Facebook',
-      href: 'https://facebook.com',
-      platform: 'facebook',
-    },
-    {
-      id: 'instagram',
-      label: 'إنستغرام | Instagram',
-      href: 'https://instagram.com',
-      platform: 'instagram',
-    },
-    {
-      id: 'x',
-      label: 'إكس | X (Twitter)',
-      href: 'https://x.com',
-      platform: 'x',
-    },
-    {
-      id: 'telegram',
-      label: 'تيليجرام | Telegram',
-      href: 'https://t.me',
-      platform: 'telegram',
-    },
-    {
-      id: 'youtube',
-      label: 'يوتيوب | YouTube',
-      href: 'https://youtube.com',
-      platform: 'youtube',
-    },
-  ],
+  // 3. روابط شبكات التواصل الاجتماعي (قالب الإضافة لاحقاً: { id: 'whatsapp', label: 'واتساب', href: 'https://wa.me/...', platform: 'whatsapp' })
+  socialLinks: [],
 
   // 4. روابط تحميل التطبيق الزراعي للهواتف الذكية
   appDownload: {
