@@ -8,11 +8,8 @@ import {
   ShieldCheck,
   Compass,
   Check,
-  Sparkles,
-  PhoneCall,
   Search,
   ShoppingBag,
-  Sprout,
 } from 'lucide-react';
 import HeroAmbientBackground from './HeroAmbientBackground';
 import HeroParticlesBackground from './HeroParticlesBackground';
@@ -22,7 +19,7 @@ import { mockProducts } from '../../data/mockData';
 // مكوّن الواجهة الترحيبية العصري المفتوح بمجسم هاتف ثلاثي الأبعاد وكرات زجاجية وإحصائيات عائمة
 export default function Hero({
   onSelectProduct = () => {},
-  onOpenFarmersModal = () => {},
+  _onOpenFarmersModal = () => {},
 }) {
   const { t, settings, isEnglish } = useSettings();
   const heroBg = settings?.heroBackground || 'ambient';
@@ -103,14 +100,6 @@ export default function Hero({
     }
   };
 
-  // فتح نافذة بوابة المزارعين
-  const handleOpenFarmers = () => {
-    if (onOpenFarmersModal) {
-      onOpenFarmersModal();
-    }
-    window.dispatchEvent(new CustomEvent('open-farmers-modal'));
-  };
-
   // اختيار أول 4 محاصيل حقيقية لعرضها في الشاشة المصغرة للهاتف
   const miniCrops = mockProducts.slice(0, 4);
 
@@ -119,7 +108,7 @@ export default function Hero({
       ref={heroContainerRef}
       onMouseMove={handleHeroMouseMove}
       onMouseLeave={handleHeroMouseLeave}
-      className="relative w-full overflow-hidden bg-transparent pt-28 md:pt-36 pb-16 md:pb-24 transition-colors duration-300"
+      className="relative w-full overflow-hidden bg-transparent pt-20 sm:pt-24 lg:pt-24 pb-8 sm:pb-10 lg:pb-10 min-h-[calc(100vh-20px)] lg:min-h-0 flex flex-col justify-center transition-colors duration-300"
     >
       {/* خلفية الواجهة الترحيبية التفاعلية حسب الإعداد المختار */}
       {heroBg === 'particles' && <HeroParticlesBackground />}
@@ -197,101 +186,60 @@ export default function Hero({
           {/* ============================================================== */}
           <div className="lg:col-span-7 flex flex-col items-start text-start">
             
-            {/* شارة AgriMarket الزجاجية الراقية مع أيقونة Sprout ونقطة المؤشر */}
-            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/70 dark:bg-emerald-950/70 backdrop-blur-md border border-[#DCE5D8] dark:border-emerald-400/25 shadow-xs text-xs font-semibold mb-3">
-              <div className="w-5 h-5 rounded-lg bg-[#31691D] hover:bg-[#255215] flex items-center justify-center text-white shadow-xs ring-1 ring-[#31691D]/20 transition-colors">
-                <Sprout className="w-3.5 h-3.5" />
-              </div>
-              <span dir="ltr" className="inline-flex items-baseline font-bold tracking-tight">
-                <span className="font-extrabold text-[#1A2B15] dark:text-white">Agri</span>
-                <span className="font-extrabold text-[#31691D] dark:text-[#7BC662]">Market</span>
-              </span>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#31691D] animate-pulse" />
-              <span className="text-secondary dark:text-emerald-300/80 text-[11px] font-medium border-r rtl:border-r-0 rtl:border-l border-[#DCE5D8] dark:border-emerald-400/20 px-1.5">
-                {isEnglish ? 'Smart Agricultural Marketplace' : 'منصة التسويق الزراعي'}
-              </span>
-            </div>
-
-            {/* الشارة التوثيقية العلوية الزجاجية بالخلفية الفاتحة المعتمدة */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E9F2E4] dark:bg-[#142610] backdrop-blur-md border border-[#31691D]/20 dark:border-[#7BC662]/30 text-[#31691D] dark:text-[#7BC662] shadow-xs text-xs font-semibold">
+            {/* الشارة التوثيقية العلوية الزجاجية المعتمدة */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E9F2E4] dark:bg-[#142610] backdrop-blur-md border border-[#31691D]/20 dark:border-[#7BC662]/30 text-[#31691D] dark:text-[#7BC662] shadow-xs text-xs font-semibold mb-3">
               <BadgeCheck className="w-4 h-4 text-[#31691D] dark:text-[#7BC662]" />
               <span>{t('hero.badge')}</span>
             </div>
 
-            {/* العنوان الرئيسي الجريء مع لمسة تدرج خفيفة على اسم المنصة */}
-            <h1 className="font-headline-lg text-3xl sm:text-4xl lg:text-[44px] lg:leading-[54px] font-black text-[#1A2B15] dark:text-white tracking-tight mt-4 mb-3">
-              <span className="block text-sm sm:text-base font-bold text-[#31691D] dark:text-[#7BC662] mb-1.5 tracking-normal">
-                {isEnglish ? 'Welcome to ' : 'مرحباً بكم في '}
-                <span dir="ltr" className="inline-flex items-baseline font-extrabold bg-gradient-to-r from-[#31691D] via-[#4F8A3A] to-[#7BC662] dark:from-[#7BC662] dark:via-emerald-300 dark:to-emerald-200 bg-clip-text text-transparent">
-                  AgriMarket
-                </span>
-                <span className="text-on-surface-variant/60 dark:text-emerald-300/40 font-normal mx-1.5">|</span>
-                <span className="font-medium text-xs sm:text-sm text-secondary dark:text-emerald-300/80">
-                  {isEnglish ? 'Specialty Agricultural Hub' : 'وجهة المحاصيل الزراعية الفاخرة'}
-                </span>
-              </span>
+            {/* العنوان الرئيسي المباشر */}
+            <h1 className="font-headline-lg text-2xl sm:text-3xl lg:text-[40px] xl:text-[44px] lg:leading-[50px] xl:leading-[54px] font-black text-[#1A2B15] dark:text-white tracking-tight mb-3">
               {t('hero.title')}
             </h1>
 
-            {/* شارة التمييز البارزة باللون الدافئ الموحد */}
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FEF3C7] text-[#D97706] border border-[#D97706]/30 text-xs font-bold shadow-xs mb-4">
-              <Sparkles className="w-3.5 h-3.5 text-[#D97706]" />
-              <span>{t('hero.accentBadge')}</span>
-            </div>
-
             {/* الوصف الإرشادي الواضح للمنصة */}
-            <p className="font-body-lg text-base sm:text-lg text-on-surface-variant dark:text-emerald-100/85 leading-relaxed mb-6 max-w-xl">
+            <p className="font-body-lg text-sm sm:text-base text-on-surface-variant dark:text-emerald-100/85 leading-relaxed mb-4 max-w-xl">
               {t('hero.description')}
             </p>
 
-            {/* الزر الرئيسي البارز مع التفاعل المغناطيسي والدائرة الخضراء المعتمدة */}
-            <motion.button
-              type="button"
-              onClick={handleScrollToProducts}
-              onMouseMove={handleMagneticMove}
-              onMouseLeave={handleMagneticLeave}
-              animate={{ x: magneticOffset.x, y: magneticOffset.y }}
-              transition={{ type: 'spring', stiffness: 220, damping: 14, mass: 0.15 }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.97 }}
-              className="inline-flex items-center justify-between gap-5 px-6 py-3.5 rounded-2xl bg-white text-[#1A2B15] hover:bg-[#F4F7F2] active:scale-95 transition-all shadow-xl shadow-emerald-950/15 border border-[#DCE5D8] dark:border-white/80 cursor-pointer group mb-3.5"
-            >
-              <div className="flex flex-col text-start">
-                <span className="font-bold text-base sm:text-lg text-[#1A2B15] leading-tight">
-                  {t('hero.browseStore')}
-                </span>
-                <span className="text-[11px] text-[#556650] font-semibold mt-0.5">
-                  {t('hero.browseSubtext')}
-                </span>
-              </div>
-              <div className="w-9 h-9 rounded-xl bg-[#31691D] group-hover:bg-[#255215] text-white flex items-center justify-center shrink-0 group-hover:translate-y-0.5 transition-colors shadow-sm">
-                <ArrowDown className="w-4 h-4" />
-              </div>
-            </motion.button>
+            {/* أزرار الإجراءات المتناسقة: تصفح محاصيل المتجر واستكشف المصادر */}
+            <div className="flex flex-wrap items-center gap-3 mb-3">
+              <motion.button
+                type="button"
+                onClick={handleScrollToProducts}
+                onMouseMove={handleMagneticMove}
+                onMouseLeave={handleMagneticLeave}
+                animate={{ x: magneticOffset.x, y: magneticOffset.y }}
+                transition={{ type: 'spring', stiffness: 220, damping: 14, mass: 0.15 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
+                className="inline-flex items-center justify-between gap-4 px-5 py-3 rounded-2xl bg-white dark:bg-[#122019] text-[#1A2B15] dark:text-white hover:bg-[#F4F7F2] dark:hover:bg-[#16271f] active:scale-95 transition-all shadow-lg shadow-emerald-950/10 border border-[#DCE5D8] dark:border-emerald-700/40 cursor-pointer group"
+              >
+                <div className="flex flex-col text-start">
+                  <span className="font-bold text-sm sm:text-base text-[#1A2B15] dark:text-white leading-tight">
+                    {t('hero.browseStore')}
+                  </span>
+                  <span className="text-[10px] text-[#556650] dark:text-emerald-300/70 font-semibold mt-0.5">
+                    {t('hero.browseSubtext')}
+                  </span>
+                </div>
+                <div className="w-8 h-8 rounded-xl bg-[#31691D] group-hover:bg-[#255215] text-white flex items-center justify-center shrink-0 group-hover:translate-y-0.5 transition-colors shadow-sm">
+                  <ArrowDown className="w-4 h-4" />
+                </div>
+              </motion.button>
 
-            {/* الأزرار الثانوية المتناسقة: استكشف المصادر وبوابة المزارعين */}
-            <div className="flex flex-wrap items-center gap-2.5">
               <button
                 type="button"
                 onClick={handleScrollToProducts}
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white/40 dark:bg-emerald-950/60 hover:bg-white/60 dark:hover:bg-emerald-900/60 backdrop-blur-md border border-[#DCE5D8] dark:border-emerald-700/40 text-on-surface dark:text-white transition-all text-xs sm:text-sm font-semibold cursor-pointer shadow-xs active:scale-95"
+                className="inline-flex items-center gap-2 px-5 py-3.5 rounded-2xl bg-white/40 dark:bg-emerald-950/60 hover:bg-white/60 dark:hover:bg-emerald-900/60 backdrop-blur-md border border-[#DCE5D8] dark:border-emerald-700/40 text-on-surface dark:text-white transition-all text-xs sm:text-sm font-semibold cursor-pointer shadow-xs active:scale-95"
               >
                 <Compass className="w-4 h-4 text-[#31691D] dark:text-[#7BC662]" />
                 <span>{t('hero.exploreOrigins')}</span>
               </button>
-
-              <button
-                type="button"
-                onClick={handleOpenFarmers}
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[#FEF3C7] hover:bg-[#fde68a] border border-[#D97706]/30 text-[#D97706] transition-all text-xs sm:text-sm font-bold cursor-pointer shadow-xs active:scale-95"
-              >
-                <PhoneCall className="w-4 h-4 text-[#D97706]" />
-                <span>{t('hero.farmersAppBtn')}</span>
-              </button>
             </div>
 
             {/* سطر الثقة الناعم بثلاث علامات صح في الأسفل */}
-            <div className="flex flex-wrap items-center gap-3 pt-6 text-xs text-on-surface-variant dark:text-emerald-200/80 font-medium">
+            <div className="flex flex-wrap items-center gap-3 pt-2 text-xs text-on-surface-variant dark:text-emerald-200/80 font-medium">
               <div className="flex items-center gap-1.5">
                 <Check className="w-4 h-4 text-[#31691D] dark:text-[#7BC662] stroke-[2.5]" />
                 <span>{t('hero.trustVerified')}</span>
