@@ -14,8 +14,8 @@ const DEFAULT_SETTINGS = {
   heroBackground: 'ambient', // 'ambient' | 'particles' | 'minimal'
   buttonStyle: 'soft', // 'soft' | 'pill' | 'sharp'
   loaderStyle: 'logo', // 'logo' | 'bar' | 'none'
-  enableFlyToCart: true, // تأثير الطيران للسلة
-  enableCard3DTilt: true, // ميلان ثلاثي الأبعاد وتوهج للبطاقات
+  enableFlyToCart: false, // تأثير الطيران للسلة (معطل نهائياً)
+  enableCard3DTilt: false, // ميلان ثلاثي الأبعاد وتوهج للبطاقات (معطل نهائياً)
 };
 
 // إنشاء سياق الإعدادات
@@ -23,12 +23,18 @@ const SettingsContext = createContext(null);
 
 // مزود سياق الإعدادات لكافة أجزاء التطبيق
 export function SettingsProvider({ children }) {
-  // قراءة الإعدادات المحفوظة مسبقاً أو اعتماد القيم الافتراضية
+  // قراءة الإعدادات المحفوظة مسبقاً أو اعتماد القيم الافتراضية مع تعطيل الحركات الدقيقة نهائياً
   const [settings, setSettings] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
-        return { ...DEFAULT_SETTINGS, ...JSON.parse(saved) };
+        const parsed = JSON.parse(saved);
+        return {
+          ...DEFAULT_SETTINGS,
+          ...parsed,
+          enableFlyToCart: false,
+          enableCard3DTilt: false,
+        };
       }
     } catch {
       // في حال تعذر القراءة يتم الاعتماد على القيم الافتراضية
