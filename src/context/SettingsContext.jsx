@@ -6,9 +6,9 @@ import { SITE_CONFIG } from '../config/siteConfig';
 // مفتاح حفظ الإعدادات في التخزين المحلي
 const STORAGE_KEY = 'agritech_settings';
 
-// القيم الافتراضية المطابقة تماماً لتصميم المنصة الحالي
+// القيم الافتراضية المطابقة تماماً لتصميم المنصة الحالي مع اعتماد الوضع الليلي افتراضياً
 const DEFAULT_SETTINGS = {
-  themeMode: 'light', // 'light' | 'dark'
+  themeMode: 'dark', // 'dark' | 'light'
   language: 'ar', // 'ar' | 'en'
   colorTheme: 'agritech', // 'agritech' | 'roasted' | 'obsidian'
   heroBackground: 'ambient', // 'ambient' | 'particles' | 'minimal'
@@ -32,6 +32,7 @@ export function SettingsProvider({ children }) {
         return {
           ...DEFAULT_SETTINGS,
           ...parsed,
+          themeMode: parsed.themeMode || 'dark',
           enableFlyToCart: false,
           enableCard3DTilt: false,
         };

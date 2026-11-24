@@ -1,10 +1,29 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" class="dark">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AgriMarket | منصة التسويق الزراعي</title>
+
+    <!-- تهيئة الوضع الليلي افتراضياً لمنع الوميض قبل تحميل React مع احترام اختيار الوضع النهاري -->
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('agritech_settings');
+          if (saved) {
+            var parsed = JSON.parse(saved);
+            if (parsed && parsed.themeMode === 'light') {
+              document.documentElement.classList.remove('dark');
+              return;
+            }
+          }
+          document.documentElement.classList.add('dark');
+        } catch (e) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
 
     <!-- خط كايرو (Cairo) والأيقونات -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
