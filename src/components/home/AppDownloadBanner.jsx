@@ -53,12 +53,14 @@ export default function AppDownloadBanner() {
             
             {/* الجهة اليمنى: أيقونة تطبيق أجري تك الرسمية مع العنوان والوصف */}
             <div className="flex items-start sm:items-center gap-4 sm:gap-5 flex-1">
-              {/* أيقونة تطبيق أجري تك الرسمية المعتمدة */}
-              <img
-                src="/images/agritech-app-icon.png"
-                alt={t('appBanner.title')}
-                className="w-16 h-16 md:w-20 md:h-20 rounded-2xl object-cover shadow-md shrink-0"
-              />
+              {/* إطار أيقونة تطبيق أجري تك المعتمدة بحواف ناعمة وظل خفيف */}
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white p-2 shadow-md border border-white/20 shrink-0 flex items-center justify-center overflow-hidden">
+                <img
+                  src="/images/agritech-app-icon.png"
+                  alt={t('appBanner.title')}
+                  className="w-full h-full object-contain"
+                />
+              </div>
 
               <div>
                 <h3 className="font-headline-sm text-xl sm:text-2xl font-bold text-white tracking-tight">
