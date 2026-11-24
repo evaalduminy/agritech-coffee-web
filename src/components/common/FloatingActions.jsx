@@ -4,9 +4,9 @@ import { MessageCircle, ArrowUp } from 'lucide-react';
 import { useSettings } from '../../context/SettingsContext';
 import { openWhatsAppSupport } from '../../services/whatsapp';
 
-// مكوّن الأزرار العائمة الذكية: زر دعم واتساب بنبض خفيف وزر العودة للأعلى
+// مكوّن الأزرار العائمة الذكية: زر دعم واتساب بفقاعة تفاعلية وشارة إشعار وزر العودة للأعلى
 export default function FloatingActions() {
-  const { t } = useSettings();
+  const { t, isEnglish } = useSettings();
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   // مراقبة تمرير الصفحة لإظهار زر العودة للأعلى بعد تجاوز 350 بكسل
@@ -54,23 +54,41 @@ export default function FloatingActions() {
         )}
       </AnimatePresence>
 
-      {/* 2. زر دعم واتساب العائم بالأخضر الزراعي المعتمد مع حالة التمرير */}
-      <div className="relative group flex items-center">
-        {/* حلقة النبض الخافتة في الخلفية */}
-        <span className="absolute inset-0 rounded-full bg-[#31691D] animate-ping opacity-25 pointer-events-none" />
-
-        <button
-          type="button"
+      {/* 2. زر دعم واتساب العائم بالأخضر (#25D366) مع الفقاعة التفاعلية وشارة الإشعار */}
+      <div className="flex items-center gap-2.5">
+        {/* فقاعة النص الجانبية بنمط Glassmorphism (تتكيف مع الوضعين وظاهرة للشاشات المتوسطة والكبيرة) */}
+        <div
           onClick={handleWhatsAppClick}
-          aria-label={t('floating.whatsappSupport')}
-          className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#31691D] hover:bg-[#255215] text-white shadow-xl shadow-[#31691D]/25 flex items-center justify-center cursor-pointer transition-all hover:scale-105 active:scale-95"
+          className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white/90 dark:bg-[#122019]/90 backdrop-blur-md border border-[#DCE5D8] dark:border-emerald-400/20 text-[#1A2B15] dark:text-white shadow-xl cursor-pointer hover:scale-102 active:scale-98 transition-all group"
         >
-          <MessageCircle className="w-6 h-6 sm:w-7 sm:h-7" />
-        </button>
+          {/* نقطة خضراء متوهجة */}
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#25D366] opacity-75" />
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#25D366]" />
+          </span>
+          <span className="text-xs font-bold whitespace-nowrap">
+            {isEnglish ? 'Chat with us on WhatsApp' : 'تحدث معنا عبر الواتساب'}
+          </span>
+        </div>
 
-        {/* تلميح التوجيه السريع يظهر عند مرور المؤشر على سطح المكتب */}
-        <div className="hidden sm:group-hover:flex absolute rtl:left-full ltr:right-full mx-3 px-3 py-1.5 rounded-xl bg-white/90 dark:bg-[#0d1812]/90 backdrop-blur-md border border-[#DCE5D8] dark:border-emerald-400/20 text-xs text-on-surface dark:text-white font-semibold shadow-lg whitespace-nowrap pointer-events-none">
-          {t('floating.whatsappTooltip')}
+        {/* الزر الدائري الأخضر (#25D366) مع حلقة النبض وشارة الإشعار 1 */}
+        <div className="relative flex items-center">
+          {/* حلقة النبض الناعمة في الخلفية */}
+          <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-35 pointer-events-none" />
+
+          <button
+            type="button"
+            onClick={handleWhatsAppClick}
+            aria-label={isEnglish ? 'Chat with us on WhatsApp' : 'تحدث معنا عبر الواتساب'}
+            className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white shadow-xl shadow-[#25D366]/30 flex items-center justify-center cursor-pointer transition-all hover:scale-105 active:scale-95"
+          >
+            <MessageCircle className="w-6 h-6 sm:w-7 sm:h-7" />
+
+            {/* شارة إشعار حمراء صغيرة تحمل الرقم 1 في الزاوية العلوية */}
+            <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[#E53935] text-white text-[11px] font-black flex items-center justify-center shadow-md border-2 border-white dark:border-[#111411]">
+              1
+            </span>
+          </button>
         </div>
       </div>
     </aside>
