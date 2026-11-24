@@ -90,11 +90,11 @@ export default function BuyerDashboard({ onReturnToStore = () => {} }) {
   // حالة نمط تعديل بيانات التوصيل
   const [isEditingAddress, setIsEditingAddress] = useState(false);
 
-  // بيانات التوصيل والتواصل المحفوظة للمشتري
+  // بيانات التوصيل والتواصل المحفوظة للمشتري وفق المعايير الرسمية
   const [deliveryDetails, setDeliveryDetails] = useState({
-    name: user?.name || (isEnglish ? `${SITE_CONFIG.brand.name} Client` : `عميل ${SITE_CONFIG.brand.name}`),
-    phone: user?.phone || user?.emailOrPhone || SITE_CONFIG.contact.phone,
-    address: isEnglish ? "Sana'a, Sixtieth Street, Near Agricultural Center" : 'صنعاء، شارع الستين، قرب المركز الزراعي',
+    name: user?.name || (isEnglish ? 'Website Guest' : 'زائر عبر الموقع'),
+    phone: user?.phone || user?.emailOrPhone || (isEnglish ? 'To be confirmed' : 'يُحدَّد عند التواصل'),
+    address: user?.address || user?.city || (isEnglish ? 'To be confirmed' : 'يُحدَّد عند التواصل'),
   });
 
   // استخراج الاسم ورقم الهاتف بوضوح من بيانات الجلسة الحالية
@@ -221,6 +221,7 @@ export default function BuyerDashboard({ onReturnToStore = () => {} }) {
       name: deliveryDetails.name,
       phone: deliveryDetails.phone,
       city: deliveryDetails.address,
+      isEnglish,
     });
   };
 

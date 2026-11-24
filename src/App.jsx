@@ -12,7 +12,7 @@ import AuthModal from './components/modals/AuthModal';
 import FarmersModal from './components/modals/FarmersModal';
 import HomePage from './pages/HomePage';
 import BuyerDashboard from './pages/BuyerDashboard';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { SettingsProvider, useSettings } from './context/SettingsContext';
 import { SITE_CONFIG } from './config/siteConfig';
@@ -49,6 +49,7 @@ const CATEGORY_TO_TAB_MAP = {
 // المكوّن الداخلي للتطبيق بعد تغليفه بمزودات السياق
 function AppContent() {
   const { openSettings, isEnglish } = useSettings();
+  const { user } = useAuth();
 
   // مزامنة عنوان المتصفح مع اسم المنصة والشعار الفرعي حسب اللغة النشطة
   useEffect(() => {
@@ -326,7 +327,15 @@ function AppContent() {
       }
     }
 
-    openWhatsApp(singleOrder);
+    // إرسال بيانات العميل الحقيقية أو القيم الافتراضية الرسمية
+    const customerInfo = {
+      name: user?.name || (isEnglish ? 'Website Guest' : 'زائر عبر الموقع'),
+      phone: user?.phone || user?.emailOrPhone || (isEnglish ? 'To be confirmed' : 'يُحدَّد عند التواصل'),
+      city: user?.address || user?.city || (isEnglish ? 'To be confirmed' : 'يُحدَّد عند التواصل'),
+      isEnglish,
+    };
+
+    openWhatsApp(singleOrder, customerInfo);
   };
 
   return (

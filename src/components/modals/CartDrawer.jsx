@@ -39,9 +39,17 @@ export default function CartDrawer({ onBrowseProducts }) {
 
   // بيانات استلام الطلب السريعة لربطها برسالة واتساب
   const [customBuyerName, setCustomBuyerName] = useState('');
-  const buyerName = customBuyerName || user?.name || 'عبد الرحمن اليافعي';
-  const [buyerAddress, setBuyerAddress] = useState('صنعاء، شارع حدة');
+  const defaultBuyerName = user?.name || (isEnglish ? 'Website Guest' : 'زائر عبر الموقع');
+  const resolvedBuyerName = customBuyerName.trim() || defaultBuyerName;
+  const [buyerAddress, setBuyerAddress] = useState(user?.address || user?.city || '');
   const [orderNotes, setOrderNotes] = useState('');
+
+  // مزامنة العنوان تلقائياً عند توفر بيانات في حساب المستخدم
+  useEffect(() => {
+    if (user?.address || user?.city) {
+      setBuyerAddress(user.address || user.city);
+    }
+  }, [user]);
 
   // حالة جاري الإرسال وحالة الخطأ للطلب في الوضع الحي
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -104,7 +112,7 @@ export default function CartDrawer({ onBrowseProducts }) {
 
         // تجهيز الملاحظات الاختيارية بما لا يتجاوز 1000 حرف
         const noteParts = [];
-        if (buyerAddress) noteParts.push(`العنوان: ${buyerAddress}`);
+        if (buyerAddress.trim()) noteParts.push(`العنوان: ${buyerAddress.trim()}`);
         if (orderNotes.trim()) noteParts.push(`ملاحظات: ${orderNotes.trim()}`);
         const itemNotes = cartItems.map((i) => i.notes).filter(Boolean);
         if (itemNotes.length > 0 && !orderNotes.trim()) {
@@ -158,11 +166,12 @@ export default function CartDrawer({ onBrowseProducts }) {
         clearCart();
         closeCart();
 
-        // فتح محادثة واتساب موثقة برقم الطلب الحقيقي العائد من استجابة Laravel
+        // فتح محادثة واتساب موثقة برقم الطلب الحقيقي وبيانات العميل الرسمية
         openWhatsApp(confirmedOrder, {
-          name: user.name || buyerName,
-          phone: user.phone || user.emailOrPhone || '',
-          city: buyerAddress,
+          name: resolvedBuyerName,
+          phone: user?.phone || user?.emailOrPhone || (isEnglish ? 'To be confirmed' : 'يُحدَّد عند التواصل'),
+          city: buyerAddress.trim() || user?.address || user?.city || (isEnglish ? 'To be confirmed' : 'يُحدَّد عند التواصل'),
+          isEnglish,
         });
       } catch (err) {
         const errorMsg = err?.message || (isEnglish ? 'Failed to process order. Please check quantity or try again.' : 'تعذر إتمام الطلب في الخادم. يرجى التحقق من توفر الكمية أو إعادة المحاولة.');
@@ -217,11 +226,12 @@ export default function CartDrawer({ onBrowseProducts }) {
     clearCart();
     closeCart();
 
-    // فتح محادثة واتساب موثقة برقم الطلب واسم المشتري والتفاصيل
+    // فتح محادثة واتساب موثقة برقم الطلب واسم المشتري والتفاصيل الرسمية
     openWhatsApp(newOrder, {
-      name: user.name || buyerName,
-      phone: user.phone || user.emailOrPhone || '',
-      city: buyerAddress,
+      name: resolvedBuyerName,
+      phone: user?.phone || user?.emailOrPhone || (isEnglish ? 'To be confirmed' : 'يُحدَّد عند التواصل'),
+      city: buyerAddress.trim() || user?.address || user?.city || (isEnglish ? 'To be confirmed' : 'يُحدَّد عند التواصل'),
+      isEnglish,
     });
   };
 
@@ -431,9 +441,9 @@ export default function CartDrawer({ onBrowseProducts }) {
                       <input
                         id="buyer-name"
                         type="text"
-                        value={customBuyerName !== '' ? customBuyerName : buyerName}
+                        value={customBuyerName !== '' ? customBuyerName : (user?.name || '')}
                         onChange={(e) => setCustomBuyerName(e.target.value)}
-                        placeholder={t('cart.buyerNamePlaceholder')}
+                        placeholder={user?.name || t('cart.buyerNamePlaceholder')}
                         className="w-full text-sm px-3.5 py-2.5 rounded-xl border border-outline-variant bg-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-body-md"
                       />
                     </div>
