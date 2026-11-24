@@ -41,18 +41,18 @@ export default function BuyerDashboard({ onReturnToStore = () => {} }) {
   const statusConfig = {
     pending: {
       label: t('dashboard.statusPending'),
-      badgeClass: 'bg-secondary-fixed text-on-secondary-fixed',
-      dotClass: 'bg-secondary animate-ping',
+      badgeClass: 'bg-secondary-fixed text-on-secondary-fixed dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/30 border border-transparent',
+      dotClass: 'bg-secondary dark:bg-amber-400 animate-ping',
     },
     confirmed: {
       label: t('dashboard.statusConfirmed'),
-      badgeClass: 'bg-primary-fixed text-on-primary-fixed',
-      dotClass: 'bg-primary',
+      badgeClass: 'bg-primary-fixed text-on-primary-fixed dark:bg-white/10 dark:text-neutral-200 dark:border-white/15 border border-transparent',
+      dotClass: 'bg-primary dark:bg-white',
     },
     completed: {
       label: t('dashboard.statusCompleted'),
-      badgeClass: 'bg-surface-container-high text-primary',
-      dotClass: 'bg-primary',
+      badgeClass: 'bg-surface-container-high text-primary dark:bg-white/10 dark:text-neutral-200 dark:border-white/15 border border-transparent',
+      dotClass: 'bg-primary dark:bg-white',
     },
   };
 
@@ -60,11 +60,11 @@ export default function BuyerDashboard({ onReturnToStore = () => {} }) {
   const typeConfig = {
     order: {
       label: t('dashboard.typeOrder'),
-      badgeClass: 'bg-surface-container-low text-on-surface-variant',
+      badgeClass: 'bg-surface-container-low text-on-surface-variant dark:bg-white/10 dark:text-neutral-200 dark:border-white/15 border border-transparent',
     },
     reservation: {
       label: t('dashboard.typeReservation'),
-      badgeClass: 'bg-tertiary-fixed text-on-tertiary-fixed font-bold',
+      badgeClass: 'bg-tertiary-fixed text-on-tertiary-fixed font-bold dark:bg-white/10 dark:text-neutral-200 dark:border-white/15 border border-transparent',
     },
   };
 
@@ -509,21 +509,21 @@ export default function BuyerDashboard({ onReturnToStore = () => {} }) {
             </nav>
 
             {/* صندوق استشارة المهندس الزراعي الميداني */}
-            <div className="rounded-2xl bg-gradient-to-br from-surface-container-low to-secondary-fixed/20 p-space-lg flex flex-col gap-space-sm border border-surface-container text-start">
+            <div className="rounded-2xl bg-gradient-to-br from-surface-container-low to-secondary-fixed/20 dark:from-transparent dark:to-transparent dark:bg-[#191d1a] p-space-lg flex flex-col gap-space-sm border border-surface-container dark:border-white/10 text-start">
               <div className="flex items-center gap-space-xs">
                 <div className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center text-on-secondary shadow-xs">
                   <Headphones className="w-5 h-5" />
                 </div>
                 <div className="flex flex-col text-start">
-                  <span className="font-label-md text-label-md text-on-surface font-bold">
+                  <span className="font-label-md text-label-md text-on-surface dark:text-white font-bold">
                     {t('dashboard.advisorTitle')}
                   </span>
-                  <span className="font-body-sm text-body-sm text-on-surface-variant">
+                  <span className="font-body-sm text-body-sm text-on-surface-variant dark:text-neutral-300">
                     {t('dashboard.advisorSubtitle')}
                   </span>
                 </div>
               </div>
-              <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              <p className="font-body-sm text-body-sm text-on-surface-variant dark:text-neutral-300 leading-relaxed">
                 {t('dashboard.advisorDesc')}
               </p>
               <a

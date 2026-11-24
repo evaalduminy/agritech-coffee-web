@@ -272,7 +272,7 @@ export default function CartDrawer({ onBrowseProducts }) {
                     <h2 className="font-headline-sm text-headline-sm text-on-surface font-bold">
                       {t('cart.title')}
                     </h2>
-                    <span className="px-2.5 py-0.5 rounded-full bg-primary-container text-on-primary font-label-sm text-label-sm font-bold shadow-xs">
+                    <span className="px-2.5 py-0.5 rounded-full bg-primary-container text-on-primary dark:bg-white/10 dark:text-white dark:border-white/15 border border-transparent font-label-sm text-label-sm font-bold shadow-xs">
                       {totalCount} {totalCount === 1 ? t('cart.cropSingular') : t('cart.cropPlural')}
                     </span>
                   </div>
@@ -500,20 +500,20 @@ export default function CartDrawer({ onBrowseProducts }) {
 
             {/* 3. أسفل السلة: الإجماليات وزر المتابعة عبر واتساب بعد التحقق من تسجيل الدخول */}
             {cartItems.length > 0 && (
-              <div className="p-5 border-t border-surface-container bg-surface-container-low/70 space-y-3.5 text-start">
+              <div className="p-5 border-t border-surface-container bg-surface-container-low/70 dark:bg-[#141715] dark:border-t dark:border-white/10 space-y-3.5 text-start">
                 <div className="space-y-1.5 px-1">
-                  <div className="flex items-center justify-between text-body-sm text-on-surface-variant font-medium">
+                  <div className="flex items-center justify-between text-body-sm text-on-surface-variant dark:text-neutral-300 font-medium">
                     <span>{t('cart.subtotal')}</span>
-                    <span className="font-bold text-on-surface">${totalPrice.toFixed(2)}</span>
+                    <span className="font-bold text-on-surface dark:text-white">${totalPrice.toFixed(2)}</span>
                   </div>
 
-                  <div className="flex items-center justify-between text-body-sm text-on-surface-variant font-medium">
+                  <div className="flex items-center justify-between text-body-sm text-on-surface-variant dark:text-neutral-300 font-medium">
                     <span>{t('cart.delivery')}</span>
                     <span className="text-primary font-bold">{t('cart.freeDelivery')}</span>
                   </div>
 
-                  <div className="flex items-center justify-between pt-2 border-t border-surface-container">
-                    <span className="font-headline-sm text-headline-sm text-on-surface font-bold">
+                  <div className="flex items-center justify-between pt-2 border-t border-surface-container dark:border-white/10">
+                    <span className="font-headline-sm text-headline-sm text-on-surface dark:text-white font-bold">
                       {t('cart.total')}
                     </span>
                     <div className="text-end">
@@ -528,7 +528,7 @@ export default function CartDrawer({ onBrowseProducts }) {
                 </div>
 
                 {/* إشعار خلو المنصة من بوابات الدفع الإلكتروني */}
-                <div className="p-3 rounded-xl bg-surface-container-lowest border border-primary/20 text-on-surface text-[12px] leading-relaxed flex items-start gap-2 shadow-xs">
+                <div className="p-3 rounded-xl bg-surface-container-lowest dark:bg-[#191d1a] border border-primary/20 dark:border-white/10 text-on-surface dark:text-neutral-300 text-[12px] leading-relaxed flex items-start gap-2 shadow-xs">
                   <ShieldCheck className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
                   <span>
                     {t('cart.noGatewayNotice')}
@@ -558,7 +558,7 @@ export default function CartDrawer({ onBrowseProducts }) {
                   <span>{isSubmitting ? (isEnglish ? 'Submitting order...' : 'جاري تأكيد الطلب...') : t('cart.confirmWhatsApp')}</span>
                 </button>
 
-                <div className="text-center font-label-sm text-xs text-on-surface-variant flex items-center justify-center gap-1.5">
+                <div className="text-center font-label-sm text-xs text-on-surface-variant dark:text-neutral-400 flex items-center justify-center gap-1.5">
                   <Lock className="w-3.5 h-3.5 text-primary" />
                   <span>{t('cart.trustBanner')}</span>
                 </div>
