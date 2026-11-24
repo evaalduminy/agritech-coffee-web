@@ -6,7 +6,6 @@ import {
   Mountain,
   Award,
   ShieldCheck,
-  Compass,
   Check,
   Search,
   ShoppingBag,
@@ -202,8 +201,8 @@ export default function Hero({
               {t('hero.description')}
             </p>
 
-            {/* أزرار الإجراءات: عرض كامل مريح على الجوال ومتناسق لسطح المكتب */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto pt-1 sm:pt-0">
+            {/* زر الإجراء الرئيسي: عرض كامل مريح على الجوال ومتناسق لسطح المكتب */}
+            <div className="w-full sm:w-auto pt-1 sm:pt-0">
               <motion.button
                 type="button"
                 onClick={handleScrollToProducts}
@@ -227,15 +226,6 @@ export default function Hero({
                   <ArrowDown className="w-4 h-4" />
                 </div>
               </motion.button>
-
-              <button
-                type="button"
-                onClick={handleScrollToProducts}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl bg-white/40 dark:bg-emerald-950/60 hover:bg-white/60 dark:hover:bg-emerald-900/60 backdrop-blur-md border border-[#DCE5D8] dark:border-emerald-700/40 text-on-surface dark:text-white transition-all text-xs sm:text-sm font-semibold cursor-pointer shadow-xs active:scale-95"
-              >
-                <Compass className="w-4 h-4 text-[#31691D] dark:text-[#7BC662]" />
-                <span>{t('hero.exploreOrigins')}</span>
-              </button>
             </div>
 
             {/* سطر الثقة الناعم بثلاث علامات صح في الأسفل (مخفي على الجوال لتقليل الازدحام) */}
