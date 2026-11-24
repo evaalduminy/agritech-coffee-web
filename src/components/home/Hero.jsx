@@ -108,17 +108,17 @@ export default function Hero({
       ref={heroContainerRef}
       onMouseMove={handleHeroMouseMove}
       onMouseLeave={handleHeroMouseLeave}
-      className="relative w-full overflow-hidden bg-transparent pt-20 sm:pt-24 lg:pt-24 pb-8 sm:pb-10 lg:pb-10 min-h-[calc(100vh-20px)] lg:min-h-0 flex flex-col justify-center transition-colors duration-300"
+      className="relative w-full overflow-hidden bg-transparent pt-24 sm:pt-24 lg:pt-24 pb-12 sm:pb-10 lg:pb-10 min-h-[calc(100vh-20px)] lg:min-h-0 flex flex-col justify-center transition-colors duration-300"
     >
       {/* خلفية الواجهة الترحيبية التفاعلية حسب الإعداد المختار */}
       {heroBg === 'particles' && <HeroParticlesBackground />}
       {heroBg === 'ambient' && <HeroAmbientBackground />}
 
-      {/* نقشة هندسية ناعمة من النقاط الخافتة في الخلفية */}
+      {/* نقشة هندسية ناعمة من النقاط الخافتة في الخلفية (مخفية على الجوال ومخففة لسطح المكتب) */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.06] dark:opacity-[0.08]"
+        className="absolute inset-0 pointer-events-none opacity-0 md:opacity-[0.035] dark:md:opacity-[0.05] hidden md:block"
         style={{
-          backgroundImage: 'radial-gradient(circle, currentColor 1.2px, transparent 1.2px)',
+          backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)',
           backgroundSize: '24px 24px',
         }}
       />
@@ -184,26 +184,26 @@ export default function Hero({
           {/* ============================================================== */}
           {/* الجهة اليمنى: النصوص والأزرار المفتوحة بدون أي صناديق تخنق النص */}
           {/* ============================================================== */}
-          <div className="lg:col-span-7 flex flex-col items-start text-start">
+          <div className="lg:col-span-7 flex flex-col items-start text-start space-y-4 sm:space-y-3">
             
-            {/* الشارة التوثيقية العلوية الزجاجية المعتمدة */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E9F2E4] dark:bg-[#142610] backdrop-blur-md border border-[#31691D]/20 dark:border-[#7BC662]/30 text-[#31691D] dark:text-[#7BC662] shadow-xs text-xs font-semibold mb-3">
+            {/* الشارة التوثيقية العلوية الزجاجية المعتمدة (مخفية على الجوال لمنع التكرار مع الترويسة) */}
+            <div className="hidden md:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E9F2E4] dark:bg-[#142610] backdrop-blur-md border border-[#31691D]/20 dark:border-[#7BC662]/30 text-[#31691D] dark:text-[#7BC662] shadow-xs text-xs font-semibold">
               <BadgeCheck className="w-4 h-4 text-[#31691D] dark:text-[#7BC662]" />
               <span>{t('hero.badge')}</span>
             </div>
 
-            {/* العنوان الرئيسي المباشر */}
-            <h1 className="font-headline-lg text-2xl sm:text-3xl lg:text-[40px] xl:text-[44px] lg:leading-[50px] xl:leading-[54px] font-black text-[#1A2B15] dark:text-white tracking-tight mb-3">
+            {/* العنوان الرئيسي المباشر مع ضبط المسافات المريحة */}
+            <h1 className="font-headline-lg text-2xl sm:text-3xl lg:text-[40px] xl:text-[44px] lg:leading-[50px] xl:leading-[54px] font-black text-[#1A2B15] dark:text-white tracking-tight leading-snug">
               {t('hero.title')}
             </h1>
 
             {/* الوصف الإرشادي الواضح للمنصة */}
-            <p className="font-body-lg text-sm sm:text-base text-on-surface-variant dark:text-emerald-100/85 leading-relaxed mb-4 max-w-xl">
+            <p className="font-body-lg text-sm sm:text-base text-on-surface-variant dark:text-emerald-100/85 leading-relaxed max-w-xl">
               {t('hero.description')}
             </p>
 
-            {/* أزرار الإجراءات المتناسقة: تصفح محاصيل المتجر واستكشف المصادر */}
-            <div className="flex flex-wrap items-center gap-3 mb-3">
+            {/* أزرار الإجراءات: عرض كامل مريح على الجوال ومتناسق لسطح المكتب */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto pt-1 sm:pt-0">
               <motion.button
                 type="button"
                 onClick={handleScrollToProducts}
@@ -213,7 +213,7 @@ export default function Hero({
                 transition={{ type: 'spring', stiffness: 220, damping: 14, mass: 0.15 }}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}
-                className="inline-flex items-center justify-between gap-4 px-5 py-3 rounded-2xl bg-white dark:bg-[#122019] text-[#1A2B15] dark:text-white hover:bg-[#F4F7F2] dark:hover:bg-[#16271f] active:scale-95 transition-all shadow-lg shadow-emerald-950/10 border border-[#DCE5D8] dark:border-emerald-700/40 cursor-pointer group"
+                className="w-full sm:w-auto inline-flex items-center justify-between gap-4 px-5 py-3.5 sm:py-3 rounded-2xl bg-white dark:bg-[#122019] text-[#1A2B15] dark:text-white hover:bg-[#F4F7F2] dark:hover:bg-[#16271f] active:scale-95 transition-all shadow-lg shadow-emerald-950/10 border border-[#DCE5D8] dark:border-emerald-700/40 cursor-pointer group"
               >
                 <div className="flex flex-col text-start">
                   <span className="font-bold text-sm sm:text-base text-[#1A2B15] dark:text-white leading-tight">
@@ -231,15 +231,15 @@ export default function Hero({
               <button
                 type="button"
                 onClick={handleScrollToProducts}
-                className="inline-flex items-center gap-2 px-5 py-3.5 rounded-2xl bg-white/40 dark:bg-emerald-950/60 hover:bg-white/60 dark:hover:bg-emerald-900/60 backdrop-blur-md border border-[#DCE5D8] dark:border-emerald-700/40 text-on-surface dark:text-white transition-all text-xs sm:text-sm font-semibold cursor-pointer shadow-xs active:scale-95"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl bg-white/40 dark:bg-emerald-950/60 hover:bg-white/60 dark:hover:bg-emerald-900/60 backdrop-blur-md border border-[#DCE5D8] dark:border-emerald-700/40 text-on-surface dark:text-white transition-all text-xs sm:text-sm font-semibold cursor-pointer shadow-xs active:scale-95"
               >
                 <Compass className="w-4 h-4 text-[#31691D] dark:text-[#7BC662]" />
                 <span>{t('hero.exploreOrigins')}</span>
               </button>
             </div>
 
-            {/* سطر الثقة الناعم بثلاث علامات صح في الأسفل */}
-            <div className="flex flex-wrap items-center gap-3 pt-2 text-xs text-on-surface-variant dark:text-emerald-200/80 font-medium">
+            {/* سطر الثقة الناعم بثلاث علامات صح في الأسفل (مخفي على الجوال لتقليل الازدحام) */}
+            <div className="hidden md:flex flex-wrap items-center gap-3 pt-2 text-xs text-on-surface-variant dark:text-emerald-200/80 font-medium">
               <div className="flex items-center gap-1.5">
                 <Check className="w-4 h-4 text-[#31691D] dark:text-[#7BC662] stroke-[2.5]" />
                 <span>{t('hero.trustVerified')}</span>

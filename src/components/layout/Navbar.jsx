@@ -1,5 +1,17 @@
-import { motion } from 'framer-motion';
-import { PhoneCall, ShoppingBag, User, Sliders } from 'lucide-react';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  PhoneCall,
+  ShoppingBag,
+  User,
+  Sliders,
+  Menu,
+  X,
+  Home,
+  Sprout,
+  Compass,
+  Phone,
+} from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { useSettings } from '../../context/SettingsContext';
@@ -14,6 +26,9 @@ export default function Navbar({
   onProfileClick,
   onOpenFarmersModal = () => {},
 }) {
+  // حالة فتح وإغلاق قائمة الجوال المنسدلة
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   // سياق السلة للحصول على العداد ودالة الفتح
   const { totalCount, openCart } = useCart();
 
@@ -36,6 +51,7 @@ export default function Navbar({
 
   // معالجة النقر على أيقونة البروفايل
   const handleProfileClick = () => {
+    setIsMobileMenuOpen(false);
     if (!user) {
       requireAuth((loggedInUser) => {
         if (onProfileClick) {
@@ -49,8 +65,9 @@ export default function Navbar({
     }
   };
 
-  // معالجة النقر على التبويبات مع التمرير السلس للقسم المقابل
+  // معالجة النقر على التبويبات مع التمرير السلس للقسم المقابل وإغلاق قائمة الجوال
   const handleTabClick = (tabId) => {
+    setIsMobileMenuOpen(false);
     if (tabId === 'home') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else if (tabId === 'crops') {
@@ -162,39 +179,74 @@ export default function Navbar({
                 <span className="absolute top-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 dark:bg-emerald-300 border-2 border-white dark:border-[#0d1812]" />
               )}
             </button>
+
+            {/* زر فتح وإغلاق قائمة الجوال المنبثقة */}
+            <button
+              type="button"
+              onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+              aria-label={isMobileMenuOpen ? 'إغلاق القائمة' : 'فتح القائمة'}
+              aria-expanded={isMobileMenuOpen}
+              className="flex lg:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-surface-container-low/80 hover:bg-surface-container-high dark:bg-[#162820] dark:hover:bg-[#1f372c] border border-[#DCE5D8] dark:border-emerald-400/10 transition-colors items-center justify-center text-on-surface cursor-pointer"
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-5 h-5 text-[#31691D] dark:text-[#7BC662]" />
+              ) : (
+                <Menu className="w-5 h-5 text-[#31691D] dark:text-[#7BC662]" />
+              )}
+            </button>
           </div>
         </div>
 
-        {/* شريط تبويبات مدمج للشاشات الصغيرة والمتوسطة بتمرير أفقي ناعم */}
-        <nav className="flex lg:hidden px-3 pb-2.5 pt-1 border-t border-[#DCE5D8] dark:border-emerald-400/10 overflow-x-auto whitespace-nowrap gap-1.5 scrollbar-none scroll-smooth items-center">
-          {navTabs.map((tab) => {
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => handleTabClick(tab.id)}
-                className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                  isActive
-                    ? 'bg-[#E9F2E4] text-[#31691D] dark:bg-[#31691D] dark:text-white shadow-xs font-bold'
-                    : 'bg-surface-container-low/70 text-on-surface-variant hover:text-on-surface dark:bg-[#162820] dark:text-gray-300 dark:hover:text-white'
-                }`}
-              >
-                {tab.label}
-              </button>
-            );
-          })}
+        {/* قائمة الجوال المنبثقة المرتبة والقابلة للفتح والطي */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.nav
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.22, ease: 'easeOut' }}
+              className="lg:hidden border-t border-[#DCE5D8] dark:border-emerald-400/10 px-3.5 py-3 flex flex-col gap-2 overflow-hidden bg-white/95 dark:bg-[#0d1812]/95 rounded-b-2xl"
+              aria-label="قائمة الجوال"
+            >
+              <div className="grid grid-cols-2 gap-2">
+                {navTabs.map((tab) => {
+                  const isActive = activeTab === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      onClick={() => handleTabClick(tab.id)}
+                      className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer text-start ${
+                        isActive
+                          ? 'bg-[#E9F2E4] text-[#31691D] dark:bg-[#31691D]/30 dark:text-[#7BC662] font-bold border border-[#31691D]/20 dark:border-[#7BC662]/30 shadow-xs'
+                          : 'bg-surface-container-low/70 text-on-surface-variant hover:text-on-surface hover:bg-surface-container dark:bg-[#162820] dark:text-gray-300 dark:hover:text-white'
+                      }`}
+                    >
+                      {tab.id === 'home' && <Home className="w-3.5 h-3.5 text-[#31691D] dark:text-[#7BC662]" />}
+                      {tab.id === 'crops' && <Sprout className="w-3.5 h-3.5 text-[#31691D] dark:text-[#7BC662]" />}
+                      {tab.id === 'origins' && <Compass className="w-3.5 h-3.5 text-[#31691D] dark:text-[#7BC662]" />}
+                      {tab.id === 'contact' && <Phone className="w-3.5 h-3.5 text-[#31691D] dark:text-[#7BC662]" />}
+                      <span className="truncate">{tab.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
 
-          {/* زر خدمة المزارعين للشاشات الصغيرة باللون الدافئ الموحد */}
-          <button
-            type="button"
-            onClick={onOpenFarmersModal}
-            className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FEF3C7] hover:bg-[#fde68a] border border-[#D97706]/30 text-[#D97706] transition-colors text-xs font-bold cursor-pointer"
-          >
-            <PhoneCall className="w-3.5 h-3.5 text-[#D97706]" />
-            <span>{t('navbar.farmerService')}</span>
-          </button>
-        </nav>
+              {/* زر خدمة المزارعين للشاشات الصغيرة بعرض كامل */}
+              <button
+                type="button"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  onOpenFarmersModal();
+                }}
+                className="w-full mt-0.5 inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl bg-[#FEF3C7] hover:bg-[#fde68a] border border-[#D97706]/30 text-[#D97706] transition-colors text-xs font-bold cursor-pointer shadow-xs active:scale-98"
+              >
+                <PhoneCall className="w-3.5 h-3.5 text-[#D97706]" />
+                <span>{t('navbar.farmerService')}</span>
+              </button>
+            </motion.nav>
+          )}
+        </AnimatePresence>
 
       </div>
     </header>

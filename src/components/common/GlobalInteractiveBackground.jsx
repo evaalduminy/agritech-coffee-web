@@ -92,20 +92,20 @@ export default function GlobalInteractiveBackground() {
 
     window.addEventListener('resize', handleResize);
 
-    // إنشاء مصفوفة الجزيئات المتفاعلة (38 جزيئاً لتوازن الأداء والجمالية)
-    const particleCount = 38;
+    // إنشاء مصفوفة الجزيئات المتفاعلة (32 جزيئاً ناعماً وخافتاً للشاشات الكبيرة)
+    const particleCount = 32;
     const particles = [];
 
     for (let i = 0; i < particleCount; i++) {
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.45,
-        vy: (Math.random() - 0.5) * 0.45,
-        radius: Math.random() * 2.2 + 1.2,
-        baseAlpha: Math.random() * 0.25 + 0.15,
-        alpha: Math.random() * 0.25 + 0.15,
-        isAmber: Math.random() > 0.75, // 25% من الجزيئات بلون كرمي دافئ
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: (Math.random() - 0.5) * 0.35,
+        radius: Math.random() * 1.6 + 0.9,
+        baseAlpha: Math.random() * 0.1 + 0.05,
+        alpha: Math.random() * 0.1 + 0.05,
+        isAmber: Math.random() > 0.8, // 20% من الجزيئات بلون كهرماني ناعم
       });
     }
 
@@ -127,9 +127,9 @@ export default function GlobalInteractiveBackground() {
 
           if (dist < repelDistance && dist > 0) {
             const force = (repelDistance - dist) / repelDistance;
-            p.x += (dx / dist) * force * 2.5;
-            p.y += (dy / dist) * force * 2.5;
-            p.alpha = Math.min(p.baseAlpha * 1.8, 0.6);
+            p.x += (dx / dist) * force * 2.2;
+            p.y += (dy / dist) * force * 2.2;
+            p.alpha = Math.min(p.baseAlpha * 1.5, 0.2);
           } else {
             p.alpha += (p.baseAlpha - p.alpha) * 0.05;
           }
@@ -147,18 +147,19 @@ export default function GlobalInteractiveBackground() {
         if (p.y < 0) p.y = height;
         if (p.y > height) p.y = 0;
 
-        // 3. رسم الجزيء بلون متناغم مع الوضعين النهاري والليلي
+        // 3. رسم الجزيء بلون زمردي باهت ناعم لا يتجاوز شفافية 0.2
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
 
+        const safeAlpha = Math.min(p.alpha, 0.2);
         if (p.isAmber) {
           ctx.fillStyle = isDark
-            ? `rgba(245, 158, 11, ${p.alpha * 0.9})`
-            : `rgba(217, 119, 6, ${p.alpha * 0.85})`;
+            ? `rgba(245, 158, 11, ${safeAlpha * 0.75})`
+            : `rgba(217, 119, 6, ${safeAlpha * 0.7})`;
         } else {
           ctx.fillStyle = isDark
-            ? `rgba(52, 211, 153, ${p.alpha})`
-            : `rgba(46, 125, 50, ${p.alpha * 0.9})`;
+            ? `rgba(110, 231, 183, ${safeAlpha * 0.85})`
+            : `rgba(52, 211, 153, ${safeAlpha * 0.8})`;
         }
         ctx.fill();
 
@@ -166,15 +167,15 @@ export default function GlobalInteractiveBackground() {
         for (let j = i + 1; j < particles.length; j++) {
           const p2 = particles[j];
           const distLinks = Math.hypot(p.x - p2.x, p.y - p2.y);
-          if (distLinks < 85) {
-            const linkAlpha = (1 - distLinks / 85) * (isDark ? 0.08 : 0.05);
+          if (distLinks < 75) {
+            const linkAlpha = (1 - distLinks / 75) * (isDark ? 0.04 : 0.03);
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
             ctx.strokeStyle = isDark
-              ? `rgba(52, 211, 153, ${linkAlpha})`
-              : `rgba(46, 125, 50, ${linkAlpha})`;
-            ctx.lineWidth = 0.75;
+              ? `rgba(110, 231, 183, ${linkAlpha})`
+              : `rgba(52, 211, 153, ${linkAlpha})`;
+            ctx.lineWidth = 0.65;
             ctx.stroke();
           }
         }
@@ -230,7 +231,7 @@ export default function GlobalInteractiveBackground() {
   return (
     <div
       aria-hidden="true"
-      className="fixed inset-0 pointer-events-none overflow-hidden z-0 select-none"
+      className="fixed inset-0 pointer-events-none overflow-hidden -z-10 select-none"
     >
       {/* ============================================================ */}
       {/* الطبقة 1: التوهج المحيطي الناعم مع كشاف إضاءة يتبع الماوس */}
@@ -269,20 +270,20 @@ export default function GlobalInteractiveBackground() {
       )}
 
       {/* ============================================================ */}
-      {/* الطبقة 2: شبكة الجزيئات والخطوط التفاعلية عبر HTML5 Canvas */}
+      {/* الطبقة 2: شبكة الجزيئات والخطوط التفاعلية عبر HTML5 Canvas (مخفية على الجوال ومخففة على الشاشات الكبيرة) */}
       {/* ============================================================ */}
       {!isMinimal && (
         <canvas
           ref={canvasRef}
-          className="absolute inset-0 w-full h-full pointer-events-none"
+          className="absolute inset-0 w-full h-full pointer-events-none hidden md:block"
         />
       )}
 
       {/* ============================================================ */}
-      {/* الطبقة 3: الأشكال والأيقونات العائمة بعمق ثلاثي الأبعاد (Parallax) */}
+      {/* الطبقة 3: الأشكال والأيقونات العائمة بعمق ثلاثي الأبعاد (Parallax) للشاشات المتوسطة والكبيرة */}
       {/* ============================================================ */}
       {!isMinimal && (
-        <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 pointer-events-none hidden md:block">
           {/* شكل 1: شتلة ناعمة في الجزء العلوي الأيسر */}
           <motion.div
             style={{ x: shape1X, y: shape1Y }}

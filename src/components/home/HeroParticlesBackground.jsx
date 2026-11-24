@@ -33,10 +33,10 @@ export default function HeroParticlesBackground() {
         ? ['#c5d1e0', '#8193a8', '#a0aec0', '#5c6b7d']
         : ['#24292e', '#38414e', '#4b5563', '#6b7280'];
     } else {
-      // النسق الافتراضي (الأخضر الغابي الزراعي)
+      // النسق الافتراضي (الأخضر الزراعي الزمردي الناعم)
       palette = isDark
         ? ['#52B788', '#74C69D', '#95D5B2', '#D4A373', '#40916C']
-        : ['#31691D', '#255215', '#40916C', '#52B788', '#D4A373'];
+        : ['#52B788', '#74C69D', '#95D5B2', '#A7E8C2', '#D4A373'];
     }
 
     // تقليل عدد الجزيئات على الأجهزة الصغيرة للأداء السلس
@@ -256,7 +256,7 @@ export default function HeroParticlesBackground() {
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 overflow-hidden pointer-events-none select-none z-0"
+      className="absolute inset-0 overflow-hidden pointer-events-none select-none z-0 hidden md:block"
     >
       <canvas
         ref={canvasRef}
