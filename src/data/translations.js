@@ -368,7 +368,8 @@ export const translations = {
 
     // 13. بانر تحميل التطبيق (App Download Banner)
     appBanner: {
-      title: 'حمّل التطبيق الزراعي الآن',
+      badge: 'تطبيق أجري تك | AgriTech App',
+      title: 'حمّل تطبيق أجري تك (AgriTech) الآن',
       desc: 'راقب محاصيلك، شخّص الأمراض، وتابع طلباتك وتسويق إنتاجك بسهولة من جوالك.',
       googlePlay: 'احصل عليه من Google Play',
       directApk: 'تحميل مباشر ملف APK',
@@ -774,7 +775,8 @@ export const translations = {
 
     // 13. App Download Banner
     appBanner: {
-      title: `Download the ${SITE_CONFIG.brand.name} App Now`,
+      badge: 'AgriTech Mobile App',
+      title: 'Download the AgriTech App Now',
       desc: 'Monitor your crops, diagnose diseases, track orders, and market harvest directly from your phone.',
       googlePlay: 'Get it on Google Play',
       directApk: 'Direct APK Download',
