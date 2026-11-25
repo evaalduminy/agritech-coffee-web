@@ -1,15 +1,15 @@
 import { useSettings } from '../../context/SettingsContext';
 import { SITE_CONFIG } from '../../config/siteConfig';
 
-// أحجام الشعار المتناسبة بدقة مع واجهات المنصة المختلفة
+// أحجام الشعار المتناسبة بدقة مع واجهات المنصة المختلفة وفق مقاسات Tailwind القياسية
 const SIZE_CONFIGS = {
   sm: {
-    container: 'w-8 h-8 rounded-lg',
+    container: 'w-8 h-8 rounded-full',
     title: 'text-sm sm:text-base',
     subtitle: 'text-[10px]',
   },
   md: {
-    container: 'w-9.5 h-9.5 sm:w-10 sm:h-10 rounded-xl',
+    container: 'w-10 h-10 sm:w-11 sm:h-11 rounded-full',
     title: 'text-base sm:text-lg',
     subtitle: 'text-[11px] sm:text-xs',
   },
@@ -25,6 +25,7 @@ export default function BrandLogo({
   size = 'md',
   showSubtitle = false,
   className = '',
+  logoContainerClassName = '',
   onClick,
 }) {
   const { isEnglish } = useSettings();
@@ -34,24 +35,29 @@ export default function BrandLogo({
   // نص السطر الفرعي المترجم للمنصة من مصدر الحقيقة الموحد
   const subtitleText = SITE_CONFIG.brand.subtitle[currentLang];
 
+  // فئة حاوية الشعار بمقاس ثابت لمنع تمدد الصورة الأصلية على الشاشات الضيقة
+  const resolvedContainerSize = logoContainerClassName || config.container;
+
   const content = (
-    <div className={`flex items-center gap-2.5 sm:gap-3 select-none ${className}`}>
-      {/* حاوية شعار المنصة الرسمي بخلفية فاتحة لضمان التباين في الوضعين النهاري والليلي */}
+    <div className={`flex items-center gap-2 sm:gap-3 select-none min-w-0 ${className}`}>
+      {/* حاوية شعار المنصة الرسمي بمقاس ثابت وخلفية فاتحة لضمان التباين في الوضعين */}
       <div
-        className={`${config.container} bg-[#f8faf5] border border-[#31691D]/20 p-1 flex items-center justify-center shadow-xs shrink-0 overflow-hidden transition-all duration-200 group-hover:scale-105`}
+        className={`${resolvedContainerSize} shrink-0 bg-[#f8faf5] p-1.5 flex items-center justify-center overflow-hidden border border-[#31691D]/20 shadow-xs transition-all duration-200 group-hover:scale-105`}
       >
         <img
           src="/images/agritech-emblem.png"
           alt={SITE_CONFIG.brand.name}
-          className="w-full h-full object-contain"
+          width={44}
+          height={44}
+          className="w-full h-full object-contain block"
         />
       </div>
 
       {/* الشعار النصي ثنائي الدرجة مع اتجاه ltr لثبات الاسم مستمد من مصدر الحقيقة */}
-      <div className="flex flex-col text-start">
+      <div className="flex flex-col text-start min-w-0">
         <span
           dir="ltr"
-          className={`font-black ${config.title} leading-tight tracking-tight inline-flex items-baseline`}
+          className={`font-black ${config.title} leading-tight tracking-tight inline-flex items-baseline whitespace-nowrap`}
         >
           <span className="font-extrabold text-[#1A2B15] dark:text-white transition-colors">
             {SITE_CONFIG.brand.prefix}
@@ -61,10 +67,10 @@ export default function BrandLogo({
           </span>
         </span>
 
-        {/* السطر الفرعي التعريفي الاختياري */}
+        {/* السطر الفرعي التعريفي الاختياري مع منع تجاوز العرض على الجوال */}
         {showSubtitle && (
           <span
-            className={`${config.subtitle} text-secondary dark:text-[#7BC662]/80 font-medium tracking-wide leading-tight mt-0.5`}
+            className={`${config.subtitle} text-secondary dark:text-[#7BC662]/80 font-medium tracking-wide leading-tight mt-0.5 truncate`}
           >
             {subtitleText}
           </span>
@@ -78,7 +84,7 @@ export default function BrandLogo({
       <button
         type="button"
         onClick={onClick}
-        className="group text-start cursor-pointer focus:outline-none"
+        className="group text-start cursor-pointer focus:outline-none min-w-0 shrink"
       >
         {content}
       </button>

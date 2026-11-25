@@ -84,21 +84,22 @@ export default function Navbar({
   };
 
   return (
-    <header className="fixed top-2.5 sm:top-3 inset-x-0 z-40 px-3 sm:px-4 pointer-events-none">
-      <div className="max-w-7xl mx-auto rounded-2xl bg-white/80 dark:bg-[#0d1812]/80 backdrop-blur-xl border border-[#DCE5D8] dark:border-emerald-400/15 shadow-lg shadow-emerald-950/5 pointer-events-auto transition-all">
+    <header className="fixed top-2.5 sm:top-3 inset-x-0 z-40 px-2.5 sm:px-4 pointer-events-none">
+      <div className="max-w-7xl mx-auto rounded-2xl bg-white/80 dark:bg-[#0d1812]/80 backdrop-blur-xl border border-[#DCE5D8] dark:border-[#7BC662]/15 shadow-lg shadow-[#142610]/5 pointer-events-auto transition-all">
         
-        {/* الصف العلوي: الشعار، التبويبات للشاشات الكبيرة، وحزمة الأدوات */}
-        <div className="h-16 sm:h-18 px-3.5 sm:px-6 flex items-center justify-between gap-3 sm:gap-6">
+        {/* الصف العلوي بارتفاع ثابت 64px على الجوال لضمان تناسق الشعار والأزرار */}
+        <div className="h-16 sm:h-[72px] px-2.5 sm:px-6 flex items-center justify-between gap-2 sm:gap-6">
           
-          {/* قسم الشعار واسم المنصة الموحّد */}
+          {/* قسم الشعار واسم المنصة الموحّد بأبعاد مقيدة تمنع تمدد الأيقونة */}
           <BrandLogo
             size="md"
             showSubtitle={true}
+            logoContainerClassName="w-10 h-10 sm:w-11 sm:h-11 shrink-0 rounded-full"
             onClick={() => handleTabClick('home')}
           />
 
           {/* تبويبات التصفح الرئيسية للشاشات الكبيرة مع المؤشر المنزلق */}
-          <nav className="hidden lg:flex items-center gap-1.5 p-1 rounded-xl bg-surface-container-low/60 dark:bg-[#122019]/60 border border-[#DCE5D8] dark:border-emerald-400/10" aria-label="التنقل الرئيسي">
+          <nav className="hidden lg:flex items-center gap-1.5 p-1 rounded-xl bg-surface-container-low/60 dark:bg-[#122019]/60 border border-[#DCE5D8] dark:border-[#7BC662]/15" aria-label="التنقل الرئيسي">
             {navTabs.map((tab) => {
               const isActive = activeTab === tab.id;
               return (
@@ -126,24 +127,24 @@ export default function Navbar({
             })}
           </nav>
 
-          {/* قسم الإجراءات السريعة (المزارعون، الإعدادات، السلة، الحساب) */}
-          <div className="flex items-center gap-2 sm:gap-2.5">
+          {/* قسم الإجراءات السريعة بأزرار ثابتة الحجم تمنع الانضغاط على شاشة 360px */}
+          <div className="flex items-center gap-1 sm:gap-2.5 shrink-0">
             {/* زر فتح إعدادات المظهر والمنصة */}
             <button
               type="button"
               onClick={openSettings}
               aria-label={t('navbar.settingsLabel')}
               title={t('navbar.settingsLabel')}
-              className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-surface-container-low/80 hover:bg-surface-container-high dark:bg-[#162820] dark:hover:bg-[#1f372c] border border-[#DCE5D8] dark:border-emerald-400/10 transition-colors flex items-center justify-center text-on-surface cursor-pointer"
+              className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-surface-container-low/80 hover:bg-surface-container-high dark:bg-[#162820] dark:hover:bg-[#1f372c] border border-[#DCE5D8] dark:border-[#7BC662]/15 transition-colors flex items-center justify-center text-on-surface cursor-pointer"
             >
-              <Sliders className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#31691D] dark:text-emerald-300" />
+              <Sliders className="w-4 h-4 sm:w-5 sm:h-5 text-[#31691D] dark:text-[#7BC662]" />
             </button>
 
             {/* زر بوابة المزارعين لسطح المكتب باللون الدافئ الموحد */}
             <button
               type="button"
               onClick={onOpenFarmersModal}
-              className="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#FEF3C7] hover:bg-[#fde68a] border border-[#D97706]/30 transition-colors text-[#D97706] cursor-pointer text-xs font-bold"
+              className="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#FEF3C7] hover:bg-[#fde68a] border border-[#D97706]/30 transition-colors text-[#D97706] cursor-pointer text-xs font-bold shrink-0"
             >
               <PhoneCall className="w-3.5 h-3.5 text-[#D97706]" />
               <span>{t('navbar.farmerService')}</span>
@@ -155,9 +156,9 @@ export default function Navbar({
               id="navbar-cart-icon"
               onClick={handleCartClick}
               aria-label={t('navbar.cartLabel')}
-              className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-surface-container-low/80 hover:bg-surface-container-high dark:bg-[#162820] dark:hover:bg-[#1f372c] border border-[#DCE5D8] dark:border-emerald-400/10 transition-colors flex items-center justify-center text-on-surface cursor-pointer"
+              className="relative w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-surface-container-low/80 hover:bg-surface-container-high dark:bg-[#162820] dark:hover:bg-[#1f372c] border border-[#DCE5D8] dark:border-[#7BC662]/15 transition-colors flex items-center justify-center text-on-surface cursor-pointer"
             >
-              <ShoppingBag className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#31691D] dark:text-emerald-300" />
+              <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 text-[#31691D] dark:text-[#7BC662]" />
               {displayCartCount > 0 && (
                 <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[#31691D] text-white dark:bg-[#7BC662] dark:text-black text-[11px] font-bold flex items-center justify-center shadow-sm">
                   {displayCartCount}
@@ -171,12 +172,12 @@ export default function Navbar({
               onClick={handleProfileClick}
               aria-label={t('navbar.profileTitle')}
               title={user ? user.name : t('navbar.login')}
-              className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#31691D] hover:bg-[#255215] dark:bg-[#31691D] dark:hover:bg-[#255215] flex items-center justify-center cursor-pointer active:scale-95 transition-all text-white shadow-xs"
+              className="relative w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-full bg-[#31691D] hover:bg-[#255215] dark:bg-[#31691D] dark:hover:bg-[#255215] flex items-center justify-center cursor-pointer active:scale-95 transition-all text-white shadow-xs"
             >
-              <User className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
+              <User className="w-4 h-4 sm:w-5 sm:h-5" />
               {/* نقطة حالة خضراء صغيرة تظهر عند تسجيل الدخول */}
               {user && (
-                <span className="absolute top-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 dark:bg-emerald-300 border-2 border-white dark:border-[#0d1812]" />
+                <span className="absolute top-0 right-0 w-2.5 h-2.5 rounded-full bg-[#7BC662] border-2 border-white dark:border-[#0d1812]" />
               )}
             </button>
 
@@ -186,7 +187,7 @@ export default function Navbar({
               onClick={() => setIsMobileMenuOpen((prev) => !prev)}
               aria-label={isMobileMenuOpen ? 'إغلاق القائمة' : 'فتح القائمة'}
               aria-expanded={isMobileMenuOpen}
-              className="flex lg:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-surface-container-low/80 hover:bg-surface-container-high dark:bg-[#162820] dark:hover:bg-[#1f372c] border border-[#DCE5D8] dark:border-emerald-400/10 transition-colors items-center justify-center text-on-surface cursor-pointer"
+              className="flex lg:hidden w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-surface-container-low/80 hover:bg-surface-container-high dark:bg-[#162820] dark:hover:bg-[#1f372c] border border-[#DCE5D8] dark:border-[#7BC662]/15 transition-colors items-center justify-center text-on-surface cursor-pointer"
             >
               {isMobileMenuOpen ? (
                 <X className="w-5 h-5 text-[#31691D] dark:text-[#7BC662]" />
@@ -205,7 +206,7 @@ export default function Navbar({
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.22, ease: 'easeOut' }}
-              className="lg:hidden border-t border-[#DCE5D8] dark:border-emerald-400/10 px-3.5 py-3 flex flex-col gap-2 overflow-hidden bg-white/95 dark:bg-[#0d1812]/95 rounded-b-2xl"
+              className="lg:hidden border-t border-[#DCE5D8] dark:border-[#7BC662]/15 px-3.5 py-3 flex flex-col gap-2 overflow-hidden bg-white/95 dark:bg-[#0d1812]/95 rounded-b-2xl"
               aria-label="قائمة الجوال"
             >
               <div className="grid grid-cols-2 gap-2">

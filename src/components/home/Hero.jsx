@@ -177,13 +177,13 @@ export default function Hero({
         />
       </motion.div>
 
-      <div className="max-w-7xl mx-auto px-margin relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-margin relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center w-full">
           
           {/* ============================================================== */}
           {/* الجهة اليمنى: النصوص والأزرار المفتوحة بدون أي صناديق تخنق النص */}
           {/* ============================================================== */}
-          <div className="lg:col-span-7 flex flex-col items-start text-start space-y-4 sm:space-y-3">
+          <div className="lg:col-span-7 min-w-0 w-full flex flex-col items-start text-start space-y-4 sm:space-y-3">
             
             {/* الشارة التوثيقية العلوية الزجاجية المعتمدة (مخفية على الجوال لمنع التكرار مع الترويسة) */}
             <div className="hidden md:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E9F2E4] dark:bg-[#142610] backdrop-blur-md border border-[#31691D]/20 dark:border-[#7BC662]/30 text-[#31691D] dark:text-[#7BC662] shadow-xs text-xs font-semibold">
@@ -191,13 +191,13 @@ export default function Hero({
               <span>{t('hero.badge')}</span>
             </div>
 
-            {/* العنوان الرئيسي المباشر مع ضبط المسافات المريحة */}
-            <h1 className="font-headline-lg text-2xl sm:text-3xl lg:text-[40px] xl:text-[44px] lg:leading-[50px] xl:leading-[54px] font-black text-[#1A2B15] dark:text-white tracking-tight leading-snug">
+            {/* العنوان الرئيسي المباشر مع ضبط عرض كامل ومنع القص على شاشة 360px */}
+            <h1 className="w-full max-w-full break-words font-headline-lg text-[22px] sm:text-3xl lg:text-[40px] xl:text-[44px] lg:leading-[50px] xl:leading-[54px] font-black text-[#1A2B15] dark:text-white tracking-tight leading-snug">
               {t('hero.title')}
             </h1>
 
             {/* الوصف الإرشادي الواضح للمنصة */}
-            <p className="font-body-lg text-sm sm:text-base text-on-surface-variant dark:text-emerald-100/85 leading-relaxed max-w-xl">
+            <p className="font-body-lg text-sm sm:text-base text-on-surface-variant dark:text-[#E9F2E4]/85 leading-relaxed max-w-xl">
               {t('hero.description')}
             </p>
 
@@ -212,13 +212,13 @@ export default function Hero({
                 transition={{ type: 'spring', stiffness: 220, damping: 14, mass: 0.15 }}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}
-                className="w-full sm:w-auto inline-flex items-center justify-between gap-4 px-5 py-3.5 sm:py-3 rounded-2xl bg-white dark:bg-[#122019] text-[#1A2B15] dark:text-white hover:bg-[#F4F7F2] dark:hover:bg-[#16271f] active:scale-95 transition-all shadow-lg shadow-emerald-950/10 border border-[#DCE5D8] dark:border-emerald-700/40 cursor-pointer group"
+                className="w-full sm:w-auto inline-flex items-center justify-between gap-4 px-5 py-3.5 sm:py-3 rounded-2xl bg-white dark:bg-[#122019] text-[#1A2B15] dark:text-white hover:bg-[#F4F7F2] dark:hover:bg-[#16271f] active:scale-95 transition-all shadow-lg shadow-[#142610]/10 border border-[#DCE5D8] dark:border-[#31691D]/40 cursor-pointer group"
               >
                 <div className="flex flex-col text-start">
                   <span className="font-bold text-sm sm:text-base text-[#1A2B15] dark:text-white leading-tight">
                     {t('hero.browseStore')}
                   </span>
-                  <span className="text-[10px] text-[#556650] dark:text-emerald-300/70 font-semibold mt-0.5">
+                  <span className="text-[10px] text-[#556650] dark:text-[#7BC662]/70 font-semibold mt-0.5">
                     {t('hero.browseSubtext')}
                   </span>
                 </div>
@@ -229,7 +229,7 @@ export default function Hero({
             </div>
 
             {/* سطر الثقة الناعم بثلاث علامات صح في الأسفل (مخفي على الجوال لتقليل الازدحام) */}
-            <div className="hidden md:flex flex-wrap items-center gap-3 pt-2 text-xs text-on-surface-variant dark:text-emerald-200/80 font-medium">
+            <div className="hidden md:flex flex-wrap items-center gap-3 pt-2 text-xs text-on-surface-variant dark:text-[#E9F2E4]/80 font-medium">
               <div className="flex items-center gap-1.5">
                 <Check className="w-4 h-4 text-[#31691D] dark:text-[#7BC662] stroke-[2.5]" />
                 <span>{t('hero.trustVerified')}</span>
@@ -251,18 +251,18 @@ export default function Hero({
           {/* ============================================================== */}
           {/* الجهة اليسرى: مجسم هاتف 3D تفاعلي مائل + بطاقات إحصائيات عائمة */}
           {/* ============================================================== */}
-          <div className="lg:col-span-5 flex items-center justify-center relative pt-6 lg:pt-0">
+          <div className="lg:col-span-5 min-w-0 w-full flex items-center justify-center relative pt-6 lg:pt-0">
             
-            {/* حاوية المجسم ثلاثي الأبعاد مع منظور العمق */}
-            <div style={{ perspective: 1200 }} className="relative flex items-center justify-center">
+            {/* حاوية المجسم ثلاثي الأبعاد مع منظور العمق وحصر العرض ضمن شاشة الجوال */}
+            <div style={{ perspective: 1200 }} className="relative flex items-center justify-center max-w-full">
 
               {/* 1. البطاقة الإحصائية العائمة العلوية (+42 مزرعة موثقة) */}
               <motion.div
                 animate={{ y: [0, -8, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute -top-3 rtl:-left-4 ltr:-right-4 z-20 pointer-events-none"
+                className="absolute -top-3 rtl:left-0 sm:rtl:-left-4 ltr:right-0 sm:ltr:-right-4 z-20 pointer-events-none"
               >
-                <div className="px-3 py-2 rounded-2xl bg-white/80 dark:bg-[#122019]/90 backdrop-blur-md border border-[#DCE5D8] dark:border-emerald-500/30 text-on-surface dark:text-white shadow-xl flex items-center gap-2 text-start">
+                <div className="px-3 py-2 rounded-2xl bg-white/80 dark:bg-[#122019]/90 backdrop-blur-md border border-[#DCE5D8] dark:border-[#7BC662]/30 text-on-surface dark:text-white shadow-xl flex items-center gap-2 text-start">
                   <div className="w-7 h-7 rounded-lg bg-[#31691D] hover:bg-[#255215] text-white flex items-center justify-center shrink-0 transition-colors">
                     <Mountain className="w-4 h-4" />
                   </div>
@@ -281,9 +281,9 @@ export default function Hero({
               <motion.div
                 animate={{ y: [0, -6, 0] }}
                 transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-                className="absolute top-1/2 rtl:-left-8 ltr:-right-8 z-20 pointer-events-none"
+                className="absolute top-1/2 rtl:-left-2 sm:rtl:-left-8 ltr:-right-2 sm:ltr:-right-8 z-20 pointer-events-none"
               >
-                <div className="px-3 py-2 rounded-2xl bg-white/80 dark:bg-[#122019]/90 backdrop-blur-md border border-[#DCE5D8] dark:border-emerald-500/30 text-on-surface dark:text-white shadow-xl flex items-center gap-2 text-start">
+                <div className="px-3 py-2 rounded-2xl bg-white/80 dark:bg-[#122019]/90 backdrop-blur-md border border-[#DCE5D8] dark:border-[#7BC662]/30 text-on-surface dark:text-white shadow-xl flex items-center gap-2 text-start">
                   <div className="w-7 h-7 rounded-lg bg-[#31691D] hover:bg-[#255215] text-white flex items-center justify-center shrink-0 transition-colors">
                     <ShieldCheck className="w-4 h-4" />
                   </div>
@@ -302,7 +302,7 @@ export default function Hero({
               <motion.div
                 animate={{ y: [0, 8, 0] }}
                 transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-                className="absolute -bottom-4 rtl:-right-6 ltr:-left-6 z-20 pointer-events-none"
+                className="absolute -bottom-4 rtl:-right-2 sm:rtl:-right-6 ltr:-left-2 sm:ltr:-left-6 z-20 pointer-events-none"
               >
                 <div className="px-3 py-2 rounded-2xl bg-[#FEF3C7] backdrop-blur-md border border-[#D97706]/30 text-[#D97706] shadow-xl flex items-center gap-2 text-start">
                   <div className="w-7 h-7 rounded-lg bg-[#FEF3C7] text-[#D97706] flex items-center justify-center shrink-0">
@@ -326,7 +326,7 @@ export default function Hero({
                   rotateY: phoneRotateY,
                   transformStyle: 'preserve-3d',
                 }}
-                className="w-[270px] sm:w-[290px] aspect-[9/18.5] rounded-[44px] border-[7px] border-[#142610] dark:border-emerald-700/80 bg-[#142610] p-2.5 shadow-2xl shadow-[#142610]/80 relative overflow-hidden select-none"
+                className="w-[250px] sm:w-[290px] aspect-[9/18.5] rounded-[44px] border-[7px] border-[#142610] dark:border-[#31691D]/80 bg-[#142610] p-2.5 shadow-2xl shadow-[#142610]/80 relative overflow-hidden select-none"
               >
                 {/* شريط الكاميرا والحساسات العلوي (Dynamic Island) */}
                 <div className="w-24 h-4 rounded-full bg-black mx-auto mb-2 flex items-center justify-center gap-1.5 shadow-inner z-20 relative">

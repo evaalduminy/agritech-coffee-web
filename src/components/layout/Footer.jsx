@@ -134,7 +134,7 @@ export default function Footer({
   return (
     <footer
       id="contact-footer"
-      className="w-full bg-surface-container-low border-t border-surface-container mt-space-xl text-start transition-colors"
+      className="w-full overflow-x-hidden bg-surface-container-low border-t border-surface-container mt-space-xl text-start transition-colors"
     >
       <div className="max-w-7xl mx-auto px-margin py-space-xl">
         
@@ -142,8 +142,13 @@ export default function Footer({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-xl pb-space-lg">
           
           {/* العمود الأول: هوية المنصة والرؤية وشبكات التواصل */}
-          <div className="flex flex-col gap-space-sm text-start">
-            <BrandLogo size="md" showSubtitle={true} />
+          <div className="flex flex-col gap-space-sm text-start min-w-0">
+            {/* شعار المنصة الرسمي بمقاس ثابت ومنضبط في التذييل */}
+            <BrandLogo
+              size="md"
+              showSubtitle={true}
+              logoContainerClassName="w-11 h-11 shrink-0 rounded-full"
+            />
 
             <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
               {t('footer.vision')}

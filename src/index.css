@@ -5,11 +5,16 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
+    max-width: 100%;
   }
   html,
   body {
     margin: 0;
     padding: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
     font-family: 'Cairo', sans-serif;
     background-color: #F4F7F2;
     color: #1A2B15;
