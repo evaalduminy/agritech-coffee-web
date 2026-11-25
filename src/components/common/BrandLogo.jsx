@@ -1,4 +1,3 @@
-import { Sprout } from 'lucide-react';
 import { useSettings } from '../../context/SettingsContext';
 import { SITE_CONFIG } from '../../config/siteConfig';
 
@@ -6,25 +5,22 @@ import { SITE_CONFIG } from '../../config/siteConfig';
 const SIZE_CONFIGS = {
   sm: {
     container: 'w-8 h-8 rounded-lg',
-    icon: 'w-4 h-4',
     title: 'text-sm sm:text-base',
     subtitle: 'text-[10px]',
   },
   md: {
     container: 'w-9.5 h-9.5 sm:w-10 sm:h-10 rounded-xl',
-    icon: 'w-5 h-5 sm:w-5.5 sm:h-5.5',
     title: 'text-base sm:text-lg',
     subtitle: 'text-[11px] sm:text-xs',
   },
   lg: {
     container: 'w-12 h-12 sm:w-14 sm:h-14 rounded-2xl',
-    icon: 'w-7 h-7 sm:w-8 sm:h-8',
     title: 'text-xl sm:text-2xl',
     subtitle: 'text-xs sm:text-sm',
   },
 };
 
-// مكوّن الشعار الموحّد للمنصة AgriMarket مع دعم الأحجام واللغتين والوضعين النهاري والليلي
+// مكوّن الشعار الموحّد للمنصة مع دعم الأحجام واللغتين والوضعين النهاري والليلي
 export default function BrandLogo({
   size = 'md',
   showSubtitle = false,
@@ -40,11 +36,15 @@ export default function BrandLogo({
 
   const content = (
     <div className={`flex items-center gap-2.5 sm:gap-3 select-none ${className}`}>
-      {/* حاوية أيقونة الشعار باللون الأخضر الزراعي المعتمد مع حالة التمرير */}
+      {/* حاوية شعار المنصة الرسمي بخلفية فاتحة لضمان التباين في الوضعين النهاري والليلي */}
       <div
-        className={`${config.container} bg-[#31691D] hover:bg-[#255215] dark:bg-[#31691D] dark:hover:bg-[#255215] text-white flex items-center justify-center shadow-xs ring-1 ring-[#31691D]/20 shrink-0 transition-all duration-200 group-hover:scale-105`}
+        className={`${config.container} bg-[#f8faf5] border border-[#31691D]/20 p-1 flex items-center justify-center shadow-xs shrink-0 overflow-hidden transition-all duration-200 group-hover:scale-105`}
       >
-        <Sprout className={config.icon} />
+        <img
+          src="/images/agritech-emblem.png"
+          alt={SITE_CONFIG.brand.name}
+          className="w-full h-full object-contain"
+        />
       </div>
 
       {/* الشعار النصي ثنائي الدرجة مع اتجاه ltr لثبات الاسم مستمد من مصدر الحقيقة */}
@@ -64,7 +64,7 @@ export default function BrandLogo({
         {/* السطر الفرعي التعريفي الاختياري */}
         {showSubtitle && (
           <span
-            className={`${config.subtitle} text-secondary dark:text-emerald-400/80 font-medium tracking-wide leading-tight mt-0.5`}
+            className={`${config.subtitle} text-secondary dark:text-[#7BC662]/80 font-medium tracking-wide leading-tight mt-0.5`}
           >
             {subtitleText}
           </span>
